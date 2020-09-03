@@ -1,0 +1,179 @@
+﻿<template>
+  <div class="container">
+    <div class="row">
+      <h2>Frequently asked questions </h2>
+
+      <a route-href="route: home" class="btn btn-primary btn-xs" style="float: right">Back to tables</a>
+
+      <br />
+      <br />
+      <br />
+      <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+        If you cannot find an answer to your question, please make sure to <a href="mailto:${appSupportEmail}"> contact us.</a>
+      </div>
+      <br />
+      <div class="faq-block">
+        <ol>
+          
+          <li><a href="#" click.delegate="scrollToElement('2')">Do you take customers from any Country?</a></li>
+          <li><a href="#" click.delegate="scrollToElement('3')">What crypto currencies do you support?</a></li>
+          <li><a href="#" click.delegate="scrollToElement('4')">Can I play with fiat currency?</a></li>
+          <li><a href="#" click.delegate="scrollToElement('5')">What are the fees/rake?</a> <i>(1%)</i></li>
+          <li><a href="#" click.delegate="scrollToElement('6')">How do I fund my account and start playing?</a></li>
+          <li><a href="#" click.delegate="scrollToElement('7')">How do I set up an account?</a></li>
+          <li><a href="#" click.delegate="scrollToElement('8')">I don’t have a Wallet yet. What is it and how do I get one?</a></li>
+          <li><a href="#" click.delegate="scrollToElement('9')">Where can I get cryptocurrency?</a></li>
+          <li><a href="#" click.delegate="scrollToElement('10')">If I have a problem, how do I get in contact?</a></li>
+          <li><a href="#" click.delegate="scrollToElement('11')">How do I cash out?</a></li>
+        </ol>
+
+        
+
+        <div>
+          <h3 id="2">2) Do you take any customers?</h3>
+          <p>We support all regions except the US and Australia. Sorry if you’re in one of those two countries! </p>
+        </div>
+
+        <div>
+          <h3 id="3">3) What crypto currencies do you support? </h3>
+          <p>The big 3; Bitcoin, Ethereum and Dash. We’re currently working on support for ERC-20 compliant tokens and hope
+            to have good news soon!
+          </p>
+        </div>
+
+        <div>
+          <h3 id="4">4) Can I play with fiat currency?</h3>
+          <p>No, sorry. Cryptocurrencies only</p>
+        </div>
+
+        <div id="5">
+          <h3 >5) What are the fees? </h3>
+          <p>Absolutely minimal and we’re transparent about it: 1%
+            <br> Most poker sites take 2.5 - 6% as the ‘rake’, and use complicated structures that make it near impossible to
+            compare the actual fees.
+            <br> We only take 1% rake. Clear and simple so you can enjoy playing.
+            <br>
+          </p>
+        </div>
+
+        <div>
+          <h3 id="6">6) How do I fund my account and start playing? </h3>
+          <p>If you’ve already got a cryptocurrency wallet with currency, then follow the below steps. If you don’t already
+            have a functioning wallet, then please go to Question 7.
+          </p>
+          <ol>
+            <li>Choose a table based on your coin. </li>
+            <li>Click ‘Sit down’</li>
+            <li>An address should be generated. Copy this address.</li>
+            <li>Go to your Wallet and enter this address and the amount you would like to fund. Select ‘InstandSend’ if available.
+              Otherwise, it will take up to 2 ½ minutes for funds to arrive
+            </li>
+            <li>Once your funds arrive, choose your buy in amount, sit down and enjoy playing!
+            </li>
+          </ol>
+          <p>You don’t need an account to play at Troy’s House, but you can set one up to help when playing with friends
+          </p>
+        </div>
+
+        <div>
+          <h3 id="7">7) How do I set up an account? </h3>
+          <p>You don’t need an account to play at Troy’s House, but you can set one up to help when playing with friends </p>
+          <ol>
+            <li>Click on ‘My Account’</li>
+            <li>User Id: If you would like to play across multiple devices, copy this address. Then re-enter on your other device(s)
+              so that you can be recognised on each device.
+            </li>
+            <li>Choose your Screen Name
+            </li>
+            <li>If you would like your gravatar to be displayed, enter your associated email address.
+            </li>
+            <li>Transfer funds: To share funds between players, just enter their screen name and the amount.
+            </li>
+          </ol>
+        </div>
+
+        <div>
+          <h3 id="8">8) I don’t have a Wallet yet. What is it and how do I get one?</h3>
+          <p>A cryptocurrency wallet is a secure digital wallet used to store, send, and receive digital currency like Bitcoin.
+            Cryptocurrency itself is not actually “stored” in a wallet. Instead, a private key (secure digital code known
+            only to you and your wallet) is stored that shows ownership of a public key (a public digital code connected
+            to a certain amount of currency). So your wallet stores your private and public keys, allows you to send and
+            receive coins, and also acts as a personal ledger of transactions.
+          </p>
+
+          <p>
+            Most coins have an official wallet or a few officially recommended third party wallets. If you are new to cryptocurrency,
+            then we recommend getting started with those on dash.org. DashCore has InstantSend capability
+
+          </p>
+          <ol>
+            <li>DashCore</li>
+            <li>Exodus</li>
+            <li>Jaxx</li>
+          </ol>
+          <p>
+            Once you’re familiar with how wallets operate, you can explore a wide range of different wallets which offer varying pros
+            and cons.
+
+          </p>
+          <p>
+            <strong>IMPORTANT:</strong> Some software offered as a wallet is actually malware trying to take advantage of those willing to download and
+            install unofficial software off the internet. Never trust mining or wallet software that comes from a source
+            that you don’t know and trust. Start with well worn solutions like the ones that are officially endorsed..
+
+          </p>
+          <p>
+              <strong>IMPORTANT:</strong> Never share your wallet password or private key and never enter your password or private key anywhere (unless
+            you are accessing your wallet via private key and password). To send coins and receive coins you only need to
+            share your public wallet address (your “public key”).
+
+          </p>
+        </div>
+
+        <div>
+          <h3 id="9">9) Where can I get cryptocurrency?</h3>
+          <p>We recommend 3 options: </p>
+          <ol>
+            <li>Uphold - Lots of currencies, lots of countries
+            </li>
+            <li>Bitpanda - Europe focused, Bitpanda (previously Coinimal) has been a reliable currency source for Dash, Ethereum
+              and Bitcoin for several years
+            </li>
+            <li>Coinspot.com.au - Supports Bitcoin, Litecoin & Dogecoin.</li>
+          </ol>
+        </div>
+
+        <div>
+          <h3 id="10">10) If I have a problem, how do I get in contact?</h3>
+          <p><a href="mailto:${appSupportEmail}">Click here</a> to message us. We usually turn contact requests around in 24 hours.
+          </p>
+        </div>
+
+        <div>
+          <h3 id="11">11) How do I cash out?</h3>
+          <ol>
+            <li>Go to your Wallet and generate and copy a Receiving Address
+            </li>
+            <li>Click the ‘Cashier’ button on the top right hand side
+            </li>
+            <li>Paste the Receiving Address and click ‘Confirm & Withdraw’
+            </li>
+            <li>Wait for your confirmation and you’re done!
+            </li>
+          </ol>
+          <p>
+            'Cash Out' transfers are immediately pushed to the network. Unlike other sites which like to hold onto your money as long
+            as possible, we harness the power of cryptocurrencies to ensure you receive your money ASAP.
+
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</template>

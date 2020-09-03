@@ -1,0 +1,18 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "files.exclude": {
+        "**/build/": true,  
+        "**/node_modules/": true,        
+        "**/db_backup/": true,        
+        "**/*.js.map": true,
+        "**/*.js": {"when": "$(basename).ts"},
+        "ravendb-nodejs-client":true,
+        "tmp":true,
+        "application.log":true,
+        "GeoLite2-Country.mmdb":true,
+        "poker.admin.ui/":true,
+        "**/dist*/**":true,
+        "poker.admin.ui.angular/dist/":true,
+    },
+    "workbench.editor.enablePreview": false
+}

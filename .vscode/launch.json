@@ -1,0 +1,82 @@
+{
+    // Use IntelliSense to learn about possible Node.js debug attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [        
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Poker Game Server",           
+           "program": "${workspaceRoot}/poker.engine/build/poker.engine/src/app.js",
+            "protocol":"inspector",   
+            "sourceMaps": true,
+            "outFiles": [ "${workspaceFolder}/poker.engine/build/poker.engine/**/*.js" ]  ,
+            "cwd": "${workspaceRoot}/poker.engine/build/poker.engine/",   
+            "console": "integratedTerminal",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]                              
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Poker Payments",
+            "program": "${workspaceRoot}/poker.payments/build/poker.payments/src/PaymentProcessorBootstrapper.js",
+            "protocol":"inspector",   
+            "sourceMaps": true,
+            "outFiles": [ "${workspaceFolder}/poker.engine/build/**/*.js" ],
+            "cwd": "${workspaceRoot}/poker.payments/",    
+            "console": "integratedTerminal",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]                         
+        },
+        {
+            "name": "Debug poker.engine tests",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/poker.engine/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": ["--no-timeouts", "--recursive"],
+            "cwd": "${workspaceRoot}/poker.engine/build/poker.engine",
+            "runtimeExecutable": null,
+            "env": { "NODE_ENV": "testing"},                        
+            "sourceMaps": true,
+            "outFiles": [ "${workspaceFolder}/poker.engine/build/poker.engine/**/*.js" ],
+            "skipFiles": [
+                "<node_internals>/**"
+            ]                 
+        },
+        {
+            "name": "Debug poker.payments tests",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/poker.payments/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": ["--no-timeouts", "--recursive"],
+            "cwd": "${workspaceRoot}/poker.payments/build/poker.payments",
+            "runtimeExecutable": null,
+            "env": { "NODE_ENV": "testing"},                        
+            "sourceMaps": true,
+            "outFiles": [ "${workspaceFolder}/poker.payments/build/poker.payments/**/*.js" ],
+            "skipFiles": [
+                "<node_internals>/**"
+            ]                                      
+        },
+        {
+            "name": "npm-spike",
+            "type": "node",
+            "request": "launch",            
+           "program": "${workspaceRoot}/npm-spike/build/npm-spike/app.js",      
+           "cwd": "${workspaceRoot}/npm-spike/build/npm-spike/",         
+           "protocol":"inspector",   
+           "sourceMaps": true,
+           "outFiles": [ "${workspaceFolder}/npm-spike/build/**/*.js" ],           
+           "console": "integratedTerminal",
+           "skipFiles": [
+               "<node_internals>/**"
+           ]                           
+        },
+    ]
+}

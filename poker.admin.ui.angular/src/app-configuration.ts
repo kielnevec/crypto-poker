@@ -1,0 +1,1 @@
+export const isPaymentServer = parseInt(window.location.port) !== 443;
