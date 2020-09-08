@@ -29,6 +29,7 @@ describe('TournamentSubscriptionRequestHandler', () => {
         handle = new WebSocketHandle(socket);
         handle.user = new User();
         handle.user.guid = 'guid1';
+        handle.user.activated = true;
 
         tournament = new Tournament();
         tournament._id = "tournmanetId";
@@ -67,15 +68,16 @@ describe('TournamentSubscriptionRequestHandler', () => {
         
     });
 
-    it('cannot_register_as_user_is_not_registered', async () => {
+    it('cannot_register_as_user_is_not_registered', async () => {        
+        dataRepository.getUser = () => Promise.resolve(null);
         let message = new ClientMessage();
         message.tournamentRegisterRequest = new TournamentRegisterRequest('id1');        
         
         await handler.run(handle, message);
 
-        dataRepository.didNotReceive('saveTournamentRegistration');
         let lastMessage = socket.getLastMessage();
         assert.equal('You must register to play tournaments', lastMessage.error.message);
+        dataRepository.didNotReceive('saveTournamentRegistration');
     });
 
     it('tournament_does_not_exist', async () => {

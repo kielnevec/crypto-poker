@@ -40,34 +40,39 @@ export class ExchangeRatesService {
   }
 
   async pollCurrencies(): Promise<ExchangeRate[]> {
-
-    let currencyQuery = this.currencies.map(c => c.currency.toUpperCase()).join(',');
-    let url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${currencyQuery}&tsyms=USD`;
-    let [err, data] = await to(http({
-      method: 'GET',
-      uri: url,
-      json: true
-    }));
     let arr: ExchangeRate[] = [];
-    if (data) {
-      for (let key in data.RAW) {
-        let currencyObj = data.RAW[key].USD;
-        if(!isNaN(parseFloat(currencyObj.PRICE)) && !isNaN(parseFloat(currencyObj.VOLUME24HOUR)) && !isNaN(parseFloat(currencyObj.CHANGE24HOUR))){
-          let exchangeRate = new ExchangeRate();
-          exchangeRate.base = key.toLowerCase();
-          exchangeRate.target = 'usd';
-          exchangeRate.price = currencyObj.PRICE;
-          exchangeRate.volume = Math.round(currencyObj.VOLUME24HOUR);
-          exchangeRate.change = currencyObj.CHANGE24HOUR;
-          arr.push(exchangeRate);
-        }else{
-          logger.info(`could not parse poll data ${JSON.stringify(currencyObj)}`);
+    if(this.currencies.length){
+      let currencyQuery = this.currencies.map(c => c.currency.toUpperCase()).join(',');
+      let url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${currencyQuery}&tsyms=USD`;
+      let [err, data] = await to(http({
+        method: 'GET',
+        uri: url,
+        json: true
+      }));
+
+      if (data) {
+        for (let key in data.RAW) {
+          let currencyObj = data.RAW[key].USD;
+          if(!isNaN(parseFloat(currencyObj.PRICE)) && !isNaN(parseFloat(currencyObj.VOLUME24HOUR)) && !isNaN(parseFloat(currencyObj.CHANGE24HOUR))){
+            let exchangeRate = new ExchangeRate();
+            exchangeRate.base = key.toLowerCase();
+            exchangeRate.target = 'usd';
+            exchangeRate.price = currencyObj.PRICE;
+            exchangeRate.volume = Math.round(currencyObj.VOLUME24HOUR);
+            exchangeRate.change = currencyObj.CHANGE24HOUR;
+            arr.push(exchangeRate);
+          }else{
+            logger.info(`could not parse poll data ${JSON.stringify(currencyObj)}`); 
+          }
+          
         }
-        
+      } else {
+        logger.info('pollCurrency error: ' + err)
       }
-    } else {
-      logger.info('pollCurrency error: ' + err)
     }
+    
+    
+    
 
     
     return arr;
