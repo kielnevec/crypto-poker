@@ -3,12 +3,13 @@
  ![screenshot](https://i.imgur.com/aLDDolt.png "Screenshot")
 
 [LIVE DEMO](https://troyshouse.poker/)
+=====
 
 Prerequisites
 1) node v10 or later
 2) mongodb
-3) typescript (sudo npm i typescript -g)
-3) aurelia (sudo npm install aurelia-cli@0.34.0 -g)
+3) typescript (`sudo npm i typescript -g`)
+3) aurelia (`sudo npm install aurelia-cli@0.34.0 -g`)
 
 Getting Started
 
