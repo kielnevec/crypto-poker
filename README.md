@@ -1,6 +1,6 @@
 ﻿# crypto-poker
  
- ![screenshot][https://imgur.com/a/vKwuuc4]
+ ![screenshot](https://imgur.com/a/vKwuuc4 "Screenshot")
 
 Prerequisites
 1) node v10 or later
