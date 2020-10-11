@@ -11,10 +11,11 @@
 =====
 
 Prerequisites
-1) node v10 or later
-2) mongodb
-3) typescript (`sudo npm i typescript -g`)
-3) aurelia (`sudo npm install aurelia-cli@0.34.0 -g`)
+* node v10 or later
+* mongodb
+* typescript (`sudo npm i typescript -g`)
+* aurelia (`sudo npm install aurelia-cli@0.34.0 -g`)
+* `npm install --global --production windows-build-tools` (windows only)
 
 Getting Started
 

@@ -48,18 +48,6 @@ export class DataRepository implements IDataRepository {
         this.server = new Server('localhost', 27017);
         this.db = new Db(this.dbName, this.server, { });
         return this.db.open(); 
-    } 
-
-    auth() : Promise<void>{
-      return new Promise((resolve, reject)=>{        
-        this.db.authenticate('troy', '59cf3caef8', function(err, result) {
-          if(result)
-            resolve();
-          else
-            reject(err)
-        });
-      })
-      
     }
 
     getTablesConfig() : Promise<TableConfig[]>{
