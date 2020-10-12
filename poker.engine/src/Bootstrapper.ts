@@ -27,6 +27,8 @@ import { TelegramService } from './framework/telegram/telegram.service';
 import { IDataRepository } from './services/documents/IDataRepository';
 import { RegisterRequestHandler } from './handlers/RegisterRequestHandler';
 import { DepositAddressService } from './services/DepositAddressService';
+import defaultTableConfigs from './model/table/DefaultTableConfig'
+import defaultCurrencyConfigs from './model/table/DefaultCurrencyConfig'
 
 export class Bootstrapper {
     exchangeRatesService: ExchangeRatesService;
@@ -47,6 +49,16 @@ export class Bootstrapper {
         await dataRepository.createNextUserDocument();
         await protobufConfig.init();        
 
+        let tableConfig = await dataRepository.getTablesConfig();  
+        if(!tableConfig.length){
+            logger.info(`no tables, adding default...`);
+            for(let config of defaultTableConfigs){
+                await dataRepository.saveTableConfig(config)
+            }  
+            for(let config of defaultCurrencyConfigs){
+                await dataRepository.saveCurrencyConfig(config)
+            }      
+        }
         this.pokerProcessor = new PokerProcessor(dataRepository);
         let gameServerProcessor = new GameServerProcessor();                
         let mailchimpService = new MailchimpService();                
@@ -64,7 +76,8 @@ export class Bootstrapper {
         new RequestHandlerInit().init(dataRepository, this.pokerProcessor, this.tournamentLogic, this.connectionToPaymentServer, this.depositAddressService);
         await this.exchangeRatesService.startPolling()
         await this.pokerProcessor.init();
-        logger.info(`loaded ${this.pokerProcessor.getTables().length} tables`);
+        const numTables = this.pokerProcessor.getTables().length;        
+        logger.info(`loaded ${numTables} tables`);
         await this.tournamentLogic.init();
         this.pokerProcessor.tournamentLogic = this.tournamentLogic;
         

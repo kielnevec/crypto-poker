@@ -12,12 +12,12 @@
 
     _id: string;
     name: string;
-    smallBlind:number;
+    smallBlind?:number;
     smallBlindUsd:number;
-    bigBlind: number;
+    bigBlind?: number;
     bigBlindUsd: number;
     currency: string;
-    exchangeRate: number;
+    exchangeRate?: number;
     timeToActSec: number;
     maxPlayers: number;
     orderIndex:number;
