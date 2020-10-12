@@ -1,14 +1,32 @@
 ﻿# crypto-poker
  
+ Click here to view the [LIVE DEMO](https://troyshouse.poker/)
+
+Features
+---
+* Texas Holdem no limit game implementation
+* Casual Table Play
+* Tournaments
+* Admin management app
+* Crypto payment gateway (DASH, ETH, BTC support)
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  
  tldr
- This software is a hobby/research project - you are allowed to use it for ANY purpose (including commercial) but the software is provided "as is" without ANY warranty of any kind. Online poker is restricted in some jurisdictions - do your research
+ This software is a hobby/research project - you are allowed to use it for ANY purpose (including commercial) but the software is provided "as is" without ANY warranty of any kind. Online poker is restricted in some jurisdictions - do your research. **None of this code should be considered commercial-grade**
  
  ![screenshot](https://i.imgur.com/aLDDolt.png "Screenshot")
+ ![screenshot](https://i.imgur.com/3jfNjfQ.png "Admin 1")
+ ![screenshot](https://i.imgur.com/jUEddky.png "Admin 2")
 
-[LIVE DEMO](https://troyshouse.poker/)
-=====
+
+Click here to view the [LIVE DEMO](https://troyshouse.poker/)
+
+
+
+
+Technical Setup Instructions
+---
 
 Prerequisites
 * node v10 or later
