@@ -167,7 +167,7 @@ export class TournamentLogic {
 
                 if(this.sendOfflinePlayersEmail && offlinePlayers.length){
                     let totalPrizes = getTotalPrize(tournament, buyInTotal);                    
-                    let body = getStandardTemplateEmail(`<p>This is to remind you that the tournament '${tournament.name}' you registered for has started.</p>
+                    let body = await getStandardTemplateEmail(`<p>This is to remind you that the tournament '${tournament.name}' you registered for has started.</p>
                     <p>Total Prizes for this tournament are ${totalPrizes} ${tournament.currency.toUpperCase()}
                     `)
                     let bccs = offlinePlayers.map(p=>p.email);
