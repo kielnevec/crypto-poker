@@ -40,8 +40,11 @@ Getting Started
 1) Run the client
 ```
 cd poker.ui
+npm i
 au run -w
 ```
+
+*note, the client must be compiled prior to compiling the server due to shared class definitions*
 
 2) Run the server
 ```
