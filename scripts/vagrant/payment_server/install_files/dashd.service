@@ -8,7 +8,7 @@ Group=troy
 
 Type=forking
 WorkingDirectory=/opt/dashcore
-ExecStart=/opt/dashcore/bin/dashd -daemon 
+ExecStart=/opt/dashcore/bin/dashd -daemon -conf=/home/troy/.dashcore/dash.conf
 
 Restart=always
 RestartSec=30
