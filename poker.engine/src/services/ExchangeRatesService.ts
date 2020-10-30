@@ -36,7 +36,7 @@ export class ExchangeRatesService {
 
     this.exchangeRatesChangedHandler.run(arr);
     if(!environment.debug)
-      setTimeout(this.pollExchangeRateApi.bind(this), 30000);
+      setTimeout(this.pollExchangeRateApi.bind(this), 60000);
   }
 
   async pollCurrencies(): Promise<ExchangeRate[]> {
