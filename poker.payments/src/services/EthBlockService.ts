@@ -23,7 +23,7 @@ import { PaymentProcessor } from '../processor/PaymentProcessor';
 import Web3 from 'web3';
 import { IBlockChainService } from './IBlockChainService';
 import * as EthDepositAddressService from "../../../poker.engine/src/services/EthDepositAddressService";
-import { BlockHeader } from 'web3/eth/types';
+import { BlockHeader } from 'web3-eth';
 
 export class EthBlockService implements IBlockChainService {
 
