@@ -11,7 +11,7 @@ import { Currency } from "../../../poker.ui/src/shared/Currency";
 import { ISecureDataRepository } from "../repository/ISecureDataRepository";
 import { CurrencyConfig } from "../model/currency-config";
 import { randomBytesHex, SharedHelpers } from "../../../poker.engine/src/shared-helpers";
-import { ECPair } from "bitcoinjs-lib";
+import { ECPair, ECPairInterface } from "bitcoinjs-lib";
 import { IBlockCypherApiProvider, BlockCypherApiProvider, IBlockCypherApi } from "./BlockCypherApiProvider";
 import { BlockCypherTx } from "../../../poker.engine/src/model/blockcypher/blockcypher-tx";
 import { Decimal } from "../../../poker.ui/src/shared/decimal";
@@ -315,7 +315,7 @@ export class BlockCypherService implements IBlockCypherService {
       throw new Error(`address mismatch. expecting ${currencyConfig.masterAccount.public} but got ${addr}`);
     }
     
-    let keypair :ECPair = null;
+    let keypair :ECPairInterface = null;
     if(currencyConfig.masterAccount.private){
       let pKey: string = encryption.decrypt(currencyConfig.masterAccount.private);
       keypair = ECPair.fromPrivateKey(Buffer.from(pKey, "hex"))    
