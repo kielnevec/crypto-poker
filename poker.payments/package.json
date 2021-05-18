@@ -7,8 +7,8 @@
   "license": "ISC",
   "dependencies": {
     "@dashevo/dashcore-lib": "^0.18.0",
-    "bip32": "^1.0.2",
-    "bitcoinjs-lib": "^4.0.2",
+    "bip32": "^2.0.6",
+    "bitcoinjs-lib": "^5.2.0",
     "blockcypher": "^0.2.0",
     "body-parser": "^1.18.3",
     "bs58check": "^2.1.2",
