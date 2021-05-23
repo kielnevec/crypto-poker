@@ -61,7 +61,7 @@ export class PaymentProcessorBootstrapper {
         this.setupLogging();
         process.on('uncaughtException', (err: any) => { logger.error('uncaughtException', err); });
         process.on("unhandledRejection", (reason: any) => { logger.error('unhandledRejection', reason); });
-        logger.info(`app started. version:${environment.version}. debug:${environment.debug}`);   
+        logger.info(`app started. version:${environment.version}. debug:${environment.debug} POKER_MONGODB:${process.env.POKER_MONGODB}`);   
         
         this.processor = new PaymentProcessor();   
         let dataRepository = new SecureDataRepository(process.env.POKER_PAYMENT_SERVER_DB_NAME || 'PokerPaymentServer');

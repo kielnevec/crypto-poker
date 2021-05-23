@@ -9,6 +9,8 @@ import { PaymentType } from '../../../poker.ui/src/shared/PaymentType';
 import { PaymentProcessorSettings } from '../model/PaymentProcessorSettings';
 import { SharedHelpers } from '../../../poker.engine/src/shared-helpers';
 const ObjectID = require('mongodb').ObjectID;
+import { Logger, getLogger } from "log4js";
+const logger:Logger = getLogger();
 
 export class SecureDataRepository implements ISecureDataRepository {
     
@@ -21,7 +23,9 @@ export class SecureDataRepository implements ISecureDataRepository {
     }
 
     init() {
-        this.server = new Server(process.env.POKER_MONGODB || 'localhost', 27017);
+      const host = process.env.POKER_MONGODB || 'localhost';
+      logger.info(`mongodb host:${host}`);   
+        this.server = new Server(host, 27017);
         this.db = new Db(this.dbName, this.server);
         return this.db.open(); 
     } 

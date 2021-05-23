@@ -1,11 +1,19 @@
 #run interactive
-#docker run -it poker-payment-server sh
+#docker run -it poker-payment-server -e POKER_MONGODB='d188cf9b6e49' sh  
 
 #package
 #docker build . -t poker-payment-server
 
+#get the IP address of mongodb
+#docker container inspect <container_id>
+
 #run
-#docker run -p 8113:8113 -d poker-payment-server
+#docker run --name PokerPaymentServer -p 8113:8113 -e POKER_MONGODB=172.17.0.3 -d poker-payment-server
+
+#view logs
+#docker logs e2ff0fd0e610
+
+
 FROM node:12
 
 # Create app directory

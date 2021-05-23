@@ -177,7 +177,7 @@ export class DashCoreBlockService implements IBlockChainService {
   private post(post_data:any) : Promise<any> {
     var options = {
       method: 'POST',
-      uri: 'http://127.0.0.1:9998',
+      uri: `http://${process.env.DASH_RPC_HOST}:9998`,
       body: post_data,
       headers: {
         "Authorization": "Basic dHJveTpmMDBiYXIx"
