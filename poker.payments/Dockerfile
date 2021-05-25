@@ -1,3 +1,9 @@
+#docker network create poker-network
+#docker run --net <network name> --name test busybox nc -l 0.0.0.0:7000
+#docker run --net <network name> busybox ping test
+
+
+
 #run interactive
 #docker run -it poker-payment-server -e POKER_MONGODB='d188cf9b6e49' sh  
 
@@ -8,10 +14,10 @@
 #docker container inspect <container_id>
 
 #run
-#docker run --name PokerPaymentServer -p 8113:8113 -e POKER_MONGODB=172.17.0.3 -d poker-payment-server
+#docker run --net poker-network --name paymentserver -p 8113:8113 -e POKER_MONGODB=mongodb -d poker-payment-server
 
 #view logs
-#docker logs e2ff0fd0e610
+#docker logs 9aeb5f4c54e9
 
 
 FROM node:12
@@ -36,3 +42,9 @@ COPY ./build .
 EXPOSE 8113
 
 CMD [ "node", "./poker.payments/src/PaymentProcessorBootstrapper.js" ]
+
+
+
+#references
+#https://stackoverflow.com/questions/32750748/how-to-edit-files-in-stopped-not-starting-docker-container
+#https://stackoverflow.com/questions/31149501/how-to-reach-docker-containers-by-name-instead-of-ip-address
