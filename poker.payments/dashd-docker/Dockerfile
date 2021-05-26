@@ -18,6 +18,8 @@ RUN apt-get update && \
     wget \
     ca-certificates \
     vim \
+    curl \
+    net-tools \
     && rm -rf /var/lib/apt/lists/*
 
 ADD ./transaction.sh /dash/transaction.sh
@@ -29,9 +31,6 @@ RUN cp /tmp/dashcore*/bin/*  /usr/local/bin
 RUN rm -rf /tmp/dashcore*
 
 RUN chmod a+x /usr/local/bin/*
-
-
-
 
 USER dash
 
