@@ -30,8 +30,6 @@ WORKDIR /usr/src/poker.payments
 # where available (npm@5+)
 COPY package*.json ./
 
-COPY .env ./
-
 RUN npm i
 # If you are building your code for production
 # RUN npm ci --only=production
