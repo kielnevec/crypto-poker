@@ -22,12 +22,13 @@ export class TelegramService implements ITelegramService {
         let url = `https://api.telegram.org/bot${token}/sendMessage`; 
         
         let sent:boolean = true;
-        await http.post({ uri: url, body: body, json:true })
+        let result = await http.post({ uri: url, body: body, json:true })
         .catch((e:any)=>{
             console.error(e);
             logToFile('application.log', `TelegramService! ${e}`);
             sent = false;
         })
+        //console.log('result', result)
         return sent;
         
         

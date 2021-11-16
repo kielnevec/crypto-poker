@@ -2,8 +2,6 @@
 #docker run --net <network name> --name test busybox nc -l 0.0.0.0:7000
 #docker run --net <network name> busybox ping test
 
-
-
 #run interactive
 #docker run -it poker-payment-server -e POKER_MONGODB='d188cf9b6e49' sh  
 
@@ -12,6 +10,9 @@
 
 #get the IP address of mongodb
 #docker container inspect <container_id>
+
+#restore database 
+mongorestore -d PaymentServer .
 
 #run
 #docker run --net poker-network --name paymentserver -p 8113:8113 -e POKER_MONGODB=mongodb -d poker-payment-server
