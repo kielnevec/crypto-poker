@@ -11,8 +11,8 @@
 #get the IP address of mongodb
 #docker container inspect <container_id>
 
-#restore database 
-mongorestore -d PaymentServer .
+#restore database (if required)
+#mongorestore -d PaymentServer .
 
 #run
 #docker run --net poker-network --name paymentserver -p 8113:8113 -e POKER_MONGODB=mongodb -d poker-payment-server
