@@ -12,7 +12,7 @@
 #docker container inspect <container_id>
 
 #restore database (if required)
-#mongorestore -d PaymentServer .
+#mongorestore -d PokerPaymentServer .
 
 #run
 #docker run --net poker-network --name paymentserver -p 8113:8113 -e POKER_MONGODB=mongodb -d poker-payment-server
