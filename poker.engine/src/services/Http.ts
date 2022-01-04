@@ -5,8 +5,8 @@ export class Http implements IHttp {
     get(uri: string, options?: IHttpOptions): Promise<any> {
         const { stack } = new Error();
         const config:AxiosRequestConfig = {
-            headers: options.headers,
-            timeout: options.timeout
+            headers: options?.headers,
+            timeout: options?.timeout
         };
         return http.get(uri, config).then((result)=>{            
             return result.data;
