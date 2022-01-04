@@ -18,7 +18,7 @@
 #docker run --net poker-network --name paymentserver -p 8113:8113 -e POKER_MONGODB=mongodb -d poker-payment-server
 
 #view logs
-#docker logs 9aeb5f4c54e9
+docker logs -f paymentserver
 
 
 FROM node:12
