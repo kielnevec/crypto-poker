@@ -1,8 +1,9 @@
-import http = require('request-promise-native');
 import { Logger, getLogger } from "log4js";
+import { Http } from "../../services/Http";
 import { to, logToFile, escapeHtml } from '../../shared-helpers';
 import { ITelegramService } from './ITelegramService';
 var logger:Logger = getLogger();
+const http = new Http();
 
 export class TelegramService implements ITelegramService {
     async sendTelegram(text: string, chatId?:string) : Promise<boolean> {
@@ -22,7 +23,7 @@ export class TelegramService implements ITelegramService {
         let url = `https://api.telegram.org/bot${token}/sendMessage`; 
         
         let sent:boolean = true;
-        let result = await http.post({ uri: url, body: body, json:true })
+        let result = await http.post(url, { body: body })
         .catch((e:any)=>{
             console.error(e);
             logToFile('application.log', `TelegramService! ${e}`);

@@ -1,4 +1,6 @@
-var http = require('request-promise-native');
+import { Http } from "../../../poker.engine/src/services/Http";
+
+const http = new Http();
 
 export class IParityModule {
     parityIp: string;
@@ -36,13 +38,12 @@ export class ParityModule implements IParityModule {
 
     post(post_data: any): Promise<any> {        
         let url = `https://mainnet.infura.io/v3/6a6f87faddeb42c59da65bb2e8193be8`;        
-        var options = {
-            method: 'POST',
+        var options = {            
             uri: url,
             body: post_data,
             json: true // Automatically stringifies the body to JSON
         };
 
-        return http(options);
+        return http.post(url, options);
     }
 }

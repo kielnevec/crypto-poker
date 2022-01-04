@@ -9,6 +9,7 @@
   "dependencies": {
     "@dashevo/dashcore-lib": "^0.17.9",
     "@sendgrid/mail": "^6.3.1",
+    "axios": "^0.24.0",
     "bcrypt": "^3.0.7",
     "bigi": "^1.4.2",
     "bip32": "^2.0.3",
@@ -32,7 +33,6 @@
     "protobufjs": "^6.8.6",
     "qrcode": "^1.3.3",
     "request": "^2.88.0",
-    "request-promise-native": "^1.0.5",
     "validator": "^10.8.0",
     "ws": "^6.0.0"
   },
@@ -47,7 +47,6 @@
     "@types/promise-queue": "^2.2.0",
     "@types/request": "^2.0.3",
     "@types/request-promise": "^4.1.37",
-    "@types/request-promise-native": "^1.0.15",
     "@types/ws": "^6.0.1",
     "jssubstitute": "github:wallaceturner/jsSubstitute",
     "mocha": "5.2.0",

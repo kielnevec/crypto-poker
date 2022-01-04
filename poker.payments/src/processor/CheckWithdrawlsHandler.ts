@@ -12,9 +12,9 @@ var logger:Logger = getLogger();
 import { CurrencyUnit } from "../../../poker.ui/src/shared/Currency";
 import { Decimal } from "../../../poker.ui/src/shared/decimal";
 import { to } from "../../../poker.engine/src/shared-helpers";
-import { IHttp } from "../services/IHttp";
 import { ITelegramService } from "../../../poker.engine/src/framework/telegram/ITelegramService";
 import { PaymentStatus } from "../../../poker.ui/src/shared/PaymentStatus";
+import { IHttp } from "../../../poker.engine/src/services/IHttp";
 
 
 export class CheckWithdrawlsHandler implements IPaymentProcessorMessageHandler {
@@ -41,7 +41,7 @@ export class CheckWithdrawlsHandler implements IPaymentProcessorMessageHandler {
         };
         
         let payments = <Payment[]> await this.http.get(endpoint, options)
-        .catch((r=>{
+        .catch(((r:any)=>{
             logger.info(`checkWithdrawls failed: ${r}`);
         }))
         if(payments){

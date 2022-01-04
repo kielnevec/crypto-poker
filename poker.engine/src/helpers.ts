@@ -26,9 +26,9 @@ import { PaymentType } from '../../poker.ui/src/shared/PaymentType';
 import { PaymentStatus } from '../../poker.ui/src/shared/PaymentStatus';
 import { UserSmall } from './model/UserSmall';
 import { TournamentPaymentMeta } from './model/TournamentPaymentMeta';
+import { Http } from './services/Http';
 const QRCode = require('qrcode')
 var md5 = require('md5');
-var http = require('request-promise-native');
 
 export class Helpers {
 
@@ -88,7 +88,8 @@ export async function getUserData(user: User, dataRepository:IDataRepository, in
 
 export async function getGravatar(email:string) : Promise<string>{
     let md5sum = md5(email.toLowerCase());
-    let [err,data] = await to(http({ method: 'GET', uri: `https://www.gravatar.com/${md5sum}`}));
+    const http = new Http();
+    let [err,data] = await to(http.get(`https://www.gravatar.com/${md5sum}`));
     if(data){
         let gravatar = `https://www.gravatar.com/avatar/${md5sum}.jpg`;
         return gravatar;

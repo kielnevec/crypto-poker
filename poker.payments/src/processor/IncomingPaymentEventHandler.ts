@@ -3,7 +3,6 @@ import { PaymentProcessorResult, PaymentProcessorMessage } from "./PaymentProces
 import { IAccountService } from "../services/AccountService";
 import { IConnectionToGameServer } from "../services/ConnectionToGameServer";
 import { ISecureDataRepository } from "../repository/ISecureDataRepository";
-import http from 'request-promise-native';
 import environment from "../environment";
 import { Payment } from "../../../poker.engine/src/model/Payment";
 import { PaymentType } from "../../../poker.ui/src/shared/PaymentType";

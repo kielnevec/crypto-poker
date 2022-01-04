@@ -11,7 +11,7 @@ var logger:Logger = getLogger();
 import { PaymentStatus } from "../../../poker.ui/src/shared/PaymentStatus";
 import { withdraw } from "./WithdrawlsHandler";
 import { IBlockCypherService } from "../services/IBlockCypherService";
-import { IHttp } from '../services/IHttp';
+import { IHttp } from '../../../poker.engine/src/services/IHttp';
 
 
 export class ProcessWithdrawlsHandler implements IPaymentProcessorMessageHandler {
@@ -69,8 +69,8 @@ export class ProcessWithdrawlsHandler implements IPaymentProcessorMessageHandler
         if(process.env.POKER_DISABLE_PAYMENTS_MACRO_IP){
             let url = `http://${process.env.POKER_DISABLE_PAYMENTS_MACRO_IP}/disable.json`
             let response = await this.http.get(url, {
-                json: true,
-            timeout: 15000
+                //json: true,
+                timeout: 15000
             });
             return !response.disabled;
         }

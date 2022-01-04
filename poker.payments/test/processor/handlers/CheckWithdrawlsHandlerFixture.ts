@@ -5,8 +5,7 @@ import { CheckWithdrawlsHandler } from '../../../src/processor/CheckWithdrawlsHa
 import { IBlockCypherService } from '../../../src/services/IBlockCypherService';
 import { ISecureDataRepository } from '../../../src/repository/ISecureDataRepository';
 import { PaymentProcessorMessage } from '../../../src/processor/PaymentProcessorMessage';
-import { IHttp } from '../../../src/services/IHttp';
-import { RequestPromise } from 'request-promise-native';
+import { IHttp } from '../../../../poker.engine/src/services/IHttp';
 import { Payment } from '../../../../poker.engine/src/model/Payment';
 import { PaymentType } from '../../../../poker.ui/src/shared/PaymentType';
 import { ITelegramService } from '../../../../poker.engine/src/framework/telegram/ITelegramService';
@@ -50,7 +49,7 @@ describe('CheckWithdrawlsHandler', ()=>{
     })
 
     it('payment is saved as pending', async () => {
-        http.get = (uri: string, options?: any, callback?: any): RequestPromise => {
+        http.get = (uri: string, options?: any, callback?: any): Promise<any> => {
             return <any>Promise.resolve([payment]);
         }
         
@@ -65,7 +64,7 @@ describe('CheckWithdrawlsHandler', ()=>{
     })
 
     it('large payment is flagged', async () => {
-        http.get = (uri: string, options?: any, callback?: any): RequestPromise => {
+        http.get = (uri: string, options?: any, callback?: any): Promise<any> => {
             return <any>Promise.resolve([payment]);
         }
         payment.amount = '50000000';
@@ -81,7 +80,7 @@ describe('CheckWithdrawlsHandler', ()=>{
     })
 
     it('internal transfer is not processed', async () => {
-        http.get = (uri: string, options?: any, callback?: any): RequestPromise => {
+        http.get = (uri: string, options?: any, callback?: any): Promise<any> => {
             return <any>Promise.resolve([payment]);
         }
         payment.transferTo = new UserSmall('guid1', 'user1')

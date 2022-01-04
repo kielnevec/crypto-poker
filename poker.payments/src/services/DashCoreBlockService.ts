@@ -5,9 +5,9 @@ import { ISecureDataRepository } from "../repository/ISecureDataRepository";
 import { AddressInfo } from "../model/AddressInfo";
 import * as DashDepositAddressService from "../../../poker.engine/src/services/DashDepositAddressService";
 import { IBlockChainService } from "./IBlockChainService";
+import { Http } from "../../../poker.engine/src/services/Http";
+import { IHttpOptions } from "../../../poker.engine/src/services/IHttp";
 const { HDPublicKey, Address } = require('@dashevo/dashcore-lib');
-var http = require('request-promise-native');
-var logger = require('log4js').getLogger();
 var fs = require('fs');
 
 export class DashCoreBlockService implements IBlockChainService {
@@ -174,18 +174,16 @@ export class DashCoreBlockService implements IBlockChainService {
   return this.post(post_data);
  }
 
-  private post(post_data:any) : Promise<any> {
-    var options = {
-      method: 'POST',
-      uri: `http://${process.env.DASH_RPC_HOST}:9998`,
+  private post(post_data:{}) : Promise<any> {
+    const options:IHttpOptions = {      
       body: post_data,
       headers: {
         "Authorization": "Basic dHJveTpmMDBiYXIx"
       },
-      json: true // Automatically stringifies the body to JSON
+      //json: true // Automatically stringifies the body to JSON
     };
-
-    return http(options);
+    const http = new Http();
+    return http.post(`http://${process.env.DASH_RPC_HOST}:9998`, options);
   }
   
 }

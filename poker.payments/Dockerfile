@@ -17,8 +17,11 @@
 #run
 #docker run --net poker-network --name paymentserver -p 8113:8113 -e POKER_MONGODB=mongodb -d poker-payment-server
 
+#copy .env file from local to docker container
+#docker cp .env paymentserver:/usr/src/poker.payments/.env
+
 #view logs
-docker logs -f paymentserver
+#docker logs -f paymentserver
 
 
 FROM node:12

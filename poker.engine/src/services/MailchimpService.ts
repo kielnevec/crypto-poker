@@ -1,7 +1,10 @@
 import to from "../../../poker.ui/src/shared/CommonHelpers";
 import { Logger, getLogger } from "log4js";
+import { Http } from "./Http";
+import { IHttpOptions } from "./IHttp";
 var logger:Logger = getLogger();
-var http = require('request-promise-native');
+
+const http = new Http();
 
 export class MailchimpService {
     
@@ -60,19 +63,16 @@ export class MailchimpService {
         let mailchimpInstance = mailchimpApiKey.substring(mailchimpApiKey.indexOf('-')+1);
         let url = `https://${mailchimpInstance}.api.mailchimp.com/3.0/${path}`;
         
-        var options:any = {
-            method: method,
-            uri: url,            
+        var options:IHttpOptions = {                              
             headers: {
                 "Authorization": 'Basic ' + new Buffer('any:' + mailchimpApiKey).toString('base64')
-            },
-            json: true // Automatically stringifies the body to JSON
+            }            
         };
         if(method === 'POST' || method === 'PUT'){
             options.body = post_data;
         }
 
-        return http(options);        
+        return http.get(url, options);        
     }
 
     async createCampaign(settings:any, listId?:string) : Promise<string> {

@@ -20,7 +20,6 @@ import { BlockCypherPaymentEventHandler } from "./webserver/handlers/BlockCypher
 import { PaymentProcessorMessage } from "./processor/PaymentProcessorMessage";
 import { ProcessWithdrawlsHandler } from "./processor/ProcessWithdrawlsHandler";
 import { ManualApprovalRequestHandler } from "./processor/ManualApprovalRequestHandler";
-import http from 'request-promise-native';
 import { to } from "../../poker.engine/src/shared-helpers";
 import 'source-map-support/register'
 import { configure } from "../../poker.engine/src/framework/telegram/telegramAppender"; //do not delete. is referenced below by setupLogging
@@ -30,6 +29,7 @@ import { DepositAddressTrigger } from "../../poker.engine/src/admin/model/outgoi
 import { IBlockChainService } from "./services/IBlockChainService";
 import { BtcBlockService } from "./services/BtcBlockService";
 import { DashCoreBlockService } from "./services/DashCoreBlockService";
+import { Http } from "../../poker.engine/src/services/Http";
 
 export class PaymentProcessorBootstrapper {
     blockCypherService!: BlockCypherService;
@@ -62,7 +62,7 @@ export class PaymentProcessorBootstrapper {
         process.on('uncaughtException', (err: any) => { logger.error('uncaughtException', err); });
         process.on("unhandledRejection", (reason: any) => { logger.error('unhandledRejection', reason); });
         logger.info(`app started. version:${environment.version}. debug:${environment.debug} POKER_MONGODB:${process.env.POKER_MONGODB}`);   
-        
+        const http = new Http();
         this.processor = new PaymentProcessor();   
         let dataRepository = new SecureDataRepository(process.env.POKER_PAYMENT_SERVER_DB_NAME || 'PokerPaymentServer');
         this.blockCypherService = new BlockCypherService(dataRepository, null);
@@ -92,7 +92,7 @@ export class PaymentProcessorBootstrapper {
         webServer.init();
         setInterval(this.runChecks.bind(this), 60000);   
           
-        //telegramService.sendTelegram(`foo        <anon>        bar`)        
+        //telegramService.sendTelegram(`test`)        
     }
 
     setupLogging(){
@@ -127,5 +127,8 @@ export class PaymentProcessorBootstrapper {
 
 (async () => {
     let app = new PaymentProcessorBootstrapper();
-    await app.run();
+    const [ err ] = await to(app.run());
+    if(err){
+        logger.error(err);
+    }
 })();

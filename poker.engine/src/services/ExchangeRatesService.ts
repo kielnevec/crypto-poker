@@ -3,11 +3,12 @@ import { ExchangeRate } from "../../../poker.ui/src/shared/ExchangeRate";
 import { IBroadcastService } from "./IBroadcastService";
 import { DataContainer, ExchangeRateResult } from "../../../poker.ui/src/shared/DataContainer";
 import { ExchangeRatesChangedHandler } from "./ExchangeRatesChangedHandler";
-var http = require('request-promise-native');
 var log4js = require('log4js');
 var logger = log4js.getLogger();
 import {to} from '../shared-helpers';
 import environment from '../environment';
+import { Http } from "./Http";
+const http = new Http();
 
 export class ExchangeRatesService {
   
@@ -44,11 +45,7 @@ export class ExchangeRatesService {
     if(this.currencies.length){
       let currencyQuery = this.currencies.map(c => c.currency.toUpperCase()).join(',');
       let url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${currencyQuery}&tsyms=USD`;
-      let [err, data] = await to(http({
-        method: 'GET',
-        uri: url,
-        json: true
-      }));
+      let [err, data] = await to(http.get(url));
 
       if (data) {
         for (let key in data.RAW) {
@@ -86,13 +83,9 @@ export class ExchangeRatesService {
       url = `https://api.cryptonator.com/api/ticker/${pair.currency}-usd`;      
     }   
     
-    var options = {
-      method: 'GET',
-      uri: url,
-      json: true
-    };
+    
     let exchangeRate:ExchangeRate;
-    let [err,data] = await to(http(options));
+    let [err,data] = await to(http.get(url));
     if(data){
       if(pair.exchange=="hitbtc"){
           if(data.last){

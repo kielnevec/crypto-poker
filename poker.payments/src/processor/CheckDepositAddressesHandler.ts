@@ -5,9 +5,9 @@ import { DepositAddressService } from "../../../poker.engine/src/services/Deposi
 import { ISecureDataRepository } from "../repository/ISecureDataRepository";
 import { getAdminEndpointResult } from "../helpers";
 import { AddressInfo as PokerEngineAddressInfo } from "../../../poker.engine/src/model/AddressInfo";
-import { IHttp } from "../services/IHttp";
 import { Logger, getLogger } from "log4js";
 import { AddressInfo } from "../model/AddressInfo";
+import { IHttp } from "../../../poker.engine/src/services/IHttp";
 var logger:Logger = getLogger();
 
 export class CheckDepositAddressesHandler implements IPaymentProcessorMessageHandler {
@@ -37,7 +37,7 @@ export class CheckDepositAddressesHandler implements IPaymentProcessorMessageHan
 
         
         let infos = <PokerEngineAddressInfo[]> await this.http.get(endpoint, this.httpOptions)
-        .catch((r=>{
+        .catch(((r:any)=>{
             logger.info(`checkDepositAddresses failed: ${r}`);
         }))
         if(infos){

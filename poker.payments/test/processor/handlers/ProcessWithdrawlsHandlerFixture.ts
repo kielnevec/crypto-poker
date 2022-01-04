@@ -16,8 +16,8 @@ import { PaymentServerToGameServerMessage } from '../../../../poker.engine/src/a
 import { GetPaymentsResult } from '../../../../poker.engine/src/admin/model/incoming/GetPaymentsResult';
 import { ProcessWithdrawlsHandler } from '../../../src/processor/ProcessWithdrawlsHandler';
 import { PaymentProcessorSettings } from '../../../src/model/PaymentProcessorSettings';
-import { IHttp } from '../../../src/services/IHttp';
 import { IAccountService } from '../../../src/services/AccountService';
+import { IHttp } from '../../../../poker.engine/src/services/IHttp';
 
 
 describe('ProcessWithdrawlsHandler', ()=>{
