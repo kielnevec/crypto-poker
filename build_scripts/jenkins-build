@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Handles all build steps on the jenkins instance
+# all jenkins should do is call this file.
+# NOTE: this script expects to be called from the root of the project, NOT from the build_scripts folder
+
+set -e
+cd crypto-poker/poker.ui/
+npm install
+tsc
+cd crypto-poker/poker.engine/
+npm i
+tsc
+npm run jenkins-artifact

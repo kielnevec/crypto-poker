@@ -1,0 +1,11 @@
+{
+  "name": "poker-client",
+  "version": "1.0.0",
+  "description": "Server side rendering project",
+  "main": "index.js",
+  "scripts": {
+    "jenkins-artifact": "build_scripts/jenkins_artifact"
+  },
+  "author": "",
+  "license": "ISC",
+}

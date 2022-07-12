@@ -1,0 +1,9 @@
+# Put patterns here (one per line) for things you don't want included in the production build artifact
+
+./Dockerfile
+./vagrant/
+./deploy.tar.gz
+./build_scripts
+./.gitignore
+./.git/
+./debug.log

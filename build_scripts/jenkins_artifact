@@ -1,0 +1,16 @@
+#! /bin/sh
+
+# Packages up the workspace for the jenkins build job
+
+set -e
+
+ARCHIVE_FILE="deploy.tar.gz"
+BUILD_DIR=$(cd "$(dirname ${0:-})"; cd ..; pwd)
+TMP_DIR=$(mktemp -d)
+ARTIFACT_PATH="$TMP_DIR/$ARCHIVE_FILE"
+
+tar -z -cf "$ARTIFACT_PATH" --exclude='.git' -X .slugignore .
+
+cp "$ARTIFACT_PATH" "$BUILD_DIR"
+
+rm -rf "$TMP_DIR"
