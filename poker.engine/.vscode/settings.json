@@ -4,5 +4,30 @@
         "**/node_modules/": true,        
         "**/*.js.map": true,
         "**/*.js": {"when": "$(basename).ts"}
-    }
+    },
+    "compile-hero.disable-compile-files-on-did-save-code": false,
+    "peacock.color": "#007fff",
+    "search.exclude": {
+        "**/build/*": true
+    },
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#0000b3",
+        "activityBar.activeBorder": "#df0000",
+        "activityBar.background": "#0000b3",
+        "activityBar.foreground": "#e7e7e7",
+        "activityBar.inactiveForeground": "#e7e7e799",
+        "activityBarBadge.background": "#df0000",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "sash.hoverBorder": "#0000b3",
+        "statusBar.background": "#000080",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#0000b3",
+        "statusBarItem.remoteBackground": "#000080",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#000080",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#00008099",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.remoteColor": "#000080"
 }

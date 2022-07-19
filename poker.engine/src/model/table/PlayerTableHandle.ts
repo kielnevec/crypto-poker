@@ -28,6 +28,7 @@ export class PlayerTableHandle implements IPlayer {
     isAutoSitout: boolean;  
     sittingOutSince: Date;  
     timerStart: Date;  
+    lastStreet: string;    
    
 
     toTableSeatEvent():TableSeatEvent{

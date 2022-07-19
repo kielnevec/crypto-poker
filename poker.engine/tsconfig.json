@@ -6,6 +6,7 @@
     "alwaysStrict": true,
     "strictNullChecks": false,
     "removeComments": true,
+    "skipLibCheck": true,
     "preserveConstEnums": true,
     "sourceMap": true,
     "target": "es2017",

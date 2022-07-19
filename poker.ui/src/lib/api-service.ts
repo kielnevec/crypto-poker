@@ -22,9 +22,11 @@ export class ApiService {
   version:Version;
 
   constructor(private ea: EventAggregator, private util: Util) {
-    let protocol = location.protocol === 'https:' ? 'wss' : 'ws';        
-    let port = environment.debug ?':8111' : '';
-    let host = environment.debug ? 'localhost' : window.location.hostname;
+    let protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+     let port = environment.debug ? ':80' : '';
+     let host = environment.debug ? environment.pokerUiWSUrl : window.location.hostname;     
+    //  let port = environment.debug ?':8111' : '';
+    //  let host = environment.debug ? 'localhost' : window.location.hostname;
 
     
     this.wsURI = `${protocol}://${host}${port}/ws`;    
@@ -86,6 +88,8 @@ export class ApiService {
   getWsUri() : string {
     let version = localStorage.getItem("app_version");
     var url = new URL(this.wsURI);
+    let guid=new URL(window.location.href).searchParams.get("guid")
+    url.searchParams.append('guid', guid);
     if(this.sid){
       url.searchParams.append('sid', this.sid);
     }
@@ -110,16 +114,16 @@ export class ApiService {
   }
 
   socket_onmessage(event) {
-    if(event.data.constructor.name==='ArrayBuffer'){
+    if (event.data.constructor.name === 'ArrayBuffer') {
       //let buffer = new Uint8Array(event.data);
       let message = protobufConfig.deserialize(event.data, 'DataContainer');
-      if(message.pong == null)
-      console.log(`${new Date().toLocaleString()} Received: (${event.data.byteLength} bytes)`, message);
+      // if (message.pong == null)
+        // console.log(`DataContainer =======> ${new Date().toLocaleString()} Received: (${event.data.byteLength} bytes)`, message);
       this.ea.publish(new DataMessageEvent(message));
-    }else{
+    } else {
       console.error(`event.data unexpected type!`, event.data);
-    }    
-    
+    }
+
   }
 
   subscribeToTable(tableId: string) {

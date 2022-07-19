@@ -1,5 +1,4 @@
 import { TournamentResult } from './model/TournamentResult';
-
 import { Currency, CurrencyUnit } from "../../poker.ui/src/shared/Currency";
 import { Decimal } from './../../poker.ui/src/shared/decimal';
 import {  UserStatus, UserData, DataContainer, FundAccountResult } from "../../poker.ui/src/shared/DataContainer";
@@ -35,7 +34,7 @@ export class Helpers {
     
     public static isNullOrWhitespace( input:string ):boolean {
         return !input || !input.trim();
-      }          
+      }
 }
 
   

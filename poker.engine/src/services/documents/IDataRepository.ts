@@ -3,6 +3,8 @@ import { IReconcilliationView } from './../../../../poker.admin.ui.angular/src/a
 import {User} from "../../model/User";
 import {ChatMessage, Account} from "../../../../poker.ui/src/shared/DataContainer";
 import { ExchangeRate } from "../../../../poker.ui/src/shared/ExchangeRate";
+import { RewardsReport } from "../../../../poker.ui/src/shared/RewardsReport";
+import { MissionReport } from "../../../../poker.ui/src/shared/MissionReport";
 import { Payment } from "../../model/Payment";
 import {TableBalance, UserTableAccount } from "../../model/TableBalance";
 import { ClientMessage } from '../../../../poker.ui/src/shared/ClientMessage';
@@ -12,23 +14,30 @@ import { TableConfig } from '../../model/TableConfig';
 import { TournamentResult } from '../../model/TournamentResult';
 import { CurrencyConfig } from '../../model/CurrencyConfig';
 import { AddressInfo } from '../../model/AddressInfo';
+import { RewardsDetails } from '../../model/table/RewardsDetails';
 import { UserSmall } from '../../model/UserSmall';
 import { ChangeSeatHistory } from '../../model/ChangeSeatHistory';
 import { TableProcessorMessage, DbTableProcessorMessage } from '../../admin/processor/table-processor/TableProcessor';
 import { DbGameResults } from '../../model/table/DbGameResults';
 import { Decimal } from '../../../../poker.ui/src/shared/decimal';
 import { QueryMeta } from './QueryMeta';
-
+import {SaveUserEmail } from '../../model/SaveUserEmail'
 export class IDataRepository {
   getTablesConfig(): Promise<TableConfig[]> { throw new Error("Not implemented"); };
   getUser(guid: string): Promise<User|null> { throw new Error("Not implemented"); };  
   getUserAccount(guid: string, currency: string) : Promise<Account> { throw new Error("Not implemented"); };  
   getUserAccounts(guid: string) : Promise<Account[]> { throw new Error("Not implemented"); };  
+  resetBalances(balance: number) : Promise<boolean> { throw new Error("Not implemented"); };  
   saveUser(user: User): Promise<void> { throw new Error("Not implemented"); };
+  saveRewardsDetails(rewardsDetails: RewardsDetails): any { throw new Error("Not implemented"); };  
+  updateRewardsReportLeaderboard(rewardsDetails: RewardsDetails, guid: string): any { throw new Error("Not implemented"); };  
+  fillPercentile(): any { throw new Error("Not implemented"); };  
   saveGame(game: DbGameResults): any { throw new Error("Not implemented"); };  
   saveExchangeRate(exchangeRate: ExchangeRate): any { throw new Error("Not implemented"); };
   getExchangeRate(base: string): Promise<ExchangeRate> { throw new Error("Not implemented"); };
   getExchangeRates(): Promise<ExchangeRate[]> { throw new Error("Not implemented"); };
+  getRewardsReport(): Promise<RewardsReport[]> { throw new Error("Not implemented"); };
+  // getMissionData(): Promise<MissionReport[]> { throw new Error("Not implemented"); };
   saveClientMessage(message: ClientMessage, tableId: string, guid: string): Promise<any> { throw new Error("Not implemented"); };  
   getPayments(args:{guid?:string, currency?:string, type?:string}): Promise<Payment[]> { throw new Error("Not implemented"); };
   getPaymentsSince(id:string): Promise<Payment[]> { throw new Error("Not implemented"); };
@@ -90,4 +99,7 @@ export class IDataRepository {
   getNextUserIndex(): Promise<number> { throw new Error("Not implemented"); };
   getAddressInfoSince(id:string): Promise<AddressInfo[]> { throw new Error("Not implemented"); };
   getUserBalances(currency:string) : Promise<{screenName:string, joined:string, email:string, balance:number}[]> { throw new Error("Not implemented"); };
+  getRewards(guid:string) : Promise<any> { throw new Error("Not implemented"); };
+  saveUserEmail(saveUserEmail: SaveUserEmail): Promise<any> { throw new Error("Not implemented"); };
+
 }

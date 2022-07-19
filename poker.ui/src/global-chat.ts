@@ -17,6 +17,7 @@ export class GlobalChat {
   showChat: boolean = true;
   showUsers: boolean = true;
   users: IUserStatusView[] = [];
+  loggedInUser:any;
   constructor(private ea: EventAggregator, private apiService: ApiService, private util: Util) {
 
     this.subscriptions.push(ea.subscribe(GlobalChatResult, result => { this.handleChat(result); }));
@@ -48,6 +49,7 @@ export class GlobalChat {
     }
     
     this.users.sort((p1: IUserStatusView, p2: IUserStatusView) => { return p1.screenName.localeCompare(p2.screenName) });
+  // this.loggedInUser=this.users[0]
   }
 
 

@@ -1,5 +1,6 @@
 <template>
   <require from="./next-tournament"></require>
+  <require from="./square"></require>
 <!-- <div id="leaderboard-lhs">
   
 </div> -->
@@ -34,7 +35,7 @@
       <span>${startingIn}</span>
     <div show.bind="gameStarting.blindsChanging">Blinds are now ${gameStarting.blindsChanging.smallBlind} and ${gameStarting.blindsChanging.bigBlind}</div>
     </div>
-    <div class="cashOut" click.delegate="cashOut()">Cashier</div>
+    <!-- <div class="cashOut" click.delegate="cashOut()">Cashier</div> -->
     <require from="./lib/number-format"></require>
     <require from="./lib/crypto-format"></require>
 
@@ -128,13 +129,47 @@
   
   <div class="poker-tables-container">
       <next-tournament></next-tournament>
-    <compose view-model="global-chat" view.bind="global-chat.html" containerless></compose>      
-    <div id="leaderboard-rhs">
-        <compose view-model="leaderboard" view.bind="leaderboard.html" containerless></compose>    
+    <!-- <compose view-model="global-chat" view.bind="global-chat.html" containerless></compose>       -->
+   
+    <compose view-model="global-chat" view.bind="global-chat.html" containerless></compose>   
+    
+    <div class="daily_missions">
+      <div class="daily_missions_header">
+          <div class="daily_missions_header_text">
+          Daily Missions
+          <i class="fa fa-info-circle info_header" aria-hidden="true"></i>
+         </div>
+     </div>
+    <div class="daily_missions_content" repeat.for="md of missionData" >
+      <div class="daily_missions_content_title">
+        ${md.name}
       </div>
-      
+    
+      <div class="progress_area">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar"
+          square="width.bind: md.barWidth;"></div>
+    
+        </div>
+        <img src='./images/fire_mission.png' class="fire_mission_image" alt="logo" />
+        <div>
+          <div class="daily_missions_content_number">${md.fireCount}</div>
+          <div class="daily_missions_content_fire">FIRE</div>
+        </div>
+      </div>
+    </div>
+
+  </div> 
+
+   
+  </div>
+  <div id="leaderboard-rhs">
+         
+    <!-- <div id="leaderboard-rhs"> -->
+        <compose view-model="leaderboard" view.bind="leaderboard.html" containerless></compose>    
+    <!-- </div> -->
+    <compose view-model="poker-rooms" view.bind="poker-rooms.html" containerless></compose>  
   </div>
   
-  <compose view-model="poker-rooms" view.bind="poker-rooms.html" containerless></compose>        
 
 </template>

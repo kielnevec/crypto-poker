@@ -1,72 +1,72 @@
 <template>
   <require from="./lib/number-format"></require>
   <require from="./lib/crypto-format"></require>
-  <div id="leaderboard-container">
 
-
-    
-      <div show.bind="rates.length">
-          
-          <div style="margin-top: 10px;">
-            <table class="leaderboard">
-              <thead>
-                <tr>
-                  <th>Currency</th>          
-                  <th>Rate</th>          
-                  <th>Change (24 hr)</th>
-                  <th>Volume (24 hr)</th> 
-                </tr>
-              </thead>
-              <tbody>
-                <tr repeat.for="rate of rates">
-                    <td><span class="table-currency">${rate.currency}</span> <i class="currency-icon currency-${rate.currency}"></i></td>              
-                  <td>${rate.price}</td>
-                  <td>
-                    <span show.bind="rate.percentChange" class="${rate.percentChange >= 0 ? 'leaderboard-profit-positive':'leaderboard-profit-negative'} ${rate.changed ? 'flash': ''}">
-                      ${rate.percentChange.toFixed(2)}<span show.bind="rate.percentChange!=null">%</span>
-                      <i class="fa fa-arrow-down leaderboard-profit-negative" show.bind="rate.percentChange < 0" ></i>
-                      <i class="fa fa-arrow-up leaderboard-profit-positive" show.bind="rate.percentChange > 0"></i>
-                    </span> 
-                    <span show.bind="!rate.percentChange">-</span>
-                  </td>                                    
-                    <td><span show.bind="rate.volume!=0"> ${rate.volume} </span> <span show.bind="rate.volume==0">-</span>  </td>                      
-                </tr>
-              </tbody>
-            </table>
+  <style>
+    td {
+      background: black;
+      color: white;
+    }
+  </style>
+  <div>
+    <div id="leaderboard-container">
+      <div show.bind="rewards.length">
+        <div style="margin-top: 10px;">
+          <div class="tables">
+            <div class="table_title">Daily Leader Board</div>
+            <div class="table_background">
+              <div class="table_header">
+                <div class="table_header_div">
+                  <div class="table_col">Rank</div>
+                  <div class="table_col">Player Name</div>
+                  <div class="table_col">Table Chips<i class="fa fa-info-circle pad_l5" aria-hidden="true"></i></div>
+                  <div class="table_col">Multiplier</div>
+                  <!-- <div class="table_col">Total Score <i class="fa fa-info-circle pad_l5" aria-hidden="true"></i></div> -->
+                  <div class="table_col">FIRE Winnings <i class="fa fa-info-circle pad_l5" aria-hidden="true"></i></div>
+                  <div class="table_col">Daily Missions <i class="fa fa-info-circle pad_l5" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+              <div class=" table_body_div">
+                <div class="table_body_content " repeat.for="rew of rewards">
+                  <div class="table_col">${rew.rank}</div>
+                  <div class="table_col">${rew.guid}</div>
+                  <div class="table_col">${rew.profitLoss/100}</div>
+                  <div class="table_col">${rew.percentile}x</div>
+                  <div class="table_col">${rew.fireWinning}<img
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAeCAYAAAA2Lt7lAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAGKADAAQAAAABAAAAHgAAAABtdYANAAAEXUlEQVRIDa1WXWhcVRCec/bnxmhsaqwpKE3EhxpbU6WCiD5YH9KmD7ZSjFCrhIiUgEiUglSlBIL1oX0omCo+VBGLiQQMQalKiwVLmwfbbIX6k0LVijUtsWyE1Oze8zPOnHvPeu9mg6z2wN05d87MfPN35q6A/7Fwtq9JF3EnIGxBhF9zq9/bIYTApMls8qWePU733q2v6KNk7Q4yWsrlobfaONv7TwB4bsc6tcDGcYUAwXb2ijWHL/Cmeslqxr+9Iw5mVdl+BNqsENoCPSor7fBSenVHYL75vhtQ3IOUdF5CyoLoHC1eNwDQsBHQUGJcasAa8/tSxplffwTKrAJqG7+kELf5fS1adw2EMX9R/gEo/+4xthNPP7mslnHm1Q2A2p4Hw8YZxIAN9U26GL5w3QAyxhZAEQCD0CPoQa1fx6Nb7q0FUncEGcgWkhFQRIDKNKiFcASP9zZUgywJgF9svCUc7zqI41ubU0qbxi9S7m2lBnE9UJs1am5mX0qWXqJeq+Lqsa5uC/ZDahad7zm2MnmMR7pvVvM0gQRGznFDsRWiQtANkZmu3LYvj3mdRRGEo4/1U29/Sh61oDGtOLKp3QszDf8s9xNfUlo4NZT/f6hVRthQHcKJx5u8TiqC8PCGPmvtIfIE4otKNxWmJMgXTVbOCq2fo1m5i8orU4remqdSDgVPH9/DrxU5fP/R9hDsj2Q68FGzAA00EqLYOQe0/N7f5OpzJyHgar5xZavoGTOVFCmrXwVjAg45ar0ofC4m8xJFtTTgRmhcbCX5UBiCcDrkCO3jS9ii5mceYIccAE1IaZV+gnPKLeip73Om0loU1n5CIawLnj+1Peg7NQEGL7OscyiuiXMo2t/FANEsevur2wHtrcxw7UBWIkq/rjvEZ5DJ7An6JwtOJP7BUCvXOpGQ5xLlIoo2ZjiAUJWXk+uxABunMjoQ/sWeYODMWHyYIuR5GFUmxXYv9HVzDrsU5a286trN5drnPpo1lIan8MCDrYtNkJMEsKhGlE7HMzjLOg5AvDx5iQr0W7JgHpDotnKpNK32r3+kGoTklS+wl/eAQtlLFQC3sfgxdwAXzFNfPBrRTaj0NZbDN9ZWoqHGoC6KuoxpUpd66nQKIGftPtA454aXa01WjMAoFcP53d8WSkMdm0NjZxYGOz7Aoc47pcHl7DF/m5l676nrTgSvTP2QAhCvnbtCSX1GWtTuYx57JC1MBK037GJhCOElHgeUmmdLYfkniqDDp8ZTp6vxoJOnn8pN9gy1e/XDNFEGqM2a6fRI0NY0LHaeUTh4X3OpfK3oxwjT2kt83rD3/GZ/tuibnHtz+iQd8pNaZT3fQh1F98JdjIiyRAKRxsdU0Hjj9qRiZVQkmbX2Qef9vwhtLvCthvjG+z0VF+nsnaARNojBs3NJ/SUDTQr5vRpoe0gjjJL7qxxPwB/k9dcZAftzBy5OerkkrQuAFfHd9bnyd8V2mkuZ/Fs/T9f6P5oE+Bvl48NjH/1D7AAAAABJRU5ErkJggg=="
+                      class="fire_table" alt="logo"></div>
+                  <div class="table_col">${rew.dailyMission}</div>
+                </div>
+                <div class="border_line"></div>
+               
+              </div>
+            </div>
           </div>
+          <!-- <h4> Leader board</h4>
+          <table class="leaderboard">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>PL$</th>
+                <th>MultiPlier</th>
+                <th>FIRE Winnings</th>
+                <th>Daily mission</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr repeat.for="rew of rewards">
+                <td><span class="table-currency"></span>${rew.guid}</td>
+                <td><span class="table-currency"></span>${rew.profitLoss/100}</td>
+                <td><span class="table-currency"></span>${rew.percentile}x</td>
+                <td><span class="table-currency"></span>${rew.fireWinning}</td>
+                <td><span class="table-currency"></span>${rew.dailyMission}</td>
+              </tr>
+            </tbody>
+          </table> -->
+        </div>
       </div>
-  
-      <div show.bind="results.length">
-          <h4 style="margin-top: 20px;">Leaderboard</h4>
-          <div style="margin-top: 10px;">
-            <table class="table table-striped table-bordered table-hover table-condensed leaderboard">
-              <thead>
-                <tr>
-                  <th>User</th>          
-                  <th>Currency</th>          
-                  <th>Profit/Loss</th>
-                  <th>Hands Played</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr repeat.for="result of results">
-                  <td>${result.screenName}</td>
-                  <td><span class="table-currency">${result.currency}</span> <i class="currency-icon currency-${result.currency}"></i></td>
-                  <td class="${result.profitLoss > 0 ? 'leaderboard-profit-positive':'leaderboard-profit-negative'} ${result.changed ? 'flash': ''}">
-                    <span>${result.profitLoss | cryptoFormat:result.currency}</span>
-                    <i class="fa fa-arrow-down leaderboard-profit-negative" show.bind="result.movement < 0" ></i>
-                    <i class="fa fa-arrow-up leaderboard-profit-positive" show.bind="result.movement > 0"></i>
-                  </td>
-                  <td class="${result.changed ? 'flash': ''}" >${result.handsPlayed}</td>    
-    
-                </tr>
-              </tbody>
-            </table>
-          </div>
-      </div>
-
-      
+    </div>
   </div>
-  
-
 </template>

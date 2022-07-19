@@ -53,6 +53,11 @@ class ProtobufConfig {
     }
 
     {
+      let rewardsReportRequest = new Type("RewardsReportRequest");
+      this.namespace.add(rewardsReportRequest);
+    }
+
+    {
       let globalChatRequest = new Type("GlobalChatRequest");
       globalChatRequest.add(new Field("initialData", 1, "bool"));
       globalChatRequest.add(new Field("message", 2, "string"));
@@ -227,7 +232,7 @@ class ProtobufConfig {
     message.add(new Field("paymentHistoryRequest", 24, "PaymentHistoryRequest"));
     message.add(new Field("tournamentInfoRequest", 25, "TournamentInfoRequest"));
     message.add(new Field("rebuyRequest", 26, "RebuyRequest"));
-    
+    message.add(new Field("rewardsReportRequest",27 , "RewardsReportRequest"));
     
     this.namespace.add(message);
   }
@@ -458,6 +463,30 @@ class ProtobufConfig {
     transferFundsResult.add(new Field("success", 5, "bool"));
     this.namespace.add(transferFundsResult);
 
+    let rewardsReport = new Type("RewardsReport");
+    rewardsReport.add(new Field("guid", 1, "string"));
+    rewardsReport.add(new Field("profitLoss", 2, "int32"));
+    rewardsReport.add(new Field("percentile", 3, "double"));
+    rewardsReport.add(new Field("misPrBest", 4, "MisPrg"));
+    rewardsReport.add(new Field("misCount", 5, "MisPrg"));
+    rewardsReport.add(new Field("misProgress", 6, "MisPrg"));
+    this.namespace.add(rewardsReport);
+
+    let missionReport = new Type("MissionReport");
+    missionReport.add(new Field("guid",1, "string"));
+    missionReport.add(new Field("misProgress",2, "MisPrg"));
+    missionReport.add(new Field("misPrBest",3, "MisPrg"));
+    missionReport.add(new Field("misCount",4, "MisPrg"));
+    missionReport.add(new Field("multiplier",5, "double"));
+    this.namespace.add(missionReport);
+
+    let misPrg = new Type("MisPrg");
+    misPrg.add(new Field("a",1,"int32"));
+    misPrg.add(new Field("b",2,"int32"));
+    misPrg.add(new Field("c",3,"int32"));
+    this.namespace.add(misPrg);
+
+
     let exchangeRate = new Type("ExchangeRate");
     exchangeRate.add(new Field("base", 1, "string"));
     exchangeRate.add(new Field("target", 2, "string"));
@@ -469,6 +498,16 @@ class ProtobufConfig {
     let exchangeRateResult = new Type("ExchangeRateResult");
     exchangeRateResult.add(new Field("rates", 1, "ExchangeRate", "repeated"));
     this.namespace.add(exchangeRateResult);
+
+    let rewardsReportResult = new Type("RewardsReportResult");
+    rewardsReportResult.add(new Field("rewards", 1, "RewardsReport", "repeated"));
+    // rewardsResult.add(new Field("profitLoss", 1, "double"));
+    // rewardsResult.add(new Field("seeTurn", 2, "double"));
+    this.namespace.add(rewardsReportResult);
+
+    let missionReportResult = new Type("MissionReportResult");
+    missionReportResult.add(new Field("mission", 1, "MissionReport", "repeated"));
+    this.namespace.add(missionReportResult);
 
     let pong = new Type("Pong");
     this.namespace.add(pong);
@@ -603,8 +642,10 @@ class ProtobufConfig {
     message.add(new Field("tournamentResult", 28, "TournamentResultView"));
     message.add(new Field("paymentHistoryResult", 29, "PaymentHistoryResult"));    
     message.add(new Field("tournamentInfoResult", 30, "TournamentInfoResult"));    
-    message.add(new Field("version", 31, "Version"));    
+    message.add(new Field("version", 31, "Version"));
     message.add(new Field("duplicateIpAddress", 32, "DuplicateIpAddress"));    
+    message.add(new Field("rewardsReportResult", 33, "RewardsReportResult"));
+    message.add(new Field("missionReportResult", 34, "MissionReportResult"));
     this.namespace.add(message);
 
     

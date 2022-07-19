@@ -1,3 +1,4 @@
+import { configV } from './configV';
 import { MailchimpService } from './services/MailchimpService';
 import { DataRepository } from './services/documents/DataRepository';
 import { ExchangeRatesService } from "./services/ExchangeRatesService";
@@ -17,6 +18,7 @@ import { GameServerProcessor } from './admin/processor/GameServerProcessor';
 import { AccountFundedHandler } from './admin/handlers/AccountFundedHandler';
 import { GetPaymentsResultHandler } from './admin/handlers/GetPaymentsResultHandler';
 import { AwardPrizesHandler } from './admin/processor/handlers/AwardPrizesHandler';
+import { Table } from "./table";
 import { TableProcessor } from './admin/processor/table-processor/TableProcessor';
 import { TimerProvider } from './model/table/TimerProvider';
 import { ManualFundAccountHandler } from './admin/processor/handlers/ManualFundAccountHandler';
@@ -34,41 +36,42 @@ export class Bootstrapper {
     exchangeRatesService: ExchangeRatesService;
     adminServer: AdminServer;
     tournamentLogic: TournamentLogic;
-    
-    pokerProcessor: PokerProcessor;
-    apiEndpoints:ApiEndpoints;
-    connectionToPaymentServer:AdminSecureSocketService;
-    gameServerProcessor:GameServerProcessor;
-    emailSender:IEmailSender = new EmailSender();
-    telegramService:ITelegramService = new TelegramService();
-    depositAddressService:DepositAddressService;
 
-    async run(dataRepository:DataRepository): Promise<void> {
-        
+    pokerProcessor: PokerProcessor;
+    apiEndpoints: ApiEndpoints;
+    connectionToPaymentServer: AdminSecureSocketService;
+    gameServerProcessor: GameServerProcessor;
+    emailSender: IEmailSender = new EmailSender();
+    telegramService: ITelegramService = new TelegramService();
+    depositAddressService: DepositAddressService;
+    dataRepository: DataRepository;
+
+    async run(dataRepository: DataRepository): Promise<void> {
+        this.dataRepository = dataRepository;
         await dataRepository.init();
         await dataRepository.createNextUserDocument();
-        await protobufConfig.init();        
+        await protobufConfig.init();
 
-        let tableConfig = await dataRepository.getTablesConfig();  
-        if(!tableConfig.length){
+        let tableConfig = await dataRepository.getTablesConfig();
+        if (!tableConfig.length) {
             logger.info(`no tables, adding default...`);
-            for(let config of defaultTableConfigs){
+            for (let config of defaultTableConfigs) {
                 await dataRepository.saveTableConfig(config)
-            }  
-            for(let config of defaultCurrencyConfigs){
+            }
+            for (let config of defaultCurrencyConfigs) {
                 await dataRepository.saveCurrencyConfig(config)
-            }      
+            }
         }
         this.pokerProcessor = new PokerProcessor(dataRepository);
-        let gameServerProcessor = new GameServerProcessor();                
-        let mailchimpService = new MailchimpService();                
-        const accountFundedHandler = new AccountFundedHandler(this.pokerProcessor, dataRepository);                
+        let gameServerProcessor = new GameServerProcessor();
+        let mailchimpService = new MailchimpService();
+        const accountFundedHandler = new AccountFundedHandler(this.pokerProcessor, dataRepository);
         this.gameServerProcessor = gameServerProcessor;
         this.exchangeRatesService = new ExchangeRatesService(dataRepository, new ExchangeRatesChangedHandler(this.pokerProcessor, this.pokerProcessor));
         this.depositAddressService = new DepositAddressService();
-        this.tournamentLogic = new TournamentLogic(dataRepository, this.pokerProcessor, (p:TableProcessor)=> new TimerProvider(p), gameServerProcessor, this.emailSender, mailchimpService);                
-        this.tournamentLogic.sendOfflinePlayersEmail = !environment.debug; 
-        this.connectionToPaymentServer  = new AdminSecureSocketService(this.pokerProcessor, dataRepository, this.exchangeRatesService, gameServerProcessor);
+        this.tournamentLogic = new TournamentLogic(dataRepository, this.pokerProcessor, (p: TableProcessor) => new TimerProvider(p), gameServerProcessor, this.emailSender, mailchimpService);
+        this.tournamentLogic.sendOfflinePlayersEmail = !environment.debug;
+        this.connectionToPaymentServer = new AdminSecureSocketService(this.pokerProcessor, dataRepository, this.exchangeRatesService, gameServerProcessor);
         gameServerProcessor.addHandler(accountFundedHandler)
         gameServerProcessor.addHandler(new GetPaymentsResultHandler(accountFundedHandler, dataRepository))
         gameServerProcessor.addHandler(new AwardPrizesHandler(dataRepository, accountFundedHandler, this.connectionToPaymentServer))
@@ -76,16 +79,16 @@ export class Bootstrapper {
         new RequestHandlerInit().init(dataRepository, this.pokerProcessor, this.tournamentLogic, this.connectionToPaymentServer, this.depositAddressService);
         await this.exchangeRatesService.startPolling()
         await this.pokerProcessor.init();
-        const numTables = this.pokerProcessor.getTables().length;        
+        const numTables = this.pokerProcessor.getTables().length;
         logger.info(`loaded ${numTables} tables`);
         await this.tournamentLogic.init();
         this.pokerProcessor.tournamentLogic = this.tournamentLogic;
-        
+
         this.apiEndpoints = new ApiEndpoints(dataRepository, this.pokerProcessor, this.connectionToPaymentServer, this.gameServerProcessor);
         this.pokerProcessor.connectionToPaymentServer = this.connectionToPaymentServer;
         this.apiEndpoints.setup();
-        
-        
+
+
         setInterval(this.runChecks.bind(this), 20000);
         this.tournamentLogic.startTimer();
     }
@@ -102,26 +105,38 @@ export class Bootstrapper {
     //               //console.log(`gravatar matches for user ${user.screenName}`);
     //           }
     //         }
-            
+
     //       }
     // }
 
     runChecks() {
+        // to be added: check no table is running!!!
+        if (!configV.resetInProgress) {
+            var today = new Date();
+            var startReset = new Date(today.getFullYear(), today.getMonth(), today.getDate(), configV.resetHoursFrom, configV.ResetMinutesFrom);
+            var stopReset = new Date(today.getFullYear(), today.getMonth(), today.getDate(), configV.ResetHoursTo, configV.ResetMinutesTo);
 
+            let reset = (startReset < today && stopReset > today)
 
-        if (!environment.debug) {
+            if (reset) {
+                configV.resetInProgress = true;
+                console.log("TIMEOUT RESET SET ON Bootstraper.ts")
+                setTimeout(Table.brutalStopServer, configV.resetDelay, this.dataRepository);
+            }
+        }
+        // if (!environment.debug) {
             try {
                 this.pokerProcessor.pingClients();
             } catch (e) {
                 logger.error(e);
             }
-        }
-
+        // }
+        
         try {
             this.pokerProcessor.checkIdlePlayers();
         } catch (ex) {
             logger.error(ex);
         }
-     
+
     }
 }

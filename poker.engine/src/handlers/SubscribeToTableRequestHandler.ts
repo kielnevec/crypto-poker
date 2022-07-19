@@ -30,6 +30,7 @@ export class SubscribeToTableRequestHandler extends AbstractMessageHandler<Subsc
         for (let t of tables) {
           if (t !== table)
             t.removeSubscriber(wsHandle);
+            t.sendLeaveTable(wsHandle.user.toSmall());
         }
         table.addSubscriber(wsHandle);
       }  

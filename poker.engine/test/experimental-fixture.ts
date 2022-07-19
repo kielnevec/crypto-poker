@@ -9,7 +9,7 @@ describe('experimental-fixture', () => {
 
   it.skip('test1', async () => {
     let f1 = parseFloat('200000000000');
-    console.log('f1', f1)
+    // console.log('f1', f1)
   });
 
   it.skip('addSubscribers', async () => {

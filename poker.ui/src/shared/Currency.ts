@@ -7,7 +7,7 @@ export class Currency {
     public static btc: string = 'btc';  
     public static tournament: string = 'tournament';    
   
-    public static freeStartingAmount: number = 100000;
+    public static freeStartingAmount: number = 500000;
   }
 
   export class CurrencyUnit {

@@ -531,12 +531,12 @@ describe('ChangeSeatingLogic', ()=> {
     let checkTableDuplicates = (combined:number[], maxPlayers:number) => {
         
         if(TestHelpers.hasDuplicates(combined)){
-            console.log('combined', combined);            
+            // console.log('combined', combined);            
             assert.fail(null, null, 'table has duplicate seating')
             assert.equal(null, null);
         }
         if(combined.length > maxPlayers){
-            console.log('combined', combined);
+            // console.log('combined', combined);
             assert.fail(null, null, `table combined ${combined.length} has exceeded maxPlayers: ${maxPlayers}`);
         }
     }

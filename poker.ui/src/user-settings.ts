@@ -65,7 +65,7 @@ export class UserSettings {
       this.util.user.screenName = this.result.screenName;
       this.util.user.muteSounds = this.result.muteSounds;
     }
-    console.log('user', this.util.user);
+    // console.log('user', this.util.user);
   }
 
   handleLogoutResult(result: LogoutResult) {

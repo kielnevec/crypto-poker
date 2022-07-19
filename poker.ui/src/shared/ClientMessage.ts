@@ -13,6 +13,7 @@ export class ClientMessage {
   listTablesRequest: ListTablesRequest;
   subscribeToTableRequest: SubscribeToTableRequest;
   exchangeRatesRequest: ExchangeRatesRequest;
+  rewardsReportRequest: RewardsReportRequest;
   globalChatRequest: GlobalChatRequest; 
   tournamentSubscriptionRequest: TournamentSubscriptionRequest;
   leaveTableRequest: LeaveTableRequest;
@@ -48,6 +49,12 @@ export class PaymentHistoryRequest implements IClientServerMessage{
 export class ExchangeRatesRequest implements IClientServerMessage {
   getFieldName(){
     return 'exchangeRatesRequest'
+  }
+}
+
+export class RewardsReportRequest implements IClientServerMessage {
+  getFieldName(){
+    return 'rewardsReportRequest'
   }
 }
 

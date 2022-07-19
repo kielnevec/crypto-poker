@@ -1,0 +1,39 @@
+// {
+//     // Use IntelliSense to learn about possible attributes.
+//     // Hover to view descriptions of existing attributes.
+//     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+//     "version": "0.2.0",
+//     "configurations": [
+//         {
+//             "type": "pwa-node",
+//             "request": "launch",
+//             "name": "Launch Program",
+//             "skipFiles": [
+//                 "<node_internals>/**"
+//             ],
+//             "program": "${workspaceFolder}/build/poker.engine/src/app.js",
+//             "outFiles": [
+//                 "${workspaceFolder}/**/*.js"
+//             ]
+//         }
+//     ]
+// }
+
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "runtimeVersion": "14.15.4",
+        "request": "launch",
+        "justMyCode": false,
+        "name": "Launch Program",
+        "program": "${workspaceFolder}/src/app.ts",
+        "preLaunchTask": "tsc: build - tsconfig.json", 
+        "skipFiles": [
+          "<node_internals>/**"
+        ],
+        //"outFiles":["${workspaceFolder}/build/poker.engine/src/*.js"]
+      }
+    ]
+  }

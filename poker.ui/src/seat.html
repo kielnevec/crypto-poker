@@ -10,7 +10,7 @@
 
   <div mouseover.delegate="isHovering=true" mouseout.delegate="isHovering=false" id="seat-${seatIndex}" click.trigger="sit()" class="player-info ${empty ? 'empty-seat' : 'player-sitting'} ${canSit ? 'can-sit' : ''} ${playerMyTurn ? 'player-my-turn' : ''}" ref="seatElem" >  
   <div class="timer" show.bind="myturn && timeLeft">${timeLeft}</div>
-    <div class="${empty ? '' : 'player-sitting-inner'} ${isSittingOut || hasFolded ? 'player-sitting-inner-grayscale' : ''} player-sitting-inner-${seatIndex}">
+    <div class="${empty ? '' : guid?'player-sitting-inner1':'player-sitting-inner'} ${isSittingOut || hasFolded ? 'player-sitting-inner-grayscale' : ''} player-sitting-inner-${seatIndex}">
       <div class="action ${isSittingOut || hasFolded ? 'grayscale' : ''}" id="seat${seatIndex}action" show.bind="action">${action}</div>
       <div class="facedown down0">
         <div class="sprite sprite-Red_Back-150" if.bind="playing && !hasFolded && !guid && !faceupCard1"></div>
@@ -19,7 +19,7 @@
         <div class="sprite sprite-Red_Back-150" if.bind="playing && !hasFolded && !guid && !faceupCard2"></div>
       </div>
       <div class="player-seat-info-box player-status ${isSittingOut || hasFolded ? 'grayscale' : ''}" show.bind="!empty && !ownCardsVisible">
-        <span class="player-name">${name}</span><br><span class="player-amount">${stack | numberFormat}</span>
+        <span class="player-name">${guid?"You":name}</span><br><span class="player-amount">${stack | numberFormat}</span>
       </div>
       <div class="player-seat-info-box player-own-stack" show.bind="!empty && ownCardsVisible">
         <span class="player-amount">${stack | numberFormat}</span>

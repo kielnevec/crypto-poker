@@ -31,6 +31,12 @@ export class PokerRooms {
     this.subscriptions.push(ea.subscribe(LoginResult, (r) => this.hasSubscribed=false));
     
     this.cashGamesVisible = true;
+    setTimeout(() => {
+      let tableIdFromURL=new URL(window.location.href).searchParams.get("tableid")
+      if(tableIdFromURL){
+        this.openTable(tableIdFromURL)
+      }
+    }, 4000);
   }
 
   

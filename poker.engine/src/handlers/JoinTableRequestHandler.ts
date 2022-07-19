@@ -2,7 +2,7 @@ import { JoinTableRequest as ClientJoinTableRequest } from './../../../poker.ui/
 import { WebSocketHandle } from "../model/WebSocketHandle";
 import { ListTablesRequest } from "../../../poker.ui/src/shared/ClientMessage";
 import { AbstractMessageHandler } from "./AbstractMessageHandler";
-import { DataContainer } from "../../../poker.ui/src/shared/DataContainer";
+import { DataContainer, RewardsReportResult, MissionReportResult } from "../../../poker.ui/src/shared/DataContainer";
 import { IPokerTableProvider } from "../services/IBroadcastService";
 import { IDataRepository } from '../services/documents/IDataRepository';
 import { User } from '../model/User';
@@ -78,7 +78,5 @@ export class JoinTableRequestHandler extends AbstractMessageHandler<ClientJoinTa
     let tMessage = new TableProcessorMessage(table);
     tMessage.joinTableRequest = request;
     table.sendTableProcessorMessage(tMessage);
-   
-
   }
 }

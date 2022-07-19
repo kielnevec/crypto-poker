@@ -1,4 +1,5 @@
-﻿import WebSocket = require('ws');
+﻿var fs = require('fs');
+import WebSocket = require('ws');
 import { User } from "./User";
 import {DataContainer, PokerError, UserData } from "../../../poker.ui/src/shared/DataContainer";
 var logger = require('log4js').getLogger();
@@ -61,14 +62,22 @@ export class WebSocketHandle implements ISubscriber {
     }
 
     send(data: DataContainer|Buffer) {
-      
       try {
+        // console.log(data);
+        // if (data.rewardsReportResult) {
+        //   console.log("breakpoint");
+        // }
         if(data instanceof DataContainer){        
+          let nowts = Date.now();
+          let date_ob = new Date(nowts);
+          let datestring = date_ob.getHours().toString() + ":" + date_ob.getMinutes().toString() + ":" + date_ob.getSeconds().toString();
+          fs.appendFileSync('./datajump.json', "WebSocketHands (sending back): ===>" + datestring + '\r\n' + JSON.stringify(data, null, 2) + '\r\n========================END======================\r\n' , 'utf-8');
+          // console.log("============================>sending data", data)
           data = protobufConfig.serialize(data, 'DataContainer');                    
+          // console.log (data);
         }
-        try {        
+        try {
           this.socket.send(data);
-          
         }catch(e) {
           logger.info(`error sending to user:${this.user.screenName}:${this.id} ${inspect(e)}`);
           this.onerror();    
@@ -76,8 +85,6 @@ export class WebSocketHandle implements ISubscriber {
       } catch (e) {
         logger.error(`error serialize :${this.user.screenName}:${this.id} data:${inspect(data)}` +  e);//this will be a serialize error
       }
-      
-      
     }
 
   sendError(msg: string) {
@@ -91,9 +98,6 @@ export class WebSocketHandle implements ISubscriber {
     data.user = await getUserData(user, dataRepository, initialData);
     this.send(data);
   }
-
-
-
 }
 
 

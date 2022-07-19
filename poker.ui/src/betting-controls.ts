@@ -62,7 +62,7 @@ export class BettingControls {
     this.seat = seat;
     this.callBtnDisabled = false;
     this.betBtnDisabled = false;
-    this.foldBtnDisabled = false;
+    this.foldBtnDisabled = false; 
     if (!seat || !seat.myturn) {
       this.canCall = false;
       this.myturn = false;
@@ -177,7 +177,7 @@ export class BettingControls {
       max: this.sliderMax,
       step: this.sliderStep,
       value: this.betAmount,
-      scale: tableConfig.currency === Currency.free ? 'logarithmic' : 'linear'
+      scale: 'linear'
     }
       $(this.sliderInput).slider(options).on('slide', () => {
       this.betSliderChanged();      

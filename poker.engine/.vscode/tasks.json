@@ -1,0 +1,15 @@
+{
+	"taskName": "runCurrentTest",
+	"type": "shell",
+	"command": "NODE_ENV=test ./node_modules/.bin/mocha",
+	"args": [
+			"${relativeFile}"
+	],
+	"group": "test",
+	"presentation": {
+			"echo": true,
+			"reveal": "always",
+			"focus": false,
+			"panel": "dedicated"
+	}
+}

@@ -12,6 +12,16 @@ const dataRepository = new DataRepository(process.env.POKER_DB_NAME || 'PokerGam
 const result = dotenv.config();
 import 'source-map-support/register'
 
+
+// Uncomment to find console.log
+// var log = console.log;
+// console.log = function() {
+//     log.apply(console, arguments);
+//     // Print the stack trace
+//     console.trace();
+// };
+
+
 for(let envVar of [ 
   { key:"POKER_FROM_EMAIL", value:process.env.POKER_FROM_EMAIL  } ,
   { key:"POKER_SENDGRID_API_KEY", value:process.env.POKER_SENDGRID_API_KEY  } ,  
@@ -24,7 +34,7 @@ for(let envVar of [
     if(result.error){
       errMsg += ` dotEnv error: ${result.error.message}`
     }
-    console.log(errMsg)
+    // console.log(errMsg)
     process.exit(1);
   }
 }

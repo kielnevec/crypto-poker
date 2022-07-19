@@ -6,11 +6,12 @@ $cdn: '';
 
 body {  
   font-family: 'Roboto Condensed', sans-serif;
-  padding-top: 50px;  
+   
 }
 .navbar-default {
   background-color: lightcyan;
 }
+
 .nav-logo{
     background:url($cdn + 'images/logo.png') no-repeat;
     width: 340px;
@@ -798,6 +799,18 @@ position: absolute;
     height: 80px;
     width: 105px;
 }
+
+.player-sitting-inner1:before {
+  content: "";
+  position: relative;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  display: block;
+  background: url($cdn + "images/You.png") rgb(97, 111, 145) no-repeat;        
+  height: 80px;
+  width: 105px;
+}
 .player-sitting-inner-grayscale {
     
 }
@@ -1166,11 +1179,20 @@ color:green;
   text-align: center;
 }
 .chatRow {
-    margin: 0;
+ 
+    // height: 42px;
+    // width: 327px;
+    color: #FFFFFF;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 28px;
+  
 }
 .chatScreenName {
-    color: red;
-    font-weight: bold;
+    // color: red;
+    // font-weight: bold;
 }
 .chatDealer {
   color: aqua;
@@ -1352,10 +1374,30 @@ ux-dialog {
 .global-chat-header-icon{
     // background-image: url('images/troll.png');
     // background-position: left;
-    // background-repeat: no-repeat;     
+    // background-repeat: no-repeat;   
+    
+      color: #FFFFFF;
+      font-family: "Open Sans";
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 28px;
 }
 .global-chatbox-header{
-    width: 350px;
+    // width: 350px;
+    
+}
+.global-chat-input{
+
+    box-sizing: border-box;
+    height: 31px;
+    width: 331px;
+    border: 1px solid #6C6C6C;
+    border-radius: 4px;
+    background-color: #000000;
+    margin-left: 10px;
+    margin-bottom: 10px;
+  
 }
 .clear {
     clear: both;
@@ -1376,7 +1418,7 @@ ux-dialog {
     height: 100%;  
     opacity: .08; 
     z-index: -1;
-    background: url($cdn + 'images/troll.jpg') no-repeat;
+    // background: url($cdn + 'images/troll.jpg') no-repeat;
     overflow:hidden;
   }
   ::-webkit-scrollbar
@@ -1577,3 +1619,232 @@ ux-dialog {
 }
 
 
+.progress {
+  border-radius: 10px !important;
+  height:  12px !important;
+  width: 200px;
+}
+
+.progress-bar {
+  background: linear-gradient(270deg, #FAD55E 0%, #F7701F 100%);
+  border-radius: 7px ;
+}
+
+.progress_area{
+  display: flex;
+  align-items: center;
+}
+.daily_missions_header {
+  height: 42px;
+  border-radius: 4px 4px 0 0;
+  background-color: #000000;
+  padding-left: 40px;
+  display: flex;
+  align-items: center;
+}
+.daily_missions {
+  width: 370px;
+  border-radius: 4px;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.daily_missions_header_text {
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 28px;
+}
+.info_header{
+    font-size: 15px;
+    margin-left: 10px;
+}
+.daily_missions_content{
+    padding: 20px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    background-color: rgba(0,0,0,0.5);
+}
+.daily_missions_content_title {
+  color: #9A9A9A;
+  font-family: "Open Sans";
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: 28px;
+}
+.fire_mission_image{
+  height: 35px;
+  margin-left: 8px;
+  margin-top: -15px;
+  padding-right: 10px;
+}
+.daily_missions_content_number {
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 28px;
+  text-align: center;
+  height: 16px;
+}
+.daily_missions_content_fire {
+  color: #FFA71B;
+  font-family: "Open Sans";
+  font-size: 10px;
+  letter-spacing: 0;
+  line-height: 28px;
+  text-align: center;
+}
+
+.tables_content{
+  padding-top: 50px;
+}
+.tables{
+  height: 400px;
+  /* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background-color: #434343;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: #202020;
+  border-radius: 5px;
+}
+}
+.table_title {
+  height: 55px;
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 30px;
+  width: 85%;
+  margin: auto;
+}
+.table_header {
+  height: 42px;
+  border-radius: 4px 4px 0 0;
+  background-color: #000000;
+  color: #FFFFFF;
+font-family: "Open Sans";
+font-size: 14px;
+font-weight: 600;
+letter-spacing: 0;
+line-height: 28px;
+}
+.table_header_div{
+  display: flex;
+  width: 96%;
+  margin: auto;
+  height: 100%;
+  align-items: center;
+} 
+.table_col{
+  width: 15%;
+  display: flex;
+  align-items: center;
+}
+.table_background{
+    width: 85%;
+    margin: auto;
+  opacity: 0.8;
+  border-radius: 4px;
+  background-color: rgba(0,0,0,0.73);
+}
+.table_body_div{
+  overflow-y: auto;
+  max-height: 230px;
+  margin: auto;
+  width: 98%;
+  margin-left: 2%;
+} 
+.table_body_content {
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+.border_line {
+  height: 1px !important;
+  border-bottom: 1px solid #FFFFFF !important;
+  opacity: 0.1 !important;
+}
+.table_footer_content {
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 19px;
+  display: flex;
+  height: 50px;
+  align-items: center;
+  margin-left: 2%;
+}
+.join_table_button {
+  height: 25px;
+  width: 110px;
+  border-radius: 25px;
+  background: linear-gradient(
+180deg, #FAD55E 0%, #F7701F 100%);
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 11px;
+  text-align: center;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+
+
+.no_scroll{
+    width:96% !important;
+}
+.pad_l5{
+    padding-left: 5px;
+}
+.fire_table{
+  height: 16px;
+  padding-left: 5px;
+}
+.game_container {
+  height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.connect_wallet_button_table {
+  border-radius: 25px;
+  background: linear-gradient(180deg, #FAD55E 0%, #F7701F 100%);
+  width: 180px;
+  padding: 10px;
+  text-align: center;
+  margin: auto 20px auto 20px;
+  color: white;
+  font-family: "Open Sans";
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 19px;
+  cursor: pointer;
+}

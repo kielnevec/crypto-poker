@@ -24,12 +24,14 @@ apt-get install software-properties-common curl -y
 add-apt-repository ppa:certbot/certbot -y
 
 #nodejs
-curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+#curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt-get install -y nodejs
 
 #apt-get update not required as nodejs setup script above calls it
 service apache2 stop
 apt-get remove apache2 -y
-apt-get install ufw unzip zip ntp git fail2ban build-essential nginx python-certbot-nginx nodejs -y
+apt-get install ufw unzip zip ntp git fail2ban build-essential nginx python3-certbot-nginx nodejs -y
 
 #configure firewall
 ufw allow 22

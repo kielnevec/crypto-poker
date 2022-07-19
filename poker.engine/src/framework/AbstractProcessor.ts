@@ -1,3 +1,4 @@
+var fs = require('fs');
 import PromiseQueue from 'promise-queue-timeout';
 import { Logger, getLogger } from "log4js";
 const logger:Logger = getLogger();
@@ -22,6 +23,13 @@ export class AbstractProcessor<TMessage, TResult extends IProcessorResult> {
         return `PendingLength: ${this.queue.getPendingLength()} QueueLength: ${this.queue.getQueueLength()}`;
     }
     sendMessage(message:TMessage): Promise<TResult> {                        
+        let nowts = Date.now();
+        let date_ob = new Date(nowts);
+        let datestring = date_ob.getHours().toString() + ":" + date_ob.getMinutes().toString() + ":" + date_ob.getSeconds().toString();
+        fs.appendFileSync('./datajump.json', datestring 
+        + '\r\n' + "receivedMessage: ===>" + '========================END======================\r\n' , 'utf-8');
+        let tss = message.toString();
+        fs.appendFileSync('./datajump.json',tss);
         this.log(message);
         return this.queue.add(()=>{
             return this.handleMessage(message)

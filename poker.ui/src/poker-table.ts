@@ -15,10 +15,10 @@ import {Chip} from "./model/chip";
 import { Simulations } from "./simulations";
 import { CashOutRequestResult, PotResult, FundAccountResult, AccountFunded, AccountWithdrawlResult, SetTableOptionResult,
   GetAccountSettingsResult, SetAccountSettingsResult, ChatMessage, GlobalChatResult, ChatMessageResult, UserData, Account,
-  GlobalUsers, LeaderboardResult, TransferFundsResult, ExchangeRateResult, TournamentSubscriptionResult, SubscribeTableResult, GameEvent, GameStartingEvent, PaymentHistoryResult, Version, TableSeatEvents, DealHoleCardsEvent, TableClosed, DataContainer, TableConfigs } from "./shared/DataContainer";
+  GlobalUsers, LeaderboardResult, TransferFundsResult, ExchangeRateResult, RewardsReportResult, MissionReportResult, TournamentSubscriptionResult, SubscribeTableResult, GameEvent, GameStartingEvent, PaymentHistoryResult, Version, TableSeatEvents, DealHoleCardsEvent, TableClosed, DataContainer, TableConfigs } from "./shared/DataContainer";
 import {AccountSettings} from "./account-settings";
 import {MessageWindow} from "./message-window";
-import {ClientMessage, SetTableOptionRequest, TournamentSubscriptionRequest, GlobalChatRequest, Ping, ListTablesRequest, JoinTableRequest, LeaveTableRequest, ChatRequest, ExchangeRatesRequest, TournamentRegisterRequest } from "./shared/ClientMessage";
+import {ClientMessage, SetTableOptionRequest, TournamentSubscriptionRequest, GlobalChatRequest, Ping, ListTablesRequest, JoinTableRequest, LeaveTableRequest, ChatRequest, ExchangeRatesRequest, RewardsReportRequest, TournamentRegisterRequest } from "./shared/ClientMessage";
 import { CommonHelpers, getCardSuit } from './shared/CommonHelpers';
 import { AutoOptionResult } from "./shared/AutoOptionResult";
 import environment from './environment';
@@ -74,7 +74,8 @@ export class PokerTable {
   nextBlinds:{smallBlind:number, bigBlind:number, timeUntil:number, timeUntilUnit:string};  
   blindsTimer:number;  
   nextBlindIncrease:Date;
-  
+  missionData:any[]=[];
+  rewards: any[] = [];
   constructor(apiService: ApiService, private dialogService: DialogService, private ea: EventAggregator, private util: Util, private constants: Constants, private dialogController: DialogController, private router: Router) {
     this.apiService = apiService;
     
@@ -82,10 +83,7 @@ export class PokerTable {
     for (let i = 0; i < 9; i++) {
       this.seats.push(new Seat(this.ea, util, this.constants, i, this.apiService));
     }
-    //console.log(new Decimal('0.01').add(new Decimal('0.02')).toString());
-    //this.game = new Game();
-    //this.game.potResults = [];    
-    //this.game.potResults.push({ seatWinners: [5, 9], winningHand : '3 of a Kind'});
+  
 
     this.subscriptions.push(ea.subscribe(SitDownAction, msg => { this.join(msg.seatIndex); }));
     this.subscriptions.push(ea.subscribe(DataMessageEvent, msg => { this.onMessage(msg.data); }));
@@ -94,6 +92,68 @@ export class PokerTable {
     this.subscriptions.push(ea.subscribe(OpenLoginPopupEvent, msg => { this.openLoginWindow(msg); }));    
     this.subscriptions.push(ea.subscribe(TournamentRegisterClickEvent, msg => { this.onTournamentRegisterClickEvent(msg); }));    
     this.subscriptions.push(ea.subscribe(DepositNowEvent, msg => { this.openFundingWindow(msg.model); }));    
+    this.subscriptions.push(ea.subscribe(RewardsReportResult, (msg: RewardsReportResult) => { this.handleRewardsReportResult(msg) }));
+    this.subscriptions.push(ea.subscribe(MissionReportResult, (msg: MissionReportResult) => { this.handleMissionReportResult(msg) }));
+  }
+
+  handleMissionReportResult(data: MissionReportResult) {
+    // console.log("mission data   =========================  ", data);
+    let allMissions = {
+      a: [
+        { value: 20, text: "See the flop" },
+        { value: 15, text: "See the turn" },
+        { value: 10, text: "See the river" }
+      ],
+      b: [
+        { value: 15, text: "Win the hand" },
+        { value: 20, text: "Get one pair" },
+        { value: 5, text: "Get two pairs" }
+      ],
+      c: [
+        { value: 50, text: "Win the hand" },
+        { value: 100, text: "See the flop" },
+        { value: 75, text: "See the turn" },
+        { value: 50, text: "See the river" }
+      ]
+    }
+    this.missionData=[]
+    
+    let userMission = data.mission.find(t => t.guid == this.userData.guid);
+
+    let mission1Name = `${allMissions.a[userMission.misPrBest.a - 1].text} (${userMission.misCount.a}/${allMissions.a[userMission.misPrBest.a - 1].value})`
+    this.missionData.push({ name: mission1Name, fireCount: 10, barWidth: `${userMission.misProgress.a}%` })
+    let mission2Name = `${allMissions.b[userMission.misPrBest.b - 1].text} (${userMission.misCount.b}/${allMissions.b[userMission.misPrBest.b - 1].value})`
+    this.missionData.push({ name: mission2Name, fireCount: 50, barWidth: `${userMission.misProgress.b}%` })
+    let mission3Name = `${allMissions.c[userMission.misPrBest.c - 1].text} (${userMission.misCount.c}/${allMissions.c[userMission.misPrBest.c - 1].value})`
+    this.missionData.push({ name: mission3Name, fireCount: 100, barWidth: `${userMission.misProgress.c}%` })
+
+  }
+  handleRewardsReportResult(data: RewardsReportResult) {
+    // this.rewards.length=0;
+    // this.rewards = [];
+    // let dataForLoggedInUser=data.rewards.find(t=>t.guid==this.userData.guid);
+    // this.missionData=[]
+    // this.missionData.push({name:"Play 20 Flops (9/20)", fireCount:dataForLoggedInUser.seeFlop,barWidth:`${10}%`})
+    // this.missionData.push({name:"Win 10 Hands(9/20)", fireCount:50,barWidth:`${40}%`})
+    // this.missionData.push({name:"Get a Flush", fireCount:100,barWidth:`${60}%`})
+    // for (let result of data.rewards || []) {
+    //   let view: any = {
+    //     guid: "anon" + result.guid.substring(0,4),
+    //     profitLoss: result.profitLoss,
+    //     currentMission: result.currentMission,
+    //     seeFlop: result.seeFlop,
+    //     seeTurn: result.seeTurn,
+    //     seeRiver: result.seeRiver,
+    //     winHand: result.winHand,
+    //     handTwoPairs: result.handTwoPairs,
+    //     handOnePair: result.handOnePair,
+    //     missionProgress: result.missionProgress,
+    //     percentile: result.percentile,
+    //     handsPlayed: result.handsPlayed
+    //  };
+    //   this.rewards.push(view);
+    // }
+
   }
 
   detached() {
@@ -179,20 +239,24 @@ export class PokerTable {
 
 
   sendPing(){
+    console.log("Sending ping (in function)");
     if(!this.wsAlive){
       window.clearInterval(this.pingTimer);
-      console.log('no response to ping. closing connection');
+      console.log('no response to ping');
       this.apiService.close();
       this.apiService.openWebSocket(() => { this.onopen() });
     }else{
+      console.log("response to ping received");
       this.wsAlive=false;      
       this.pingStartDate = new Date();
       this.apiService.send(new Ping());
+      console.log("loading new pinger");
       this.pingTimer = window.setTimeout(() => { this.sendPing()}, 20000);    
-    }    
+    }
   }
 
   handleServerPong() {
+    console.log("=================================>receiving pong");
     this.wsAlive=true;
     this.pingTime = new Date().getTime() - this.pingStartDate.getTime();    
   }
@@ -204,7 +268,7 @@ export class PokerTable {
     this.pingTime = null;
     this.isLoadingTable = true;
     window.clearInterval(this.pingTimer);
-  }
+  } 
 
 
   clear() {        
@@ -250,7 +314,7 @@ export class PokerTable {
 
   onOpenTableAction(tableId: string) {
     if (this.util.currentTableId === tableId) {
-      this.showWarning('You are currently viewing this table!');
+      // this.showWarning('You are currently viewing this table!');
       
       return;
     }
@@ -295,6 +359,8 @@ export class PokerTable {
       { key: 'leaderboardResult', handler: (data: LeaderboardResult) => { this.ea.publish(Object.assign(new LeaderboardResult(), data)); } },
       { key: 'transferFundsResult', handler: (data: TransferFundsResult) => { this.ea.publish(Object.assign(new TransferFundsResult(), data)); } },
       { key: 'exchangeRates', handler: (data: ExchangeRateResult) => { this.ea.publish(Object.assign(new ExchangeRateResult(), data)); } },
+      { key: 'rewardsReportResult', handler: (data: RewardsReportResult) => { this.ea.publish(Object.assign(new RewardsReportResult(), data)); } },
+      { key: 'missionReportResult', handler: (data: MissionReportResult) => { this.ea.publish(Object.assign(new MissionReportResult(), data)); } },
       { key: 'registerResult', handler: (data: RegisterResult) => { this.ea.publish(Object.assign(new RegisterResult(), data)); } },
       { key: 'tournamentSubscriptionResult', handler: (data) => { this.ea.publish(Object.assign(new TournamentSubscriptionResult(), data)); } },
       { key: 'loginResult', handler: this.handleLoginResult },
@@ -313,7 +379,7 @@ export class PokerTable {
       let data = message[handler.key];
       if (data) {
         handled = true;
-        //console.log('handling ' + handler.key, data);
+        console.log('=================================>handling ' + handler.key, data);
         handler.handler.call(this, data);
 
       }
@@ -342,6 +408,7 @@ export class PokerTable {
   }
 
   handleVersion(result:Version){
+    console.log("=========================>handlingversion");
     let priorVersion = localStorage.getItem("app_version");
     localStorage.setItem("app_version", result.version);
     if(priorVersion && priorVersion != result.version){        
@@ -354,12 +421,14 @@ export class PokerTable {
       let message = new ClientMessage();
       message.listTablesRequest = new ListTablesRequest();
       message.exchangeRatesRequest = new ExchangeRatesRequest();
+      message.rewardsReportRequest = new RewardsReportRequest();
       message.tournamentSubscriptionRequest = new TournamentSubscriptionRequest();
       message.globalChatRequest = new GlobalChatRequest(undefined, true);
       this.apiService.sendMessage(message);      
-      if(!environment.debug) {
+      // if(!environment.debug) {
         this.sendPing();   
-      }
+        console.log("sending ping!");
+      // }
       this.checkRegisterTournament();
     }
   }
@@ -415,7 +484,8 @@ export class PokerTable {
     }
     this.userData = userData;
     this.util.user = userData;
-    this.setPlayerStack();              
+    this.setPlayerStack();      
+    // console.log("hello=====================",this.userData);        
   }
 
 
