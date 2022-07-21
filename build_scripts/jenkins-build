@@ -11,4 +11,5 @@ cd ..
 cd poker.engine/
 npm i
 tsc
+cd ..
 npm run jenkins-artifact
