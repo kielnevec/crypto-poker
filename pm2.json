@@ -2,14 +2,14 @@
   "apps": [
     {
       "name": "poker.engine",
-      "cwd": "/home/application/crypto-poker/poker.engine/build/poker.engine/",
+      "cwd": "poker.engine/build/poker.engine/",
       "script": "./src/app.js",
       "instances": 1,
       "exec_mode": "fork"
     },
     {
       "name": "poker.ui",
-      "cwd": "/home/application/crypto-poker/poker.ui",
+      "cwd": "poker.ui",
       "script": "/opt/node-v14.15.4-linux-x64/bin/au run -w",
       "instances": 1,
       "exec_mode": "fork"
