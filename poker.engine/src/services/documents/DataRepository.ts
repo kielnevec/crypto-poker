@@ -1,7 +1,7 @@
 ﻿const percentile = require('percentile');
 import { UserSmall } from './../../model/UserSmall';
 import { TournamentResult } from './../../model/TournamentResult';
-import { Server, Db, ReplaceOneOptions } from 'mongodb';
+import { Server, Db, ReplaceOneOptions,MongoClient } from 'mongodb';
 const ObjectID = require('mongodb').ObjectID;
 
 import { User } from "../../model/User";
@@ -49,7 +49,7 @@ export class DataRepository implements IDataRepository {
 
 
 
-  private server: Server;
+  private server: any;
   db: Db;
   dbName: string;
   // private percentil[]: number;
@@ -58,14 +58,10 @@ export class DataRepository implements IDataRepository {
     this.dbName = dbName;
   }
 
-  init() {
+  async init() {
     DataRepository.percentil = [10, 30, 50];
-    // mongodb://poker-client:sfaskjdfuwerdfsdfsdf@mongodb-evm-dev-1/poker
-    // this.server = new Server(process.env.mongoDBHost, 27017);
-    // this.db = new Db(this.dbName, this.server, {});
-    this.server = new Server("poker-client:sfaskjdfuwerdfsdfsdf@mongodb-evm-dev-1", 27017);
-    this.db = new Db("poker", this.server, {});
-    return this.db.open();
+    this.db = await MongoClient.connect(process.env.mongoDBHost);
+    return this.db
   }
 
   getTablesConfig(): Promise<TableConfig[]> {
