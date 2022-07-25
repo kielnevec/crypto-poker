@@ -7,6 +7,7 @@
 set -e
 cd poker.ui/
 npm install
+tsc
 cd ..
 cd poker.engine/
 npm i
