@@ -1,7 +1,7 @@
 export default {
   debug: true,
   testing: true,
-  pokerUiWSUrl: 'solanapoker.badbeat.com',
+  pokerUiWSUrl: process.env.pokerUiWSUrl,
   // pokerUiWSUrl: 'cryptopoker.fun',
-  pokerUiWSUrlPort: '80'
+  pokerUiWSUrlPort: process.env.pokerUiWSUrlPort
 };
