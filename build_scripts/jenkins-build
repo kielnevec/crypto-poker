@@ -4,7 +4,7 @@
 # all jenkins should do is call this file.
 # NOTE: this script expects to be called from the root of the project, NOT from the build_scripts folder
 
-set -e
+
 cd poker.ui/
 npm install
 tsc
