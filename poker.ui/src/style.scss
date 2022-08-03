@@ -22,6 +22,7 @@ body {
 .container-fluid {
   background-color: #E8E8E8;
   padding-bottom: 55px;
+  height: 100vh;
 }
 .header-nav {
   text-align: center;
@@ -760,11 +761,11 @@ position: absolute;
 
 .player-info {
   height: 80px;
-  width: 105px;
-  min-width: 105px;
+  width: 80px;
+  min-width: 80px;
   min-height: 80px;
   overflow: hidden;
-  border-radius: 15px;
+  border-radius: 40px;
   border-color: #bcbcbc;
   position: absolute;
   -webkit-box-shadow: -4px 6px 32px -6px rgba(0,0,0,0.75);
@@ -772,6 +773,21 @@ position: absolute;
   box-shadow: -4px 6px 32px -6px rgba(0,0,0,0.75);
   z-index: 2;
   color:#fff;
+}
+
+.chat_box{
+    height: 123px;
+    width: 348px;
+    border-radius: 20px;
+    background-color: rgba(0,0,0,0.5);
+    box-sizing: border-box;
+    border: 1px solid #979797;
+    border-radius: 15px;
+    background-color: rgba(64,64,64,0.7);
+    box-shadow: 0 2px 26px 0 rgba(0,0,0,0.43);
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
 }
 
 .player-sitting {
@@ -1442,7 +1458,7 @@ ux-dialog {
   
 #global-chatbox {
   margin-top: 5px;
-  height: 200px;
+  height: 50px;
   line-height: 14px;
   font-size: 12px;
   overflow-y: scroll;
@@ -1644,8 +1660,11 @@ ux-dialog {
 }
 .daily_missions {
   width: 370px;
-  border-radius: 4px;
-  background-color: rgba(0,0,0,0.5);
+  box-sizing: border-box;
+  border: 1px solid #979797;
+  border-radius: 15px;
+  background-color: #404040;
+  box-shadow: 0 2px 26px 0 rgba(0,0,0,0.43);
 }
 
 .daily_missions_header_text {
