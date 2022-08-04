@@ -1,6 +1,6 @@
 export default {
   debug: true,
   testing: true,
-  pokerUiWSUrl: 'pokerclient-dev.badbeat.com',
-  pokerUiWSUrlPort: 443
+  pokerUiWSUrl: process.env.POKER_CLIENT_URL,
+  pokerUiWSUrlPort: process.env.POKER_CLIENT_PORT
 };

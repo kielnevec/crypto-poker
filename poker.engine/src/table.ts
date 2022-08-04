@@ -231,21 +231,29 @@ export class Table {
       let arrayMissionResults = [];
       if (dcRewardReports.rewardsReportResult.rewards.length > 0) {
         for (let counter = 0; counter < dcRewardReports.rewardsReportResult.rewards.length; counter++) {
-          arrayMissionResults.push({
-            guid: dcRewardReports.rewardsReportResult.rewards[counter].guid,
-            misProgress: dcRewardReports.rewardsReportResult.rewards[counter].misProgress,
-            misPrBest: dcRewardReports.rewardsReportResult.rewards[counter].misPrBest,
-            misCount: dcRewardReports.rewardsReportResult.rewards[counter].misCount,
-            multiplier: dcRewardReports.rewardsReportResult.rewards[counter].percentile
-          })
+          for (let subscriber of this.subscribers) {
+            if (subscriber.user.guid === dcRewardReports.rewardsReportResult.rewards[counter].guid) {
+              arrayMissionResults[0] = {
+                guid: dcRewardReports.rewardsReportResult.rewards[counter].guid,
+                misProgress: dcRewardReports.rewardsReportResult.rewards[counter].misProgress,
+                misPrBest: dcRewardReports.rewardsReportResult.rewards[counter].misPrBest,
+                misCount: dcRewardReports.rewardsReportResult.rewards[counter].misCount,
+                multiplier: dcRewardReports.rewardsReportResult.rewards[counter].percentile
+              }
+              dcMissionResults.missionReportResult.mission = arrayMissionResults;
+              subscriber.send(dcMissionResults);
+              // arrayMissionResults = [];
+              // this.sendDataContainerMission(dcMissionResults);
+            }
+          }
         }
+
       } else {
 
       }
       dcMissionResults.missionReportResult.mission = arrayMissionResults;
-
       this.sendDataContainerRewards(dcRewardReports);
-      this.sendDataContainerMission(dcMissionResults);
+      // this.sendDataContainerMission(dcMissionResults);
     }
     catch (e) {
       console.log(e);
@@ -679,40 +687,46 @@ export class Table {
   }
 
   sendDataContainerMission(data: DataContainer): void {
-    let sent = false;
-    for (let subscriber of this.subscribers) {
-      // let dx = await this.dataRepository.getMissionData(subscriber.user.guid);
-      for (let counter = 0; counter < data.missionReportResult.mission.length; counter++) {
-        if (data.missionReportResult.mission[counter].guid === subscriber.user.guid) {
-          // todo: assign dataS the single element of the array, now data for all players is sent to the table
-          subscriber.send(data);
-          sent = true;
-        }
-      }
-      if (!sent) {
-        data.missionReportResult.mission = [];
-        data.missionReportResult.mission[0] = {
-          guid: subscriber.user.guid,
-          misProgress: {
-            a: 0,
-            b: 0,
-            c: 0
-          },
-          misPrBest: {
-            a: 1,
-            b: 1,
-            c: 1
-          },
-          misCount: {
-            a: 0,
-            b: 0,
-            c: 0
-          },
-          multiplier: 0
-        }
-        subscriber.send(data);
-      }
-    }
+    // let sent = false;
+    // let sendMisData = new DataContainer();
+    // let arrayMissionResults = [];
+    // for (let subscriber of this.subscribers) {
+    //   console.log("subscriber guid " + subscriber.user.guid);
+    //   // console.log("subscribers: " + JSON.stringify(this.subscribers))
+    //   // let dx = await this.dataRepository.getMissionData(subscriber.user.guid);
+    //   for (let counter = 0; counter < data.missionReportResult.mission.length; counter++) {
+    //     console.log("mission gui: " + data.missionReportResult.mission[counter].guid)
+    //     if (data.missionReportResult.mission[counter].guid === subscriber.user.guid) {
+    //       // todo: assign dataS the single element of the array, now data for all players is sent to the table
+    //       sendMisData = data.missionReportResult.mission;
+    //       subscriber.send(sendMisData);
+    //       sent = true;
+    //     }
+    //   }
+    //   if (!sent) {
+    //     data.missionReportResult.mission = [];
+    //     data.missionReportResult.mission[0] = {
+    //       guid: subscriber.user.guid,
+    //       misProgress: {
+    //         a: 0,
+    //         b: 0,
+    //         c: 0
+    //       },
+    //       misPrBest: {
+    //         a: 1,
+    //         b: 1,
+    //         c: 1
+    //       },
+    //       misCount: {
+    //         a: 0,
+    //         b: 0,
+    //         c: 0
+    //       },
+    //       multiplier: 0
+    //     }
+    //     subscriber.send(data);
+    //   }
+    // }
   }
 
 
@@ -790,6 +804,31 @@ export class Table {
         data.gameStarting = this.getGameStartingEvent();
         data.gameStarting.nextBlind = data.subscribeTableResult.nextBlind;
       }
+
+
+
+      data.missionReportResult = new MissionReportResult();
+      let ar01 = [{
+        guid: subscriber.user.guid,
+        misProgress: {
+          a: 0,
+          b: 0,
+          c: 0
+        },
+        misPrBest: {
+          a: 1,
+          b: 1,
+          c: 1
+        },
+        misCount: {
+          a: 0,
+          b: 0,
+          c: 0
+        },
+        multiplier: 0
+      }]
+
+      data.missionReportResult.mission = ar01;
       subscriber.send(data);
       if (broadcastToOthers) {
         this.broadcastPlayer(player, true);
