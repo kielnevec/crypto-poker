@@ -1655,6 +1655,7 @@ ux-dialog {
   border-radius: 4px 4px 0 0;
   background-color: #000000;
   padding-left: 40px;
+  border-radius: 15px;
   display: flex;
   align-items: center;
 }
@@ -1722,6 +1723,11 @@ ux-dialog {
 }
 .tables{
   height: 400px;
+  box-sizing: border-box;
+  border: 1px solid #979797;
+  border-radius: 15px;
+  background-color: #404040;
+  box-shadow: 0 2px 26px 0 rgba(0,0,0,0.43);
   /* width */
 ::-webkit-scrollbar {
   width: 10px;
