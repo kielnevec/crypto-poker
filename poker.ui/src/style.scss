@@ -1726,7 +1726,6 @@ ux-dialog {
   box-sizing: border-box;
   border: 1px solid #979797;
   border-radius: 15px;
-  background-color: #404040;
   box-shadow: 0 2px 26px 0 rgba(0,0,0,0.43);
   /* width */
 ::-webkit-scrollbar {
@@ -1753,7 +1752,6 @@ ux-dialog {
   font-weight: bold;
   letter-spacing: 0;
   line-height: 30px;
-  width: 85%;
   margin: auto;
 }
 .table_header {
@@ -1769,7 +1767,6 @@ line-height: 28px;
 }
 .table_header_div{
   display: flex;
-  width: 96%;
   margin: auto;
   height: 100%;
   align-items: center;
@@ -1780,7 +1777,6 @@ line-height: 28px;
   align-items: center;
 }
 .table_background{
-    width: 85%;
     margin: auto;
   opacity: 0.8;
   border-radius: 4px;
@@ -1790,8 +1786,6 @@ line-height: 28px;
   overflow-y: auto;
   max-height: 230px;
   margin: auto;
-  width: 98%;
-  margin-left: 2%;
 } 
 .table_body_content {
   color: #FFFFFF;
