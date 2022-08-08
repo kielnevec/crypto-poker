@@ -50,13 +50,13 @@
     
     <div id="pot-amount" show.bind="potAmount">Pot: <span>${potAmount | numberFormat}</span></div>
     <div id="table-pot-amount" show.bind="potAmount && game.board.length>0"><span>${potAmount | numberFormat}</span></div>
-    <div id="infobox">
+    <compose view-model="global-chat" view.bind="global-chat.html" containerless></compose>   
+    <!-- <div id="infobox">
       <div id="gameinfo">
         <span>${playerSitting ? 'Stack:' : 'Account Balance:'}  ${playerStack | numberFormat}</span>
         <span class="crypto-balance" if.bind="isCurrencyCrypto">${playerStack | cryptoFormat}</span>
         <span class="currency-icon currency-${currency}" if.bind="isCurrencyCrypto"></span>
 
-        <!--<span id="tocall" show.bind="game.tocall >= 0">To call: ${game.tocall | numberFormat}</span>-->
       </div>
       <div id="chatbox" ref="chatboxElem" scrolltop.bind="chatboxElemScrollHeight">
         <p repeat.for="chat of chatMessages" class="chatRow">
@@ -82,7 +82,7 @@
         <div id="submitchat" click.trigger="sendChat()">Send</div>   
         
       </div>
-    </div>
+    </div> -->
     <div id="side-pots" class="hide">
       <strong>Side Pots:</strong>
       <ol></ol>
@@ -131,7 +131,7 @@
       <next-tournament></next-tournament>
     <!-- <compose view-model="global-chat" view.bind="global-chat.html" containerless></compose>       -->
    
-    <compose view-model="global-chat" view.bind="global-chat.html" containerless></compose>   
+    <!-- <compose view-model="global-chat" view.bind="global-chat.html" containerless></compose>    -->
     
     <div class="daily_missions">
       <div class="daily_missions_header">
