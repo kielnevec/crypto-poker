@@ -17,8 +17,46 @@ export class TexasHoldemGameState {
       return result;
     }
 
-    allocatePots(players: IPlayer[]) : void {
+  playerMissionStats(players: IPlayer[]): void {
+    let hand, handFlop, handTurn, rankFlop, rankTurn, isFlop = false, isTurn = false, flopCards, turnCards, boardCards;
 
+    this.boardCards ? boardCards = this.boardCards.length : boardCards = 0;
+
+    boardCards > 2 ? isFlop = true : isFlop = false;
+    boardCards > 3 ? isTurn = true : isTurn = false;
+    isFlop ? flopCards = [this.boardCards[0], this.boardCards[1], this.boardCards[2]] : flopCards = null;
+    isTurn ? turnCards = [this.boardCards[0], this.boardCards[1], this.boardCards[2], this.boardCards[3]] : turnCards = null;
+
+    let handResult, flopResult, turnResult;
+    for (let counter = 0; counter < players.length; counter++) {
+      if (boardCards > 0) {
+        players[counter].missionData = { score: 0, flopScore: 0, turnScore: 0, rank: 0, turnRank: 0, flopRank: 0 };
+        hand = this.boardCards.concat(players[counter].holecards);
+        isFlop ? handFlop = flopCards.concat(players[counter].holecards) : handFlop = null;
+        isTurn ? handTurn = turnCards.concat(players[counter].holecards) : handTurn = null;
+        handResult = PokerEvaluator.rankHand(hand);
+        isFlop ? flopResult = PokerEvaluator.rankHand(handFlop) : flopResult = null;
+        isTurn ? turnResult = PokerEvaluator.rankHand(handTurn) : turnResult = null;
+        // console.log(players[counter]);
+        // console.log(handResult);
+        console.log(`Hand: ${players[counter].holecards} Hand Value: ${handResult.handRankEnglish}, Best Hand Cards, ${handResult.bestHandCards} Score: ${handResult.score}`);
+        isFlop ? console.log(`Hand: ${players[counter].holecards} Hand Value Flop: ${flopResult.handRankEnglish}, Best Hand Cards, ${flopResult.bestHandCards} Score: ${flopResult.score}`) : console.log("no flop");
+        // players[counter].flopScore = flopResult.score
+        //  players[counter].score = handResult.score
+        isFlop ? players[counter].missionData.flopScore = flopResult.score : players[counter].missionData.flopScore = null;
+        isTurn ? players[counter].missionData.turnScore = turnResult.score : players[counter].missionData.turnScore = null;
+        players[counter].missionData.score = handResult.score;
+        players[counter].missionData.rank = handResult.handRank;
+        isFlop ? players[counter].missionData.flopRank = flopResult.handRank : players[counter].missionData.flopRank;
+        isTurn ? players[counter].missionData.turnRank = turnResult.handRank : players[counter].missionData.turnRank;
+      } else {
+        players[counter].missionData = { score: null, flopScore: null, turnScore: null, rank: null, turnRank: null, flopRank: null };
+      }
+    }
+  }
+
+    allocatePots(players: IPlayer[]) : void {
+      this.playerMissionStats(players);
       let filteredPlayers = players.filter(p => p.cumulativeBet > 0);
       let groups = _.groupBy(filteredPlayers, (p: IPlayer) => p.cumulativeBet);
       let sortedKeys = _.keys(groups).sort((k1: number, k2: number) => { return k1 - k2; });
@@ -138,7 +176,6 @@ export class TexasHoldemGameState {
           } else if (handResult.handRank === maxRank) {
             maxScore = Math.max(maxScore, handResult.score);
           }
-
           i++;
         }
         winners = potResult.playerHandEvaluatorResults.filter((r: HandEvaluatorResult) => r.handRank === maxRank && r.score === maxScore);

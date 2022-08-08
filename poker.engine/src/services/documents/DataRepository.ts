@@ -36,6 +36,7 @@ import { QueryMeta } from './QueryMeta';
 import { inspect } from 'util'
 import { RewardsReportLeaderboard } from '../../model/table/RewardsReportLeaderboard';
 import { SaveUserEmail } from '../../model/SaveUserEmail'
+import { max } from 'lodash';
 
 interface dailyLeaderboardHistory {
   guid: string;
@@ -207,11 +208,79 @@ export class DataRepository implements IDataRepository {
   }
 
 
+  compRewardsDetails(rewardsDetails: RewardsDetails[]): any {
+    let mission = { plFlop: 0, plTurn: 0, plRiver: 0, plShowdown: 0, bestHandPre: false, bestHandFlop: false, bestHandTurn: false };
+    let maxHandRankFlop = 0;
+    let maxHandScoreFlop = 0;
+    let maxHandRankTurn = 0;
+    let maxHandScoreTurn = 0;
+    let maxHandRankRiver = 0;
+    let maxHandScoreRiver = 0;
+    for (let counter = 0; counter < rewardsDetails.length; counter++) {
+      if (rewardsDetails[counter].flopRank >= maxHandRankFlop) {
+        maxHandRankFlop = rewardsDetails[counter].flopRank;
+        if (rewardsDetails[counter].flopScore >= maxHandScoreFlop) {
+          maxHandScoreFlop = rewardsDetails[counter].flopScore;
+        }
+      }
+      if (rewardsDetails[counter].turnRank >= maxHandRankTurn) {
+        maxHandRankTurn = rewardsDetails[counter].turnRank;
+        if (rewardsDetails[counter].turnScore >= maxHandScoreTurn) {
+          maxHandScoreTurn = rewardsDetails[counter].turnScore;
+        }
+      }
+      if (rewardsDetails[counter].handRank >= maxHandRankRiver) {
+        maxHandRankRiver = rewardsDetails[counter].handRank;
+        if (rewardsDetails[counter].score >= maxHandScoreRiver) {
+          maxHandScoreRiver = rewardsDetails[counter].score;
+        }
+      }
+    }
+    for (let counter = 0; counter < rewardsDetails.length; counter++) {
+      console.log(rewardsDetails[counter]);
+      // rank players
+      if (rewardsDetails[counter].lastStreet == "flop") {
+        mission.plFlop++;
+        if (maxHandRankFlop == rewardsDetails[counter].flopRank && maxHandScoreFlop == rewardsDetails[counter].flopScore)
+        rewardsDetails[counter].bestHandFlop = true;
+      }
+      if (rewardsDetails[counter].lastStreet == "turn") {
+        mission.plFlop++;
+        mission.plTurn++;
+        if (maxHandRankFlop == rewardsDetails[counter].flopRank && maxHandScoreFlop == rewardsDetails[counter].flopScore)
+        rewardsDetails[counter].bestHandFlop = true;
+        if (maxHandRankTurn == rewardsDetails[counter].turnRank && maxHandScoreTurn == rewardsDetails[counter].turnScore)
+        rewardsDetails[counter].bestHandTurn = true;
+      }
+      if (rewardsDetails[counter].lastStreet == "river") {
+        mission.plFlop++;
+        mission.plTurn++;
+        mission.plRiver++;
+        if (maxHandRankFlop == rewardsDetails[counter].flopRank && maxHandScoreFlop == rewardsDetails[counter].flopScore)
+        rewardsDetails[counter].bestHandFlop = true;
+        if (maxHandRankTurn == rewardsDetails[counter].turnRank && maxHandScoreTurn == rewardsDetails[counter].turnScore)
+        rewardsDetails[counter].bestHandTurn = true;
+        if (maxHandRankRiver == rewardsDetails[counter].score && maxHandScoreRiver == rewardsDetails[counter].score)
+        rewardsDetails[counter].bestHandRiver = true;
+      }
+      if (rewardsDetails[counter].seenShowdown) {
+        mission.plShowdown++;
+      }
+    }
+    for (let counter = 0; counter < rewardsDetails.length; counter++) {
+      rewardsDetails[counter].plFlop = mission.plFlop;
+      rewardsDetails[counter].plTurn = mission.plTurn;
+      rewardsDetails[counter].plRiver = mission.plRiver;
+      rewardsDetails[counter].plShowdown = mission.plShowdown;
+    }
+    return rewardsDetails;
+  }
+  
   saveRewardsDetails(rewardsDetails: RewardsDetails): any {
     var collection = this.db.collection('rewardsDetail');
     return collection.save(rewardsDetails);
   }
-
+  
   async notNaN(myNumber: any) {
     return (myNumber == undefined || isNaN(myNumber)) ? 0 : myNumber;
   }
@@ -219,6 +288,44 @@ export class DataRepository implements IDataRepository {
   async updateRewardsReportLeaderboard(rewardsDetails: RewardsDetails, guid: string) {
     // DataRepository.percentil = await this.fillPercentile();
     let percentil = DataRepository.percentil;
+
+    interface missionMapI {
+      a: {
+        name: string,
+        field: string,
+        target: number
+      }
+      b: {
+        name: string,
+        field: string,
+        target: number
+      }
+      c: {
+        name: string,
+        field: string,
+        target: number
+      }
+    }  
+    const missionMap: missionMapI = 
+    {
+      a: {
+        name: "Flop Seen",
+        field: "seeFlop",
+        target: 20
+      }, 
+      b: {
+        name: "Win Hand",
+        field: "winHand",
+        target: 15
+      },
+      c: {
+        name: "Win Hand",
+        field: "winHand",
+        target: 10
+      }      
+    }
+
+    // console.log(missionMap.a);
 
     let Missions = {
       level1: {
@@ -244,6 +351,7 @@ export class DataRepository implements IDataRepository {
 
     const query = { guid: guid };
     let tempReport = await collection.findOne(query);
+    let winStreak, currentWinStreak;
     let addProfitLoss = rewardsDetails.profitLoss
     let addOnePair = rewardsDetails.handRank == 2 ? 1 : 0;
     let addTwoPairs = rewardsDetails.handRank == 3 ? 1 : 0;
@@ -253,7 +361,26 @@ export class DataRepository implements IDataRepository {
     let addWinHand = rewardsDetails.winHand ? 1 : 0;
     let update, lastProfitLoss, lastHandOnePair, lastHandTwoPairs, lastSeeFlop, lastSeeTurn, lastSeeRiver, lastWinHand, currentMission, lastHandsPlayed;
     // Report exists: update
+
+    interface misBarInterface {[k: string]: number};
+
+    let misCount: misBarInterface = {};
+    let misProgress: misBarInterface = {};
+    let misPrBest: misBarInterface = {};
+    
+    let k: keyof missionMapI;
+
+    for (k in missionMap) {
+      misCount[k] = 0;
+      misProgress[k] = 0;
+      misPrBest[k] = 0;
+    }    
+
     if (tempReport != null) {
+      winStreak = tempReport.winStreak;
+      currentWinStreak = rewardsDetails.winHand ? ++tempReport.currentWinStreak : 0;
+      currentWinStreak > winStreak ? winStreak = currentWinStreak: winStreak;
+
       lastProfitLoss = await this.notNaN(tempReport.profitLoss);
       lastHandOnePair = await this.notNaN(tempReport.handOnePair);
       lastHandTwoPairs = await this.notNaN(tempReport.handTwoPairs);
@@ -264,58 +391,59 @@ export class DataRepository implements IDataRepository {
       lastHandsPlayed = await this.notNaN(tempReport.handsPlayed);
 
       let totProfitLoss = lastProfitLoss + addProfitLoss;
-
-      let misCount = { a: 0, b: 0, c: 0 };
-      let misProgress = { a: 0, b: 0, c: 0 };
-      let misPrBest = { a: 0, b: 0, c: 0 };
-
-      misCount.a = tempReport.seeFlop;
-      misCount.b = tempReport.winHand;
-      misCount.c = tempReport.winHand;
+      
 
       update = {
         $set: {
           guid: guid, profitLoss: totProfitLoss, handOnePair: lastHandOnePair + addOnePair,
           handTwoPairs: lastHandTwoPairs + addTwoPairs, seeFlop: lastSeeFlop + addSeeFlop, seeTurn: lastSeeTurn + addSeeTurn, seeRiver: lastSeeRiver + addSeeRiver,
-          winHand: lastWinHand + addWinHand, handsPlayed: lastHandsPlayed + 1, misCount: misCount, misProgress: misProgress, misPrBest: misPrBest }
+          winHand: lastWinHand + addWinHand, handsPlayed: lastHandsPlayed + 1, misCount: misCount, misProgress: misProgress, misPrBest: misPrBest,
+          currentWinStreak: currentWinStreak, winStreak: winStreak
+        }
       }
       await collectionU2.updateOne(query, update);
-            
       tempReport = await collection.findOne(query);
 
       let currentMission = 1;
-      // let misPrTitle = { a: 0, b: 0, c: 0 };
-      // let misCount = { a: 0, b: 0, c: 0 };
-      // let misProgress = { a: 0, b: 0, c: 0 };
-      // let misPrBest = { a: 0, b: 0, c: 0 };
-
       let missionProgress = 0;
 
       // to be implemented: random daily mission (now it's fixed)
+      let missx: keyof missionMapI; 
+      // : keyof missionMapI;
+      for (k in missionMap) {
+        missx = k as keyof missionMapI;
+        missionProgress = tempReport[missionMap[missx].field] / missionMap[missx].target; misPrBest[missx] = 1; misCount[missx] = tempReport[missionMap[missx].field];
+        // if (tempReport.seeTurn / Missions.level1.seeTurn > missionProgress) { missionProgress = tempReport.seeTurn / Missions.level1.seeTurn; misCount.a = tempReport.seeTurn; }
+        // if (tempReport.seeRiver / Missions.level1.seeRiver > missionProgress) { missionProgress = tempReport.seeRiver / Missions.level1.seeRiver; misPrBest.a = 2; misPrBest.a = 1; misCount.a = tempReport.seeRiver; }
+        misProgress[missx] = missionProgress;
+        console.log(misProgress[missx]);
+      }
 
-      missionProgress = tempReport.seeFlop / Missions.level1.seeFlop; misPrBest.a = 1; misCount.a = tempReport.seeFlop;
-      // if (tempReport.seeTurn / Missions.level1.seeTurn > missionProgress) { missionProgress = tempReport.seeTurn / Missions.level1.seeTurn; misCount.a = tempReport.seeTurn; }
-      // if (tempReport.seeRiver / Missions.level1.seeRiver > missionProgress) { missionProgress = tempReport.seeRiver / Missions.level1.seeRiver; misPrBest.a = 2; misPrBest.a = 1; misCount.a = tempReport.seeRiver; }
-      misProgress.a = missionProgress;
-
-      missionProgress = tempReport.winHand / Missions.level2.winHand; misPrBest.b = 1; misCount.b = tempReport.winHand;
+      // missionProgress = tempReport.winHand / Missions.level2.winHand; misPrBest.b = 1; misCount.b = tempReport.winHand;
       // if (tempReport.handOnePair / Missions.level2.handOnePair > missionProgress) { missionProgress = tempReport.handOnePair / Missions.level2.handOnePair; misPrBest.b = 2; misCount.b = tempReport.handOnePair; }
       // if (tempReport.handTwoPairs / Missions.level2.handTwoPairs > missionProgress) { missionProgress = tempReport.handTwoPairs / Missions.level2.handTwoPairs; misPrBest.b = 3; misCount.b = tempReport.handTwoPairs; }
-      misProgress.b = missionProgress;
+      // misProgress.b = missionProgress;
 
-      missionProgress = tempReport.winHand / Missions.level3.winHand; misPrBest.c = 1; misCount.c = tempReport.winHand;
+      // missionProgress = tempReport.winHand / Missions.level3.winHand; misPrBest.c = 1; misCount.c = tempReport.winHand;
       // if (tempReport.seeFlop / Missions.level3.seeFlop > missionProgress) { missionProgress = tempReport.seeFlop / Missions.level3.seeFlop; misPrBest.c = 2; misCount.c = tempReport.seeFlop; }
       // if (tempReport.seeTurn / Missions.level3.seeTurn > missionProgress) { missionProgress = tempReport.seeTurn / Missions.level3.seeTurn; misPrBest.c = 3; misCount.c = tempReport.seeTurn; }
       // if (tempReport.seeRiver / Missions.level3.seeTurn > missionProgress) { missionProgress = tempReport.seeRiver / Missions.level3.seeRiver; misPrBest.c = 4; misCount.c = tempReport.seeRiver; }
-      misProgress.c = missionProgress;
+      // misProgress.c = missionProgress;
       currentMission = 0;
-      misProgress.a *= 100;
-      misProgress.b *= 100;
-      misProgress.c *= 100;
 
-      misProgress.a > 100 ? misProgress.a = 100 : misProgress.a = Math.round(misProgress.a);
-      misProgress.b > 100 ? misProgress.b = 100 : misProgress.b = Math.round(misProgress.b);
-      misProgress.c > 100 ? misProgress.c = 100 : misProgress.c = Math.round(misProgress.c);
+      for (k in missionMap) {
+        missx = k as keyof missionMapI;
+        misProgress[missx] *= 100;
+        misProgress[missx] > 100 ? misProgress[missx] = 100 : misProgress[missx] = Math.round(misProgress[missx]);
+      }
+
+      // misProgress.a *= 100;
+      // misProgress.b *= 100;
+      // misProgress.c *= 100;
+
+      // misProgress.a > 100 ? misProgress.a = 100 : misProgress.a = Math.round(misProgress.a);
+      // misProgress.b > 100 ? misProgress.b = 100 : misProgress.b = Math.round(misProgress.b);
+      // misProgress.c > 100 ? misProgress.c = 100 : misProgress.c = Math.round(misProgress.c);
 
       update = {
         $set: {
@@ -324,9 +452,12 @@ export class DataRepository implements IDataRepository {
       await collectionU.updateOne(query, update);
     // Report does not exist: insert first record
     } else {
-      let misCount = { a: 0, b: 0, c: 0 };
-      let misPrBest = { a: 0, b: 0, c: 0 };
-      let misProgress = { a: 0, b: 0, c: 0 };
+      currentWinStreak = rewardsDetails.winHand ? 1 : 0;
+      winStreak === undefined ? winStreak = 0: winStreak;
+      currentWinStreak > winStreak ? winStreak = currentWinStreak: winStreak;            
+      // let misCount = { a: 0, b: 0, c: 0 };
+      // let misPrBest = { a: 0, b: 0, c: 0 };
+      // let misProgress = { a: 0, b: 0, c: 0 };
       let missionProgress = addSeeFlop / Missions.level1.seeFlop; misPrBest.a = 1; misCount.a = addSeeFlop;
       misProgress.a = missionProgress;
       missionProgress = addWinHand / Missions.level2.winHand; misPrBest.b = 1; misCount.b = addWinHand;
@@ -343,7 +474,8 @@ export class DataRepository implements IDataRepository {
       update = {
         guid: guid, profitLoss: addProfitLoss, handOnePair: addOnePair,
         handTwoPairs: addTwoPairs, seeFlop: addSeeFlop, seeTurn: addSeeTurn, seeRiver: addSeeRiver,
-        winHand: addWinHand, currentMission: currentMission, handsPlayed: 1, misCount: misCount, misProgress: misProgress, misPrBest: misPrBest
+        winHand: addWinHand, currentMission: currentMission, handsPlayed: 1, misCount: misCount, misProgress: misProgress, misPrBest: misPrBest,
+        winStreak: winStreak, currentWinStreak: winStreak
       }
       await collectionU.insertOne(update);
     }

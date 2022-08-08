@@ -65,6 +65,7 @@ export class Table {
     return this._tableConfig;
   }
   gameStarting: Date | null;
+  gameRunning: boolean = false;
   gameStartDelaySec: number = 3;
   showdownAfterAllFoldDelaySec: number = 1;
   flopDelaySec: number = 1;
@@ -181,7 +182,6 @@ export class Table {
       this.broadcastTableConfigUpdate();
     }
     this.checkGameStartingEvent();
-
     return result;
   }
 
@@ -204,15 +204,37 @@ export class Table {
       subscriber.send(data);
     }
   }
-
-  checkGameStartingEvent() {
-    if (!this.gameStarting && !this.currentPlayers) {
-      let players = this.getPlayersForNextHand()
-
-      if (players.length >= this.minNumPlayers) {
-        this.handleGameStartingEvent();
+  checkActivePlayers(players: PlayerTableHandle[]) {
+    let activePlayers = 0;
+    for (let counter = 0; counter < players.length; counter++) {
+      console.log(players[counter]);
+      if (players[counter].isDisconnected===false || players[counter].isDisconnected === undefined) {
+        activePlayers++;
       }
+    }
+    return activePlayers;
+  }
+  checkGameStartingEvent() {
+    if (!this.gameRunning) {
+      // changed logic to check start game, check original
+      let players;
+      if (!this.gameStarting) {
+        if (!this.currentPlayers) {
+          players = this.getPlayersForNextHand();
+          } else {
+            if ((this.checkActivePlayers(this.currentPlayers))<2) {
+                // players = this.currentPlayers;
+                players = [];
+            } else {
+              players = this.getPlayersForNextHand();
+            }
+            //  players = this.currentPlayers;          
+        }
 
+        if (players.length >= this.minNumPlayers) {
+          this.handleGameStartingEvent();
+        }
+      }
     }
   }
 
@@ -366,6 +388,7 @@ export class Table {
 
   dealHoleCards() {
     this.playersSeenStreet();
+    this.gameRunning = true;
 
     if (this.shutdownRequested) {
       this.broadcastShutdown();
@@ -1234,13 +1257,20 @@ export class Table {
   }
 
   async handleShowdown(): Promise<void> {
+    this.gameRunning = false;
     this.clearPlayerTimer();
     this.street = null;
     let data = new DataContainer();
 
     data.game = this.toGameEvent();
     data.game.potResults = [];
-
+    for (let counter = 0; counter<this.players.length; counter++) {
+      console.log(this.players[counter].seat===0);
+      if (this.players[counter].seat===this.dealerSeat) {
+        this.players[counter].position = 0;
+        
+      }
+    }
     let combinedPlayers = this.players.filter(p => p.cumulativeBet > 0 || this.currentPlayers.indexOf(p) > -1);//need to include players who were sat out but paid blinds
     let result: GamePotResult;
     try {
@@ -1322,7 +1352,8 @@ export class Table {
     dbGame.boardCards = this.gameState.boardCards;
     dbGame.players = gameResultPlayers;
     dbGame.potResults[0].playerHandEvaluatorResults;
-    let rewardsDetails;
+    let rewardsDetails = new Array();
+    let hasFolded;
     // for (let counter03 = 0; counter03 < data.game.potResults.length; counter03++) {
     //   for (let counter02 = 0; counter02 < data.game.potResults[counter03].seatWinners.length; counter02++) {
 
@@ -1330,28 +1361,47 @@ export class Table {
     // }
     let winHand = false;
     for (let counter01 = 0; counter01 < gameResultPlayers.length; counter01++) {
-      winHand = false;
-      for (let counter03 = 0; counter03 < data.game.potResults.length; counter03++) {
-        for (let counter02 = 0; counter02 < data.game.potResults[counter03].seatWinners.length; counter02++) {
-          if (data.game.potResults[counter03].seatWinners[counter03] == gameResultPlayers[counter01].seat) {
-            winHand = true;
+      if (gameResultPlayers[counter01].playing) {
+        winHand = false;
+        for (let counter03 = 0; counter03 < data.game.potResults.length; counter03++) {
+          for (let counter02 = 0; counter02 < data.game.potResults[counter03].seatWinners.length; counter02++) {
+            if (data.game.potResults[counter03].seatWinners[counter03] == gameResultPlayers[counter01].seat) {
+              winHand = true;
+            }
           }
         }
-      }
-      rewardsDetails = {
-        date: new Date(Date.now()),
-        guid: gameResultPlayers[counter01].guid,
-        profitLoss: gameResultPlayers[counter01].profitLoss,
-        handRank: dbGame.potResults[0].playerHandEvaluatorResults[counter01] ? dbGame.potResults[0].playerHandEvaluatorResults[counter01].handRank : 0,
-        handRankEnglish: dbGame.potResults[0].playerHandEvaluatorResults[counter01] ? dbGame.potResults[0].playerHandEvaluatorResults[counter01].handRankEnglish : "N/A",
-        lastStreet: gameResultPlayers[counter01].lastStreet ? gameResultPlayers[counter01].lastStreet : "preflop",
-        winHand: winHand
+        hasFolded = gameResultPlayers[counter01].hasFolded === true ? false : true;
+        rewardsDetails.push({
+          date: new Date(Date.now()),
+          guid: gameResultPlayers[counter01].guid,
+          profitLoss: gameResultPlayers[counter01].profitLoss,
+          handRank: dbGame.potResults[0].playerHandEvaluatorResults[counter01] ? dbGame.potResults[0].playerHandEvaluatorResults[counter01].handRank : 0,
+          handRankEnglish: dbGame.potResults[0].playerHandEvaluatorResults[counter01] ? dbGame.potResults[0].playerHandEvaluatorResults[counter01].handRankEnglish : "N/A",
+          lastStreet: gameResultPlayers[counter01].lastStreet ? gameResultPlayers[counter01].lastStreet : "preflop",
+          winHand: winHand,
+          flopScore: gameResultPlayers[counter01].missionData.flopScore,
+          score: gameResultPlayers[counter01].missionData.score,
+          turnScore:  gameResultPlayers[counter01].missionData.turnScore,
+          flopRank: gameResultPlayers[counter01].missionData.flopRank,
+          turnRank: gameResultPlayers[counter01].missionData.turnRank,
+          seenShowdown: hasFolded,
+          holeCards: gameResultPlayers[counter01].holecards,
+          boardCards: this.gameState.boardCards        
+        
+        });
       }
       // console.log(rewardsDetails);
-      await this.dataRepository.saveRewardsDetails(rewardsDetails);
-      await this.dataRepository.updateRewardsReportLeaderboard(rewardsDetails, gameResultPlayers[counter01].guid);
     }
-
+    let notPlaying = 0;
+    // await console.log(this.dataRepository.compRewardsDetails(rewardsDetails));
+    for (let counter01 = 0; counter01 < gameResultPlayers.length; counter01++) {
+      if (gameResultPlayers[counter01].playing) {
+        await this.dataRepository.saveRewardsDetails(rewardsDetails[counter01-notPlaying]);
+        await this.dataRepository.updateRewardsReportLeaderboard(rewardsDetails[counter01-notPlaying], gameResultPlayers[counter01-notPlaying].guid);
+      } else {
+        notPlaying++;
+      }
+    }    
     await this.dataRepository.saveGame(dbGame);
     await this.dataRepository.fillPercentile().catch(console.dir);
     let temp = await this.dataRepository.saveTableStates([this.getTableState()]);
@@ -1382,11 +1432,13 @@ export class Table {
         seatEvent.playercards = p.holecards;
       data.tableSeatEvents.seats.push(seatEvent);
     }
+    // console.log("this is the data");
+    // console.log(`============>${data}`);
+    // console.log("yes, this is the data");
     this.sendDataContainer(data);
 
     let delay = remainingPlayers.length > 1 ? 5500 : 1500;
     this.timerProvider.startTimer(this.postShowdown.bind(this), delay, this);
-
   }
 
 
@@ -1432,7 +1484,6 @@ export class Table {
     let prefix = this.tableConfig.currency == Currency.tournament ? '' : '$';
     return prefix + numberWithCommas(val);
   }
-
 
 
 
@@ -1540,7 +1591,7 @@ export class Table {
     this.sendRewardsData();
     this.removePlayer(player);
     if (broadcastRemovedPlayer)
-      this.broadcastPlayer(player);
+    this.broadcastPlayer(player);
     this.broadcastTableConfigUpdate();
 
     if (!this.tournamentId) {

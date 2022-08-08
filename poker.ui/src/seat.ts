@@ -41,6 +41,15 @@ export class Seat{
     facedownCard: string = 'Red_Back';
     timeToActSec:number;
     isHovering:boolean=false;
+    missionData: {
+      flopScore: number;
+      score: number;
+      turnScore: number;
+      flopRank: number;
+      turnRank: number;
+      rank: number;
+    }
+    
     loadSoundsHandler:()=> void;
   
     constructor(private ea: EventAggregator, private util: Util, private constants: Constants, seatIndex: number, private apiService: ApiService) {

@@ -16,7 +16,8 @@
     "bluebird": "^3.4.1",
     "bootstrap": "^3.3.7",
     "bootstrap-slider": "^10.2.0",
-    "decimal.js": "^10.0.0",
+    "decimal": "latest",
+    "decimal.js": "^10.3.1",
     "font-awesome": "^4.7.0",
     "jquery": "^2.2.4",
     "long": "^4.0.0",
@@ -26,7 +27,6 @@
     "text": "github:requirejs/text#latest",
     "yargs": "17.1.1"
   },
-  "peerDependencies": {},
   "devDependencies": {
     "@types/jasmine": "^2.2.0",
     "@types/node": "^6.0.45",
@@ -38,7 +38,7 @@
     "connect-history-api-fallback": "^1.2.0",
     "debounce": "^1.0.2",
     "event-stream": "^4.0.1",
-    "gulp": "github:gulpjs/gulp#v4.0.0",
+    "gulp": "latest",
     "gulp-changed-in-place": "^2.0.3",
     "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.1.0",
@@ -49,7 +49,7 @@
     "gulp-typescript": "^3.1.4",
     "gulp-watch": "^4.3.11",
     "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
+    "karma": "^1",
     "karma-chrome-launcher": "^1.0.1",
     "karma-jasmine": "^1.0.2",
     "karma-typescript-preprocessor": "^0.2.1",
@@ -57,7 +57,7 @@
     "minimatch": "^3.0.2",
     "through2": "^2.0.1",
     "tslint": "^3.11.0",
-    "typescript": "^2.9.2",
+    "typescript": "^4",
     "uglify-js": "^3.0.19",
     "vinyl-fs": "^2.4.3"
   }

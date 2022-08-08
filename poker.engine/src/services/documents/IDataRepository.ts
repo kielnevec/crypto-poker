@@ -30,6 +30,7 @@ export class IDataRepository {
   resetBalances(balance: number) : Promise<boolean> { throw new Error("Not implemented"); };  
   saveUser(user: User): Promise<void> { throw new Error("Not implemented"); };
   saveRewardsDetails(rewardsDetails: RewardsDetails): any { throw new Error("Not implemented"); };  
+  compRewardsDetails(rewardsDetails: RewardsDetails[]): any { throw new Error("Not implemented"); };  
   updateRewardsReportLeaderboard(rewardsDetails: RewardsDetails, guid: string): any { throw new Error("Not implemented"); };  
   fillPercentile(): any { throw new Error("Not implemented"); };  
   saveGame(game: DbGameResults): any { throw new Error("Not implemented"); };  

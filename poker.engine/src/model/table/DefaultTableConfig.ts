@@ -11,7 +11,7 @@ const configs: TableConfig[] = [
         "timeToActSec": 60,
         "orderIndex": 1,
         "maxBuyIn": 100,
-        "rake": 0.1
+        "rake": 0
     },
     {
         "_id": undefined,
@@ -23,7 +23,7 @@ const configs: TableConfig[] = [
         "timeToActSec": 60,
         "orderIndex": 4,
         "maxBuyIn": 100,
-        "rake": 1
+        "rake": 0
     },
     {
         "_id": undefined,
@@ -35,7 +35,7 @@ const configs: TableConfig[] = [
         "timeToActSec": 60,
         "orderIndex": 11,
         "maxBuyIn": 100,
-        "rake": 1
+        "rake": 0
     },
     {
         "_id": undefined,
@@ -47,7 +47,7 @@ const configs: TableConfig[] = [
         "timeToActSec": 60,
         "orderIndex": 11,
         "maxBuyIn": 100,
-        "rake": 1
+        "rake": 0
     }, 
     {
         "_id": undefined,
@@ -59,7 +59,7 @@ const configs: TableConfig[] = [
         "timeToActSec": 60,
         "orderIndex": 11,
         "maxBuyIn": 100,
-        "rake": 1
+        "rake": 0
     },    {
         "_id": undefined,
         "name": "Madrid",
@@ -70,7 +70,7 @@ const configs: TableConfig[] = [
         "timeToActSec": 60,
         "orderIndex": 1,
         "maxBuyIn": 100,
-        "rake": 0.1
+        "rake": 0
     },
     {
         "_id": undefined,
@@ -82,7 +82,7 @@ const configs: TableConfig[] = [
         "timeToActSec": 60,
         "orderIndex": 4,
         "maxBuyIn": 100,
-        "rake": 1
+        "rake": 0
     },
     {
         "_id": undefined,
@@ -94,7 +94,7 @@ const configs: TableConfig[] = [
         "timeToActSec": 60,
         "orderIndex": 11,
         "maxBuyIn": 100,
-        "rake": 1
+        "rake": 0
     },
     {
         "_id": undefined,
@@ -106,7 +106,7 @@ const configs: TableConfig[] = [
         "timeToActSec": 60,
         "orderIndex": 11,
         "maxBuyIn": 100,
-        "rake": 1
+        "rake": 0
     }, {
         "_id": undefined,
         "name": "Miami",
@@ -117,7 +117,479 @@ const configs: TableConfig[] = [
         "timeToActSec": 60,
         "orderIndex": 11,
         "maxBuyIn": 100,
-        "rake": 1
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Douala",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 1,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Tunis",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 4,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Mandalay",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Tabriz",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    }, 
+    {
+        "_id": undefined,
+        "name": "Shiraz",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },    {
+        "_id": undefined,
+        "name": "Kyoto",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 1,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Qom",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 4,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Baghdad",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Las Vegas",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    }, {
+        "_id": undefined,
+        "name": "Maracaibo",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Tehran",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 1,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Taichung",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 4,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Cairo",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Warsaw",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    }, 
+    {
+        "_id": undefined,
+        "name": "Fez",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },    {
+        "_id": undefined,
+        "name": "Harbin",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 1,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Tashkent",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 4,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Chittagong",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Melbourne",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    }, {
+        "_id": undefined,
+        "name": "Guatemala City",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Abidjan",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 1,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Yokohama",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 4,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Shenyang",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Osaka",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    }, 
+    {
+        "_id": undefined,
+        "name": "Ahvaz",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },    {
+        "_id": undefined,
+        "name": "Cape Town",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 1,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Accra",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 4,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Roma",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Enna",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    }, {
+        "_id": undefined,
+        "name": "Bologna",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Siracusa",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 1,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Verona",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 4,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Rosario",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Newcastle upon Tine",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    }, 
+    {
+        "_id": undefined,
+        "name": "Stratford upon Avon",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },    {
+        "_id": undefined,
+        "name": "Ramsay",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 1,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Belfast",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 4,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Bradford",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    {
+        "_id": undefined,
+        "name": "Derby",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    }, {
+        "_id": undefined,
+        "name": "Durham",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
     }
 ]
 
