@@ -71,7 +71,7 @@ export class WebSocketHandle implements ISubscriber {
           let nowts = Date.now();
           let date_ob = new Date(nowts);
           let datestring = date_ob.getHours().toString() + ":" + date_ob.getMinutes().toString() + ":" + date_ob.getSeconds().toString();
-          fs.appendFileSync('./datajump.json', "WebSocketHands (sending back): ===>" + datestring + '\r\n' + JSON.stringify(data, null, 2) + '\r\n========================END======================\r\n' , 'utf-8');
+          // fs.appendFileSync('./datajump.json', "WebSocketHands (sending back): ===>" + datestring + '\r\n' + JSON.stringify(data, null, 2) + '\r\n========================END======================\r\n' , 'utf-8');
           // console.log("============================>sending data", data)
           data = protobufConfig.serialize(data, 'DataContainer');                    
           // console.log (data);
