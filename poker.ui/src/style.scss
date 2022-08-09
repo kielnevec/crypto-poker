@@ -778,18 +778,18 @@ position: absolute;
 
 .player-info {
   height: 80px;
-  width: 80px;
-  min-width: 80px;
+  width: 105px;
+  min-width: 105px;
   min-height: 80px;
   overflow: hidden;
-  border-radius: 40px;
+  border-radius: 15px;
   border-color: #bcbcbc;
   position: absolute;
-  -webkit-box-shadow: -4px 6px 32px -6px rgba(0,0,0,0.75);
-  -moz-box-shadow: -4px 6px 32px -6px rgba(0,0,0,0.75);
-  box-shadow: -4px 6px 32px -6px rgba(0,0,0,0.75);
+  -webkit-box-shadow: -4px 6px 32px -6px rgb(0 0 0 / 75%);
+  -moz-box-shadow: -4px 6px 32px -6px rgba(0, 0, 0, 0.75);
+  box-shadow: -4px 6px 32px -6px rgb(0 0 0 / 75%);
   z-index: 2;
-  color:#fff;
+  color: #fff;
 }
 
 .chat_box{
