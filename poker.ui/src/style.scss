@@ -1659,6 +1659,7 @@ ux-dialog {
 }
 
 .progress-bar {
+  width: 65%;
   background: linear-gradient(270deg, #FAD55E 0%, #F7701F 100%);
   border-radius: 7px ;
 }
@@ -1666,6 +1667,7 @@ ux-dialog {
 .progress_area{
   display: flex;
   align-items: center;
+  padding-top: 5px;
 }
 .daily_missions_header {
   height: 42px;
@@ -1701,18 +1703,23 @@ ux-dialog {
     padding: 20px;
     padding-bottom: 0px;
 }
+.daily_mission_bottom{
+  border-bottom: 1px solid gray;
+}
+.daily_mission_bottom:not(:last-child){
+}
+
+
 .daily_missions_content_title {
   color: #9A9A9A;
   font-family: "Open Sans";
   font-size: 16px;
   letter-spacing: 0;
   line-height: 28px;
+  width: 65%;
 }
 .fire_mission_image{
   height: 35px;
-  margin-left: 8px;
-  margin-top: -15px;
-  padding-right: 10px;
 }
 .daily_missions_content_number {
   color: #FFFFFF;
@@ -1723,6 +1730,12 @@ ux-dialog {
   line-height: 28px;
   text-align: center;
   height: 16px;
+  margin-left: 24px;
+  margin-top: -30px;
+}
+.daily_mission_partition{
+       display: flex; 
+     flex-direction: row;
 }
 .daily_missions_content_fire {
   color: #FFA71B;
@@ -1875,7 +1888,7 @@ line-height: 28px;
     padding-left: 5px;
 }
 .fire_table{
-  height: 16px;
+  height: 22px;
   padding-left: 5px;
 }
 .game_container {
