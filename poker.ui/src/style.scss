@@ -22,6 +22,7 @@ body {
 .container-fluid {
   background-color: #E8E8E8;
   padding-bottom: 55px;
+  height: 100%;
 }
 .header-nav {
   text-align: center;
@@ -136,9 +137,26 @@ body {
 .invitation {
     line-height:80px;
     color:#000;
-    font-size:18px;
+    font-size:14px;
     color: white;
     text-align: center;
+    font-weight: bold;
+}
+
+.player-sitting-card-inner {
+  background-color: #333333;
+}
+.player-sitting-card-inner:before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 8px;
+    right: 0;
+    z-index: -1;
+    display: block;
+    background: url($cdn + "images/default-user.svg") no-repeat;        
+    height: 80px;
+    width: 105px;
 }
 
 .can-sit:hover {
@@ -767,11 +785,26 @@ position: absolute;
   border-radius: 15px;
   border-color: #bcbcbc;
   position: absolute;
-  -webkit-box-shadow: -4px 6px 32px -6px rgba(0,0,0,0.75);
-  -moz-box-shadow: -4px 6px 32px -6px rgba(0,0,0,0.75);
-  box-shadow: -4px 6px 32px -6px rgba(0,0,0,0.75);
+  -webkit-box-shadow: -4px 6px 32px -6px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: -4px 6px 32px -6px rgba(0, 0, 0, 0.75);
+  box-shadow: -4px 6px 32px -6px rgba(0, 0, 0, 0.75);
   z-index: 2;
-  color:#fff;
+  color: #fff;
+}
+
+.chat_box{
+    height: 123px;
+    width: 348px;
+    border-radius: 20px;
+    background-color: rgba(0,0,0,0.5);
+    box-sizing: border-box;
+    border: 1px solid #979797;
+    border-radius: 15px;
+    background-color: rgba(64,64,64,0.7);
+    box-shadow: 0 2px 26px 0 rgba(0,0,0,0.43);
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
 }
 
 .player-sitting {
@@ -1442,7 +1475,7 @@ ux-dialog {
   
 #global-chatbox {
   margin-top: 5px;
-  height: 200px;
+  height: 50px;
   line-height: 14px;
   font-size: 12px;
   overflow-y: scroll;
@@ -1626,6 +1659,7 @@ ux-dialog {
 }
 
 .progress-bar {
+  width: 65%;
   background: linear-gradient(270deg, #FAD55E 0%, #F7701F 100%);
   border-radius: 7px ;
 }
@@ -1633,10 +1667,11 @@ ux-dialog {
 .progress_area{
   display: flex;
   align-items: center;
+  padding-top: 5px;
 }
 .daily_missions_header {
   height: 42px;
-  border-radius: 4px 4px 0 0;
+  border-radius: 15px 15px 0 0;
   background-color: #000000;
   padding-left: 40px;
   display: flex;
@@ -1644,8 +1679,12 @@ ux-dialog {
 }
 .daily_missions {
   width: 370px;
-  border-radius: 4px;
-  background-color: rgba(0,0,0,0.5);
+  height: 600px;
+  box-sizing: border-box;
+  border: 1px solid #979797;
+  border-radius: 15px;
+  background-color: #404040;
+  box-shadow: 0 2px 26px 0 rgba(0,0,0,0.43);
 }
 
 .daily_missions_header_text {
@@ -1662,22 +1701,25 @@ ux-dialog {
 }
 .daily_missions_content{
     padding: 20px;
-    padding-top: 0px;
     padding-bottom: 0px;
-    background-color: rgba(0,0,0,0.5);
 }
+.daily_mission_bottom{
+  border-bottom: 1px solid gray;
+}
+.daily_mission_bottom:not(:last-child){
+}
+
+
 .daily_missions_content_title {
   color: #9A9A9A;
   font-family: "Open Sans";
   font-size: 16px;
   letter-spacing: 0;
   line-height: 28px;
+  width: 65%;
 }
 .fire_mission_image{
   height: 35px;
-  margin-left: 8px;
-  margin-top: -15px;
-  padding-right: 10px;
 }
 .daily_missions_content_number {
   color: #FFFFFF;
@@ -1688,6 +1730,12 @@ ux-dialog {
   line-height: 28px;
   text-align: center;
   height: 16px;
+  margin-left: 24px;
+  margin-top: -30px;
+}
+.daily_mission_partition{
+       display: flex; 
+     flex-direction: row;
 }
 .daily_missions_content_fire {
   color: #FFA71B;
@@ -1702,7 +1750,7 @@ ux-dialog {
   padding-top: 50px;
 }
 .tables{
-  height: 400px;
+  height: 300px;
   /* width */
 ::-webkit-scrollbar {
   width: 10px;
@@ -1728,7 +1776,6 @@ ux-dialog {
   font-weight: bold;
   letter-spacing: 0;
   line-height: 30px;
-  width: 85%;
   margin: auto;
 }
 .table_header {
@@ -1744,10 +1791,10 @@ line-height: 28px;
 }
 .table_header_div{
   display: flex;
-  width: 96%;
   margin: auto;
   height: 100%;
   align-items: center;
+  padding: 10px;
 } 
 .table_col{
   width: 15%;
@@ -1755,20 +1802,36 @@ line-height: 28px;
   align-items: center;
 }
 .table_background{
-    width: 85%;
     margin: auto;
   opacity: 0.8;
   border-radius: 4px;
-  background-color: rgba(0,0,0,0.73);
+  background-color: #404040;
+  box-sizing: border-box;
+  border: 1px solid #979797;
+  border-radius: 15px;
+  box-shadow: 0 2px 26px 0 rgba(0,0,0,0.43);
+  height: 250px;
+  overflow-y: hidden;
 }
 .table_body_div{
   overflow-y: auto;
   max-height: 230px;
   margin: auto;
-  width: 98%;
-  margin-left: 2%;
+  padding: 10px;
 } 
 .table_body_content {
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  border-bottom: 1px solid #FFFFFF !important;
+}
+.table_body_content:not(:last-child){
   color: #FFFFFF;
   font-family: "Open Sans";
   font-size: 14px;
@@ -1825,7 +1888,7 @@ line-height: 28px;
     padding-left: 5px;
 }
 .fire_table{
-  height: 16px;
+  height: 22px;
   padding-left: 5px;
 }
 .game_container {
