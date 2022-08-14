@@ -1,3 +1,5 @@
+import { missionMapI, missionMapDisplayI} from '../../poker.ui/src/shared/Interfaces';
+import { rewardsInitializer, missionMapDisplay } from './configfiles/missionMaps';
 import { configV } from './configV';
 import { Server, Db, ReplaceOneOptions } from 'mongodb';
 import { TableBalance } from "./model/TableBalance";
@@ -6,7 +8,7 @@ import { CommonHelpers, getCardSuit, numberWithCommas } from '../../poker.ui/src
 import { AutoOptionResult } from '../../poker.ui/src/shared/AutoOptionResult';
 import {
   DataContainer, PokerError, GameStartingEvent, DealHoleCardsEvent, GameEvent, SubscribeTableResult, PotResult, TableSeatEvent,
-  SetTableOptionResult, ChatMessage, ChatMessageResult, TableClosed, LeaderboardResult, LeaderboardUser, BlindsChangingEvent, TableSeatEvents, TableConfigs, RewardsReportResult, MissionReportResult
+  SetTableOptionResult, ChatMessage, ChatMessageResult, TableClosed, LeaderboardResult, LeaderboardUser, BlindsChangingEvent, TableSeatEvents, TableConfigs, RewardsReportResult, MissionReportR
 } from "../../poker.ui/src/shared/DataContainer";
 import { WebSocketHandle, IWebSocket } from "./model/WebSocketHandle";
 import { Deck } from "./deck";
@@ -242,44 +244,114 @@ export class Table {
     let players = this.players.filter(p => !p.sitOutNextHand && !p.isDisconnected);
     return players;
   }
-  // ++++++++++++++++++++ changed to async / to be fixed
-  async sendRewardsData() {
+  
+  async missionSort(data: missionMapI[], guid: string): Promise<missionMapDisplayI[]> {
+    let progressbarN: number;
+    // guid: '29b26f83408eca23e4bee8dffb08000ceb615180'
+    // missions: 0: {name: 'Flop Seen', field: 'seeFlop', target: 20, current: 0, xp: 50}
+    //           1: {name: 'Hands Won', field: 'wonHand', target: 20, current: 1, xp: 80}
+    // let missionDisplay: missionMapDisplayI;    
+    // interface missionDisplayA extends Array<missionMapDisplayI>{}
+    // missionDisplay = new missionDisplay;   
+    var missionD: missionMapDisplayI[] = [];
+
+    // missionDisplayA.push(missionDisplay);
+
+    data.forEach(element => {
+      progressbarN = element.current/element.target*100;
+      missionD.push({
+        name: element.name,
+        progressbar: (progressbarN).toString() + "%",
+        xp: element.xp,
+        position: progressbarN,
+        target: element.target,
+        current: element.current
+      })
+      // missionD.name = element.name;
+      // missionDisplay.percent = element.current/element.target;
+      // missionDisplay.current = element.current;
+      // missionDisplay.target = element.target;
+      // missionDisplay.xp = element.xp;
+      // missionDisplayA.push(missionDisplay);
+    });
+    missionD.sort((a, b) => b.position - a.position);
+    return missionD;
+  }
+  
+
+  async getObjKey(obj: any, value: any) {
+    return Object.keys(obj).find(key => obj[key] === value);
+  }
+ 
+  // console.log(getObjKey(obj, 'Chile')); // 👉️ "country
+
+  // ++++++++++++++++++++ changed to async / to check
+    async sendRewardsData() {
     let dcRewardReports = new DataContainer();
     dcRewardReports.rewardsReportResult = new RewardsReportResult();
     dcRewardReports.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
     try {
       let dcMissionResults = new DataContainer();
-      dcMissionResults.missionReportResult = new MissionReportResult();
-      let arrayMissionResults = [];
-      if (dcRewardReports.rewardsReportResult.rewards.length > 0) {
-        for (let counter = 0; counter < dcRewardReports.rewardsReportResult.rewards.length; counter++) {
-          for (let subscriber of this.subscribers) {
-            if (subscriber.user.guid === dcRewardReports.rewardsReportResult.rewards[counter].guid) {
-              arrayMissionResults[0] = {
-                guid: dcRewardReports.rewardsReportResult.rewards[counter].guid,
-                misProgress: dcRewardReports.rewardsReportResult.rewards[counter].misProgress,
-                misPrBest: dcRewardReports.rewardsReportResult.rewards[counter].misPrBest,
-                misCount: dcRewardReports.rewardsReportResult.rewards[counter].misCount,
-                multiplier: dcRewardReports.rewardsReportResult.rewards[counter].percentile
-              }
-              dcMissionResults.missionReportResult.mission = arrayMissionResults;
-              subscriber.send(dcMissionResults);
-              // arrayMissionResults = [];
-              // this.sendDataContainerMission(dcMissionResults);
+      dcMissionResults.missionReportR = new MissionReportR();
+      let thisSubscriber;
+      let subFound = false;
+      for (let subscriber of this.subscribers) {
+        for (let counter = 0; counter <dcRewardReports.rewardsReportResult.rewards.length; counter++) {
+          if (dcRewardReports.rewardsReportResult.rewards[counter].guid === subscriber.user.guid) {
+            subFound = true;
+          }
+        }
+        if (!subFound) {
+          this.dataRepository.initRewards(subscriber.user.guid);
+        }
+        subFound = false;
+      }
+      for (
+        let counter = 0;
+        counter < dcRewardReports.rewardsReportResult.rewards.length;
+        counter++
+      ) {
+        for (let subscriber of this.subscribers) {
+          console.log(
+            subscriber.user.guid ===
+              dcRewardReports.rewardsReportResult.rewards[counter].guid,
+            subscriber.user.guid,
+            dcRewardReports.rewardsReportResult.rewards[counter].guid
+          );
+          if (
+            subscriber.user.guid ===
+            dcRewardReports.rewardsReportResult.rewards[counter].guid
+          ) {
+            dcMissionResults.missionReportR.guid =
+              dcRewardReports.rewardsReportResult.rewards[counter].guid;
+            let tmpMission: missionMapI[] =
+              dcRewardReports.rewardsReportResult.rewards[counter].missions;
+            let x: missionMapDisplayI[];
+            x = await this.missionSort(tmpMission, subscriber.user.guid);
+            let y: MissionReportR;
+            if (x === null || x === undefined) {
+              y = {
+                guid: subscriber.user.guid,
+                missions: missionMapDisplay,
+              };
+            } else {
+              y = {
+                guid: subscriber.user.guid,
+                missions: x,
+              };
+
+              let n = new DataContainer();
+              n.missionReportR = y;
+              subscriber.send(n);
             }
           }
         }
-
-      } else {
-
       }
-      dcMissionResults.missionReportResult.mission = arrayMissionResults;
+      // dcMissionResults.missionReportResult = arrayMissionResults;
       this.sendDataContainerRewards(dcRewardReports);
       // this.sendDataContainerMission(dcMissionResults);
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e);
-
     }
   }
   async handleGameStartingEvent() {
@@ -682,29 +754,26 @@ export class Table {
     // const timestamp = new Date().getTime();
     // const dateNow = new Date(new Date().getTime());
     for (let subscriber of this.subscribers) {
-      if (data.rewardsReportResult.rewards.length === 0) {
-        // data.rewards.rewardsReportresult.guid = subscriber.user.guid;
-        data.rewardsReportResult.rewards[0] = {
-          date: new Date(new Date().getTime()),
-          guid: subscriber.user.guid,
-          profitLoss: 0,
-          seeFlop: 0,
-          seeTurn: 0,
-          seeRiver: 0,
-          winHand: 0,
-          handOnePair: 0,
-          handTwoPairs: 0,
-          position: 0,
-          percentile: 0,
-          currentMission: 0,
-          missionProgress: 0,
-          handsPlayed: 0,
-          misProgress: { a: 0, b: 0, c: 0 },
-          misPrBest: { a: 0, b: 0, c: 0 },
-          misCount: { a: 0, b: 0, c: 0 },
-          misTotalCount: { a: 0, b: 0, c: 0 }
-        }
-      }
+      // if (data.rewardsReportResult.rewards.length === 0) {
+      //   // data.rewards.rewardsReportresult.guid = subscriber.user.guid;
+      //   data.rewardsReportResult.rewards[0] = {
+      //     date: new Date(new Date().getTime()),
+      //     guid: subscriber.user.guid,
+      //     profitLoss: 0,
+      //     seeFlop: 0,
+      //     seeTurn: 0,
+      //     seeRiver: 0,
+      //     winHand: 0,
+      //     handOnePair: 0,
+      //     handTwoPairs: 0,
+      //     position: 0,
+      //     percentile: 0,
+      //     currentMission: 0,
+      //     missionProgress: 0,
+      //     handsPlayed: 0,
+      //     missions: []
+      //   }
+      // }
       subscriber.send(data);
     }
   }
@@ -830,28 +899,13 @@ export class Table {
 
 
 
-      data.missionReportResult = new MissionReportResult();
+      data.missionReportR = new MissionReportR();
       let ar01 = [{
         guid: subscriber.user.guid,
-        misProgress: {
-          a: 0,
-          b: 0,
-          c: 0
-        },
-        misPrBest: {
-          a: 1,
-          b: 1,
-          c: 1
-        },
-        misCount: {
-          a: 0,
-          b: 0,
-          c: 0
-        },
-        multiplier: 0
+        missionsStatus: {}
       }]
 
-      data.missionReportResult.mission = ar01;
+      // data = ar01;
       subscriber.send(data);
       if (broadcastToOthers) {
         this.broadcastPlayer(player, true);

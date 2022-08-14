@@ -1,6 +1,6 @@
 import * as gulp from 'gulp';
 import * as sourcemaps from 'gulp-sourcemaps';
-import * as sass from 'gulp-sass';
+const sass = require('gulp-sass')(require('sass'));
 import * as project from '../aurelia.json';
 import {build} from 'aurelia-cli';
 

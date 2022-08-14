@@ -43,7 +43,7 @@ export class IDataRepository {
   getPayments(args:{guid?:string, currency?:string, type?:string}): Promise<Payment[]> { throw new Error("Not implemented"); };
   getPaymentsSince(id:string): Promise<Payment[]> { throw new Error("Not implemented"); };
   getLastPaymentUpdate(): Promise<Payment|null> { throw new Error("Not implemented"); };
-  
+  initRewards(guid: string) { throw new Error("Not implemented"); };
   savePayment(payment: Payment): any { throw new Error("Not implemented"); };  
   saveTableConfig(tableConfig: TableConfig): Promise<any> { throw new Error("Not implemented"); };
   deleteTableConfig(id: string): Promise<any> { throw new Error("Not implemented"); };

@@ -39,11 +39,11 @@ export class ApiEndpoints {
     resetRequestHandler: ResetRequestHandler;
 
        constructor(private dataRepository: IDataRepository, private pokerProcessor: PokerProcessor, private connectionToPaymentServer: IConnectionToPaymentServer, private processor: GameServerProcessor) {
-      
+        console.log("connecting to" + process.env.mongoDBHost)
         this.dbConnection()
     }
    async dbConnection(){
-    this.db=  await MongoClient.connect(process.env.mongoDBHost);
+    this.db=  await MongoClient.connect(`${process.env.mongoDBHost}/${process.env.mongoDBDatabase}`);
 
     }
 
@@ -143,40 +143,38 @@ export class ApiEndpoints {
             let data= await this.dataRepository.getRewardsReport()
             let rewards = [];
         let i=0
-        console.log("updating leaderboard data");
-            for (let result of data || []) {
-                i++
-              let dailyMission = 0
-              let fireWinning = 0
-              if (result.misProgress) {
-                if (result.misProgress.a === 100) {
-                  dailyMission++
-                  fireWinning += 10
+        // console.log("updating leaderboard data");
+            // for (let result of data || []) {
+            //     i++
+            //   let dailyMission = 0
+            //   let fireWinning = 0
+            //   if (result.misProgress) {
+            //     if (result.misProgress.a === 100) {
+            //       dailyMission++
+            //       fireWinning += 10
         
-                }
-                if (result.misProgress.b === 100) {
-                  dailyMission++
-                  fireWinning += 50
-                }
-                if (result.misProgress.c === 100) {
-                  dailyMission++
-                  fireWinning += 100
-                }
-              }
-              let view = {
-                rank:i,
-                guid: "anon" + result.guid.substring(0, 4),
-                profitLoss: result.profitLoss,
-                percentile: result.percentile,
-                fireWinning: fireWinning,
+            //     }
+            //     if (result.misProgress.b === 100) {
+            //       dailyMission++
+            //       fireWinning += 50
+            //     }
+            //     if (result.misProgress.c === 100) {
+            //       dailyMission++
+            //       fireWinning += 100
+            //     }
+            //   }
+            //   let view = {
+            //     rank:i,
+            //     guid: "anon" + result.guid.substring(0, 4),
+            //     profitLoss: result.profitLoss,
+            //     percentile: result.percentile,
+            //     fireWinning: fireWinning,
         
-                dailyMission: dailyMission + "/3"
-              };
-              rewards.push(view);
-            }
-        
-
-            res.send({tableList,rewards});
+            //     dailyMission: dailyMission + "/3"
+            //   };
+            //   rewards.push(view);
+            // }
+            res.send({tableList});
           });    
       
 

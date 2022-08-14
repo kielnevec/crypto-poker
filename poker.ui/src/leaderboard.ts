@@ -1,9 +1,10 @@
+import { missionMapI, missionMapDisplayI } from "./shared/Interfaces";
 import { autoinject } from "aurelia-framework";
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { Util } from "./lib/util";
 import { ApiService } from "./lib/api-service";
 import { ClientMessage } from "./shared/ClientMessage";
-import { LeaderboardResult, LeaderboardUser, ExchangeRateResult, RewardsReportResult, MissionReportResult } from "./shared/DataContainer";
+import { LeaderboardResult, LeaderboardUser, ExchangeRateResult, RewardsReportResult, MissionReportR } from "./shared/DataContainer";
 import * as $ from 'jquery';
 import { numberWithCommas } from "./shared/CommonHelpers";
 
@@ -13,24 +14,31 @@ export class Leaderboard {
   results: LeaderboardUser[] = [];
   rates: IExchangeRateView[] = [];
   rewards: IRewardsReportView[] = [];
-  mission: IMissionReportView[] = [];
+  mission: missionMapDisplayI[];
   constructor(private ea: EventAggregator, private util: Util, private apiService: ApiService) {
     this.subscriptions.push(ea.subscribe(LeaderboardResult, (msg: LeaderboardResult) => { this.handleLeaderboardResult(msg) }));
     this.subscriptions.push(ea.subscribe(ExchangeRateResult, (msg: ExchangeRateResult) => { this.handleExchangeRateResult(msg) }));
     this.subscriptions.push(ea.subscribe(RewardsReportResult, (msg: RewardsReportResult) => { this.handleRewardsReportResult(msg) }));
-    this.subscriptions.push(ea.subscribe(MissionReportResult, (msg: MissionReportResult) => { this.handleMissionReportResult(msg) }));
+    this.subscriptions.push(ea.subscribe(MissionReportR, (msg: MissionReportR) => { this.handleMissionReportResult(msg) }));
   }
-  handleMissionReportResult(data: MissionReportResult) {
-    this.mission = [];
-    for (let result of data.mission || []) {
-      let view: IMissionReportView = {
-        guid: result.guid,
-        misProgress: result.misProgress,
-        misPrBest: result.misPrBest,
-        misCount: result.misCount,
-      };
-      this.mission.push(view);
-    }
+  handleMissionReportResult(data: MissionReportR) {
+    console.log("mission data   =========================  ", data);
+    this.mission = data.missions;
+    // this.mission = [];
+    // for (let result of data.mission || []) {
+      // let view: IMissionReportView;
+      // console.log(`here I ' ${data}`)
+      // let vx = {
+      //   field: "ciccia",
+      //   target: 100,
+      //   name: "nome",
+      //   current: 10,
+      //   xp: 50
+      // }
+      // this.mission.push(vx);
+      
+      // this.mission  = data.missions;
+    // }
 
   }
 
@@ -43,22 +51,22 @@ let i=0
       i++
       let dailyMission = 0
       let fireWinning = 0
-      if (result.misProgress) {
-        if (result.misProgress.a === 100) {
-          dailyMission++
-          fireWinning += 10
-        }
-        if (result.misProgress.b === 100) {
-          dailyMission++
-          fireWinning += 50
-        }
-        if (result.misProgress.c === 100) {
-          dailyMission++
-          fireWinning += 100
-        }
-      }
+      // if (result.misProgress) {
+      //   if (result.misProgress.a === 100) {
+      //     dailyMission++
+      //     fireWinning += 10
+      //   }
+      //   if (result.misProgress.b === 100) {
+      //     dailyMission++
+      //     fireWinning += 50
+      //   }
+      //   if (result.misProgress.c === 100) {
+      //     dailyMission++
+      //     fireWinning += 100
+      //   }
+      // }
       let view = {
-        rank:i,
+        rank: 1,
         guid: "anon" + result.guid.substring(0, 4),
         profitLoss: result.profitLoss,
         percentile: result.percentile,
@@ -157,22 +165,6 @@ interface IRewardsReportView {
   percentile: number;
 
 }
-
 interface IMissionReportView {
-  guid: string;
-  misProgress: {
-    a: number;
-    b: number;
-    c: number;
-  }
-  misPrBest: {
-    a: number;
-    b: number;
-    c: number;
-  }
-  misCount: {
-    a: number;
-    b: number;
-    c: number;
-  }
+  view: missionMapI;
 }
