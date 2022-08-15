@@ -137,12 +137,22 @@ export class ApiEndpoints {
             res.send({ success: success, country: country });
         });
 
+
+
+        app.get('/api/rewards', async (req:any, res:any) => {
+            let data= await this.dataRepository.getRewardsReport()
+            let rewards = [];
+            let i=0
+            res.send({data});
+          });    
+
+
         app.get('/api/tables', async (req:any, res:any) => {
              
             let tableList  = await pokerProcessor.getTables().map(getTableViewRow);
             let data= await this.dataRepository.getRewardsReport()
             let rewards = [];
-        let i=0
+            let i=0
         // console.log("updating leaderboard data");
             // for (let result of data || []) {
             //     i++
