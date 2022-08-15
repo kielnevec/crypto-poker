@@ -21,5 +21,6 @@ export class RewardsReportLeaderboard {
     percentile: number;
     currentMission: number;
     handsPlayed: number;
+    xp: number;
     missions: missionMapI[];
 }

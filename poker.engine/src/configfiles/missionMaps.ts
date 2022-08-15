@@ -40,75 +40,55 @@ const missionMapDisplay: missionMapDisplayI[] =
 ]
 
 const missionMap: missionMapI[] = 
-[{
-  
-    name: "Flop Seen",
+[{  
+    name: "Seen the flop",
     field: "seeFlop",
-    target: 10,
+    target: 5,
     current: 0,
     xp: 50
-        
 }, {
-    name: "Hands Won",
-    field: "wonHand",
-    target: 10,
-    current: 0,
-    xp: 10
-  }, {
-    name: "Hands Won",
-    field: "wonHand",
-    target: 20,
-    current: 0,
-    xp: 20
-  }, {
-    name: "Hands Won",
-    field: "wonHand",
-    target: 30,
-    current: 0,
-    xp: 30
-  }, {
-    name: "Hands Won",
-    field: "wonHand",
-    target: 40,
-    current: 0,
-    xp: 40
-  }, {
-    name: "Hands Won",
-    field: "wonHand",
-    target: 50,
-    current: 0,
-    xp: 50
-  }, {
-    name: "Hands Won",
-    field: "wonHand",
-    target: 60,
-    current: 0,
-    xp: 60
-  }, {
-    name: "Hands Won",
-    field: "wonHand",
-    target: 70,
-    current: 0,
-    xp: 70
-  }, {
-    name: "Hands Won",
-    field: "wonHand",
-    target: 80,
-    current: 0,
-    xp: 80
-  }, {
-    name: "Hands Won",
-    field: "wonHand",
-    target: 90,
-    current: 0,
-    xp: 90
-  }, {
-    name: "Hands Won",
-    field: "wonHand",
-    target: 100,
-    current: 0,
-    xp: 100
-  }
+  name: "Won the hand",
+  field: "wonHand",
+  target: 10,
+  current: 0,
+  xp: 10
+}, {
+  name: "Won the hand",
+  field: "wonHand",
+  target: 20,
+  current: 0,
+  xp: 20
+}, {
+  name: "Hands played",
+  field: "playedHands",
+  target: 10,
+  current: 0,
+  xp: 10
+} , {
+  name: "Hands played",
+  field: "playedHands",
+  target: 50,
+  current: 0,
+  xp: 50
+}, {
+  name: "Hands played",
+  field: "playedHands",
+  target: 100,
+  current: 0,
+  xp: 100
+}, {
+  name: "Lost hand after seeing the flop",
+  field: "lostSeeFlop",
+  target: 10,
+  current: 0,
+  xp: 400
+},  {
+  name: "Win hand after seeing the flop",
+  field: "wonSeeFlop",
+  target: 10,
+  current: 0,
+  xp: 500
+}
 ]
 
 const rewardsInitializer = {

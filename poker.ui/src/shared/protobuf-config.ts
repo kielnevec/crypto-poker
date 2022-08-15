@@ -468,7 +468,10 @@ class ProtobufConfig {
     rewardsReport.add(new Field("guid", 1, "string"));
     rewardsReport.add(new Field("profitLoss", 2, "int32"));
     rewardsReport.add(new Field("percentile", 3, "double"));
-    rewardsReport.add(new Field("missionsStatus", 4, "MissionReport", "repeated"));    
+    rewardsReport.add(new Field("xp", 4, "double"));
+    rewardsReport.add(new Field("missionsCompleted", 5, "double"));
+    rewardsReport.add(new Field("rank", 6, "double"));
+    rewardsReport.add(new Field("missionsStatus", 7, "MissionReport", "repeated"));    
     this.namespace.add(rewardsReport);
 
     let missionReport = new Type("MissionReport");
@@ -509,7 +512,8 @@ class ProtobufConfig {
 
     let missionReportR = new Type("MissionReportR");
     missionReportR.add(new Field("guid", 1, "string"));
-    missionReportR.add(new Field("missions", 2, "MissionReport", "repeated"));
+    missionReportR.add(new Field("xp", 2, "double"));
+    missionReportR.add(new Field("missions", 3, "MissionReport", "repeated"));
     this.namespace.add(missionReportR);
 
     let pong = new Type("Pong");

@@ -31,6 +31,7 @@ export class IDataRepository {
   saveUser(user: User): Promise<void> { throw new Error("Not implemented"); };
   saveRewardsDetails(rewardsDetails: RewardsDetails): any { throw new Error("Not implemented"); };  
   compRewardsDetails(rewardsDetails: RewardsDetails[]): any { throw new Error("Not implemented"); };  
+  updateRewardsReportXPMissions(guid: string, xp: number, missionsCompleted: number): any { throw new Error("Not implemented"); };  
   updateRewardsReportLeaderboard(rewardsDetails: RewardsDetails, guid: string): any { throw new Error("Not implemented"); };  
   fillPercentile(): any { throw new Error("Not implemented"); };  
   saveGame(game: DbGameResults): any { throw new Error("Not implemented"); };  
@@ -43,7 +44,7 @@ export class IDataRepository {
   getPayments(args:{guid?:string, currency?:string, type?:string}): Promise<Payment[]> { throw new Error("Not implemented"); };
   getPaymentsSince(id:string): Promise<Payment[]> { throw new Error("Not implemented"); };
   getLastPaymentUpdate(): Promise<Payment|null> { throw new Error("Not implemented"); };
-  initRewards(guid: string) { throw new Error("Not implemented"); };
+  async initRewards(guid: string) { throw new Error("Not implemented"); };
   savePayment(payment: Payment): any { throw new Error("Not implemented"); };  
   saveTableConfig(tableConfig: TableConfig): Promise<any> { throw new Error("Not implemented"); };
   deleteTableConfig(id: string): Promise<any> { throw new Error("Not implemented"); };

@@ -15,5 +15,7 @@ export class RewardsReport {
   currentMission: number;
   missionProgress: number;
   handsPlayed: number;
+  xp: number;
+  missionsCompleted: number;
   missions: missionMapI[];
 }

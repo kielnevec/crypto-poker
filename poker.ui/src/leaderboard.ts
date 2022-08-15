@@ -1,3 +1,4 @@
+import { RewardsReport } from "./shared/RewardsReport";
 import { missionMapI, missionMapDisplayI } from "./shared/Interfaces";
 import { autoinject } from "aurelia-framework";
 import { EventAggregator } from 'aurelia-event-aggregator';
@@ -13,8 +14,8 @@ export class Leaderboard {
   subscriptions: { dispose: () => void }[] = [];
   results: LeaderboardUser[] = [];
   rates: IExchangeRateView[] = [];
-  rewards: IRewardsReportView[] = [];
-  mission: missionMapDisplayI[];
+  rewards: RewardsReport[] = [];
+  mission: missionMapDisplayI[] = [];
   constructor(private ea: EventAggregator, private util: Util, private apiService: ApiService) {
     this.subscriptions.push(ea.subscribe(LeaderboardResult, (msg: LeaderboardResult) => { this.handleLeaderboardResult(msg) }));
     this.subscriptions.push(ea.subscribe(ExchangeRateResult, (msg: ExchangeRateResult) => { this.handleExchangeRateResult(msg) }));
@@ -24,57 +25,29 @@ export class Leaderboard {
   handleMissionReportResult(data: MissionReportR) {
     console.log("mission data   =========================  ", data);
     this.mission = data.missions;
-    // this.mission = [];
-    // for (let result of data.mission || []) {
-      // let view: IMissionReportView;
-      // console.log(`here I ' ${data}`)
-      // let vx = {
-      //   field: "ciccia",
-      //   target: 100,
-      //   name: "nome",
-      //   current: 10,
-      //   xp: 50
-      // }
-      // this.mission.push(vx);
-      
-      // this.mission  = data.missions;
-    // }
-
   }
 
   handleRewardsReportResult(data: RewardsReportResult) {
     // this.rewards.length=0;
     this.rewards = [];
     console.log(JSON.stringify(data));
-let i=0
+    let i=0
     for (let result of data.rewards || []) {
       i++
       let dailyMission = 0
       let fireWinning = 0
-      // if (result.misProgress) {
-      //   if (result.misProgress.a === 100) {
-      //     dailyMission++
-      //     fireWinning += 10
-      //   }
-      //   if (result.misProgress.b === 100) {
-      //     dailyMission++
-      //     fireWinning += 50
-      //   }
-      //   if (result.misProgress.c === 100) {
-      //     dailyMission++
-      //     fireWinning += 100
-      //   }
-      // }
-      let view = {
-        rank: 1,
-        guid: "anon" + result.guid.substring(0, 4),
-        profitLoss: result.profitLoss,
-        percentile: result.percentile,
-        fireWinning: fireWinning,
 
-        dailyMission: dailyMission + "/3"
-      };
-      this.rewards.push(view);
+      // let view = {
+      //   rank: 1,
+      //   guid: "anon" + result.guid.substring(0, 4),
+      //   profitLoss: result.profitLoss,
+      //   percentile: result.percentile,
+      //   xp: result.xp,
+
+      //   dailyMission: result
+      // };
+      // this.rewards.push(view);
+      this.rewards = data.rewards;
     }
 
    

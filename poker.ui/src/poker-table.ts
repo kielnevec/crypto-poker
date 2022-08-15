@@ -37,6 +37,7 @@ import { NextBlind } from './shared/NextBlind';
 import { PotResultChatSummary } from './model/PotResultChatSummary';
 import { TournamentInfoPopup } from './tournament-info-poup';
 import { RegisterTournamentPopup, RegisterTournamentPopupViewModel } from './register-tournament-popup';
+import { runInThisContext } from 'vm';
 
 @autoinject()
 export class PokerTable {  
@@ -76,6 +77,8 @@ export class PokerTable {
   blindsTimer:number;  
   nextBlindIncrease:Date;
   missionData:missionMapDisplayI[];
+  missionXP: number;
+  missionGUID: string;
   rewards: any[] = [];
   constructor(apiService: ApiService, private dialogService: DialogService, private ea: EventAggregator, private util: Util, private constants: Constants, private dialogController: DialogController, private router: Router) {
     this.apiService = apiService;
@@ -100,8 +103,11 @@ export class PokerTable {
   handleMissionReportR(data: MissionReportR) {
 
     console.log("mission data   =========================  ", data);
+    
     this.missionData = data.missions;
-    // this.missionData.push({
+    this.missionXP = data.xp;
+    this.missionGUID = data.guid;
+        // this.missionData.push({
     //   name: "ciccia",
     //   field: "questo",
     //   xp: 100,
@@ -131,7 +137,6 @@ export class PokerTable {
     // let userMission = data.mission.find(t => t.guid == this.userData.guid);
 
     // let mission1Name = `${allMissions.a[userMission.misPrBest.a - 1].text} (${userMission.misCount.a}/${allMissions.a[userMission.misPrBest.a - 1].value})`
-    // this.missionData.push({ name: mission1Name, fireCount: 10, barWidth: `${userMission.misProgress.a}%` })
     // let mission2Name = `${allMissions.b[userMission.misPrBest.b - 1].text} (${userMission.misCount.b}/${allMissions.b[userMission.misPrBest.b - 1].value})`
     // this.missionData.push({ name: mission2Name, fireCount: 50, barWidth: `${userMission.misProgress.b}%` })
     // let mission3Name = `${allMissions.c[userMission.misPrBest.c - 1].text} (${userMission.misCount.c}/${allMissions.c[userMission.misPrBest.c - 1].value})`
@@ -139,6 +144,7 @@ export class PokerTable {
 
   }
   handleRewardsReportResult(data: RewardsReportResult) {
+    console.log("not-reach")
     // this.rewards.length=0;
     // this.rewards = [];
     // let dataForLoggedInUser=data.rewards.find(t=>t.guid==this.userData.guid);
@@ -163,7 +169,7 @@ export class PokerTable {
     //  };
     //   this.rewards.push(view);
     // }
-
+    
   }
 
   detached() {

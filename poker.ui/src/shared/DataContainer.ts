@@ -83,6 +83,7 @@ export class RewardsReportResult {
 
 export class MissionReportR {
   guid: string;
+  xp: number;
   missions: missionMapDisplayI[];
 }
 
