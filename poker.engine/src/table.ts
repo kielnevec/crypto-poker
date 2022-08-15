@@ -274,6 +274,11 @@ export class Table {
       // missionDisplay.xp = element.xp;
       // missionDisplayA.push(missionDisplay);
     });
+    let removeElementsN = missionD.length-5;
+
+    for (let counter = 0; counter < removeElementsN; counter++) {
+      missionD.pop();
+    }
     missionD.sort((a, b) => b.position - a.position);
     return missionD;
   }

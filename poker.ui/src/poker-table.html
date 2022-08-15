@@ -142,19 +142,19 @@
      </div>
     <div class="daily_missions_content" repeat.for="md of missionData" >
       <div class="daily_missions_content_title">
-        ${md.name} (${md.current}/${md.target}) ---->  ${md.progressbar}
+        ${md.name} (${md.current}/${md.target})
       </div>
       <div class=""><img src='./images/xpbig.svg' class="fire_mission_image" alt="logo" /></div>
     </div>
       <div class="progress_area daily_mission_partition">
         <div class="progress">
           <div class="progress-bar" role="progressbar"
-          square="width.bind: md.barWidth;"></div>
+          square="width.bind: md.progressbar;"></div>
     
         </div>
         <img src='./images/fire_mission.png' class="fire_mission_image" alt="logo" />
         <div>
-          <div class="daily_missions_content_number">${md.fireCount}</div>
+          <div class="daily_missions_content_number">${md.xp}</div>
           <div class="daily_missions_content_fire">FIRE</div>
         </div>
       </div>
