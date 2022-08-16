@@ -20,20 +20,28 @@
 // }
 
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "type": "node",
-        "runtimeVersion": "14.15.4",
-        "request": "launch",
-        "justMyCode": false,
-        "name": "Launch Program",
-        "program": "${workspaceFolder}/src/app.ts",
-        "preLaunchTask": "tsc: build - tsconfig.json", 
-        "skipFiles": [
-          "<node_internals>/**"
-        ],
-        //"outFiles":["${workspaceFolder}/build/poker.engine/src/*.js"]
-      }
-    ]
-  }
+  "version": "0.2.0",
+  "scripts": {
+    "start": ""
+  },
+  "configurations": [
+    {
+      "type": "node",
+      "runtimeVersion": "14.19.3",
+      "request": "launch",
+      "name": "Launch Program",
+      "program": "${workspaceFolder}/src/app.ts",
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "name": "Docker Node.js Launch",
+      "type": "docker",
+      "request": "launch",
+      "preLaunchTask": "docker-run: debug",
+      "platform": "node"
+    }
+  ]
+}

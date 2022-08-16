@@ -12,8 +12,16 @@ describe('PokerEvaluator', function() {
     {
         holecards: holecards,
         cumulativeBet: cumulativeBet,
-        hasFolded: hasFolded
-      }
+        hasFolded: hasFolded,
+        missionData: {
+          flopScore: 0,
+          turnScore: 0,
+          score: 0,
+          flopRank: 0,
+          turnRank: 0,
+          rank: 0
+        }
+    }
     return player;
   }
   it('rankHand', function () {

@@ -10,6 +10,7 @@ import { Currency } from "./Currency"
 import { TournamentInfoResult } from './TournamentInfoRequest';
 import { TournamentResultView } from './TournamentResultView';
 import { NextBlind } from './NextBlind';
+import { missionMapI, missionMapDisplayI } from './Interfaces';
 
 export class DataContainer {
   [x: string]: any;
@@ -38,7 +39,7 @@ export class DataContainer {
   transferFundsResult: TransferFundsResult;
   exchangeRates: ExchangeRateResult;
   rewardsReportResult: RewardsReportResult;
-  missionReportResult: MissionReportResult;
+  missionReportR: MissionReportR;
   pong: Pong;
   logoutResult: LogoutResult;
   registerResult: RegisterResult;
@@ -80,8 +81,10 @@ export class RewardsReportResult {
   rewards: RewardsReport[];
 }
 
-export class MissionReportResult {
-  mission: MissionReport[];
+export class MissionReportR {
+  guid: string;
+  xp: number;
+  missions: missionMapDisplayI[];
 }
 
 export class TransferFundsResult {

@@ -1,3 +1,4 @@
+import { missionMapI, missionMapDisplayI } from './shared/Interfaces';
 import { RegisterResult } from './shared/signup-request';
 import { autoinject,computedFrom } from "aurelia-framework";
 import { Compose } from 'aurelia-templating-resources';
@@ -15,7 +16,7 @@ import {Chip} from "./model/chip";
 import { Simulations } from "./simulations";
 import { CashOutRequestResult, PotResult, FundAccountResult, AccountFunded, AccountWithdrawlResult, SetTableOptionResult,
   GetAccountSettingsResult, SetAccountSettingsResult, ChatMessage, GlobalChatResult, ChatMessageResult, UserData, Account,
-  GlobalUsers, LeaderboardResult, TransferFundsResult, ExchangeRateResult, RewardsReportResult, MissionReportResult, TournamentSubscriptionResult, SubscribeTableResult, GameEvent, GameStartingEvent, PaymentHistoryResult, Version, TableSeatEvents, DealHoleCardsEvent, TableClosed, DataContainer, TableConfigs } from "./shared/DataContainer";
+  GlobalUsers, LeaderboardResult, TransferFundsResult, ExchangeRateResult, RewardsReportResult, MissionReportR, TournamentSubscriptionResult, SubscribeTableResult, GameEvent, GameStartingEvent, PaymentHistoryResult, Version, TableSeatEvents, DealHoleCardsEvent, TableClosed, DataContainer, TableConfigs } from "./shared/DataContainer";
 import {AccountSettings} from "./account-settings";
 import {MessageWindow} from "./message-window";
 import {ClientMessage, SetTableOptionRequest, TournamentSubscriptionRequest, GlobalChatRequest, Ping, ListTablesRequest, JoinTableRequest, LeaveTableRequest, ChatRequest, ExchangeRatesRequest, RewardsReportRequest, TournamentRegisterRequest } from "./shared/ClientMessage";
@@ -36,6 +37,7 @@ import { NextBlind } from './shared/NextBlind';
 import { PotResultChatSummary } from './model/PotResultChatSummary';
 import { TournamentInfoPopup } from './tournament-info-poup';
 import { RegisterTournamentPopup, RegisterTournamentPopupViewModel } from './register-tournament-popup';
+import { runInThisContext } from 'vm';
 
 @autoinject()
 export class PokerTable {  
@@ -74,7 +76,9 @@ export class PokerTable {
   nextBlinds:{smallBlind:number, bigBlind:number, timeUntil:number, timeUntilUnit:string};  
   blindsTimer:number;  
   nextBlindIncrease:Date;
-  missionData:any[]=[];
+  missionData:missionMapDisplayI[];
+  missionXP: number;
+  missionGUID: string;
   rewards: any[] = [];
   constructor(apiService: ApiService, private dialogService: DialogService, private ea: EventAggregator, private util: Util, private constants: Constants, private dialogController: DialogController, private router: Router) {
     this.apiService = apiService;
@@ -93,42 +97,54 @@ export class PokerTable {
     this.subscriptions.push(ea.subscribe(TournamentRegisterClickEvent, msg => { this.onTournamentRegisterClickEvent(msg); }));    
     this.subscriptions.push(ea.subscribe(DepositNowEvent, msg => { this.openFundingWindow(msg.model); }));    
     this.subscriptions.push(ea.subscribe(RewardsReportResult, (msg: RewardsReportResult) => { this.handleRewardsReportResult(msg) }));
-    this.subscriptions.push(ea.subscribe(MissionReportResult, (msg: MissionReportResult) => { this.handleMissionReportResult(msg) }));
+    this.subscriptions.push(ea.subscribe(MissionReportR, (msg: MissionReportR) => { this.handleMissionReportR(msg) }));
   }
 
-  handleMissionReportResult(data: MissionReportResult) {
-    // console.log("mission data   =========================  ", data);
-    let allMissions = {
-      a: [
-        { value: 20, text: "See the flop" },
-        { value: 15, text: "See the turn" },
-        { value: 10, text: "See the river" }
-      ],
-      b: [
-        { value: 15, text: "Win the hand" },
-        { value: 20, text: "Get one pair" },
-        { value: 5, text: "Get two pairs" }
-      ],
-      c: [
-        { value: 50, text: "Win the hand" },
-        { value: 100, text: "See the flop" },
-        { value: 75, text: "See the turn" },
-        { value: 50, text: "See the river" }
-      ]
-    }
-    this.missionData=[]
-    
-    let userMission = data.mission.find(t => t.guid == this.userData.guid);
+  handleMissionReportR(data: MissionReportR) {
 
-    let mission1Name = `${allMissions.a[userMission.misPrBest.a - 1].text} (${userMission.misCount.a}/${allMissions.a[userMission.misPrBest.a - 1].value})`
-    this.missionData.push({ name: mission1Name, fireCount: 10, barWidth: `${userMission.misProgress.a}%` })
-    let mission2Name = `${allMissions.b[userMission.misPrBest.b - 1].text} (${userMission.misCount.b}/${allMissions.b[userMission.misPrBest.b - 1].value})`
-    this.missionData.push({ name: mission2Name, fireCount: 50, barWidth: `${userMission.misProgress.b}%` })
-    let mission3Name = `${allMissions.c[userMission.misPrBest.c - 1].text} (${userMission.misCount.c}/${allMissions.c[userMission.misPrBest.c - 1].value})`
-    this.missionData.push({ name: mission3Name, fireCount: 100, barWidth: `${userMission.misProgress.c}%` })
+    console.log("mission data   =========================  ", data);
+    
+    this.missionData = data.missions;
+    this.missionXP = data.xp;
+    this.missionGUID = data.guid;
+        // this.missionData.push({
+    //   name: "ciccia",
+    //   field: "questo",
+    //   xp: 100,
+    //   target: 200,
+    //   current: 10
+    // })
+    // let allMissions = {
+    //   a: [
+    //     { value: 20, text: "See the flop" },
+    //     { value: 15, text: "See the turn" },
+    //     { value: 10, text: "See the river" }
+    //   ],
+    //   b: [
+    //     { value: 15, text: "Win the hand" },
+    //     { value: 20, text: "Get one pair" },
+    //     { value: 5, text: "Get two pairs" }
+    //   ],
+    //   c: [
+    //     { value: 50, text: "Win the hand" },
+    //     { value: 100, text: "See the flop" },
+    //     { value: 75, text: "See the turn" },
+    //     { value: 50, text: "See the river" }
+    //   ]
+    // }
+    // this.missionData=[]
+    
+    // let userMission = data.mission.find(t => t.guid == this.userData.guid);
+
+    // let mission1Name = `${allMissions.a[userMission.misPrBest.a - 1].text} (${userMission.misCount.a}/${allMissions.a[userMission.misPrBest.a - 1].value})`
+    // let mission2Name = `${allMissions.b[userMission.misPrBest.b - 1].text} (${userMission.misCount.b}/${allMissions.b[userMission.misPrBest.b - 1].value})`
+    // this.missionData.push({ name: mission2Name, fireCount: 50, barWidth: `${userMission.misProgress.b}%` })
+    // let mission3Name = `${allMissions.c[userMission.misPrBest.c - 1].text} (${userMission.misCount.c}/${allMissions.c[userMission.misPrBest.c - 1].value})`
+    // this.missionData.push({ name: mission3Name, fireCount: 100, barWidth: `${userMission.misProgress.c}%` })
 
   }
   handleRewardsReportResult(data: RewardsReportResult) {
+    console.log("not-reach")
     // this.rewards.length=0;
     // this.rewards = [];
     // let dataForLoggedInUser=data.rewards.find(t=>t.guid==this.userData.guid);
@@ -153,7 +169,7 @@ export class PokerTable {
     //  };
     //   this.rewards.push(view);
     // }
-
+    
   }
 
   detached() {
@@ -360,7 +376,7 @@ export class PokerTable {
       { key: 'transferFundsResult', handler: (data: TransferFundsResult) => { this.ea.publish(Object.assign(new TransferFundsResult(), data)); } },
       { key: 'exchangeRates', handler: (data: ExchangeRateResult) => { this.ea.publish(Object.assign(new ExchangeRateResult(), data)); } },
       { key: 'rewardsReportResult', handler: (data: RewardsReportResult) => { this.ea.publish(Object.assign(new RewardsReportResult(), data)); } },
-      { key: 'missionReportResult', handler: (data: MissionReportResult) => { this.ea.publish(Object.assign(new MissionReportResult(), data)); } },
+      { key: 'missionReportR', handler: (data: MissionReportR) => { this.ea.publish(Object.assign(new MissionReportR(), data)); } },
       { key: 'registerResult', handler: (data: RegisterResult) => { this.ea.publish(Object.assign(new RegisterResult(), data)); } },
       { key: 'tournamentSubscriptionResult', handler: (data) => { this.ea.publish(Object.assign(new TournamentSubscriptionResult(), data)); } },
       { key: 'loginResult', handler: this.handleLoginResult },

@@ -9,7 +9,7 @@ import { User } from "./model/User";
 import {
   Pong, DataContainer, AccountFunded, AccountWithdrawlResult, ChatMessage, UserData, Account,
   CashOutRequestResult, TxFee, PokerError, GetAccountSettingsResult, SetAccountSettingsResult, GlobalChatResult,
-  ChatMessageResult, GlobalUsers, UserStatus, LeaderboardResult, LeaderboardUser, TransferFundsResult, ExchangeRateResult, RewardsReportResult, MissionReportResult, CashOutAccount, Version, DuplicateIpAddress
+  ChatMessageResult, GlobalUsers, UserStatus, LeaderboardResult, LeaderboardUser, TransferFundsResult, ExchangeRateResult, RewardsReportResult, MissionReportR, CashOutAccount, Version, DuplicateIpAddress
 } from "../../poker.ui/src/shared/DataContainer";
 import { ClientMessage, AccountWithdrawlRequest, SetAccountSettingsRequest, TransferFundsRequest, JoinTableRequest } from "../../poker.ui/src/shared/ClientMessage";
 import { Currency, CurrencyUnit } from "../../poker.ui/src/shared/Currency";
@@ -191,8 +191,8 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
           let nowts = Date.now();
           let date_ob = new Date(nowts);
           let datestring = date_ob.getHours().toString() + ":" + date_ob.getMinutes().toString() + ":" + date_ob.getSeconds().toString();
-          fs.appendFileSync('./datajump.json', datestring + "\r\n" + "receivedMessage: ===>" + JSON.stringify(clientMessage, null, 2) + '\r\n', 'utf-8');
-          // console.log(`received ${message.byteLength} bytes`, clientMessage);            
+          // fs.appendFileSync('./datajump.json', datestring + "\r\n" + "receivedMessage: ===>" + JSON.stringify(clientMessage, null, 2) + '\r\n', 'utf-8');
+          // console.log(` =====> received ${message.byteLength} bytes`, clientMessage);            
           this.logAndEnqueue(wsHandle, clientMessage);
         } else {
           logger.info(`message is not an ArrayBuffer:`, message);
@@ -298,6 +298,7 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
 
     for (let key in data) {
       let handler = this.handlers[key];
+      // console.log(`=====>${(handler)}`)
       if (handler != null) {
         await handler.run(wsHandle, data);
       } else {
@@ -315,7 +316,7 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
   }
 
   async handleMessageWithNoHandler(wsHandle: WebSocketHandle, data: ClientMessage): Promise<void> {
-    // console.log("this is data ====> ", data);
+    // console.log(`this is data =====> ${(data)}`);
     if (data.logoutRequest != null) {
       if (wsHandle.authenticated) {
         wsHandle.authenticated = false;
@@ -568,7 +569,7 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
     for (let client of this.clients) {
       // console.log(client);
       let pingTime = new Date().getTime() - client.lastPing.getTime();
-      console.log("ping time is " , pingTime);
+      // console.log(`ping time is ${pingTime}(${client}+)`);
       if (pingTime > 100000) {
         if (client.user) {
           logger.info(`disconnecting ${client.user.screenName} due to ping ${pingTime}`);

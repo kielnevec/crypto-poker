@@ -25,6 +25,7 @@ import { DbGameResults } from './model/table/DbGameResults';
 import { RewardsDetails } from './model/table/RewardsDetails';
 import { IPokerTableProvider } from "./services/IBroadcastService";
 import {Table} from './table'
+import { rewardsInitializer } from './configfiles/missionMaps';
 // import {  Db  } from 'mongodb';
 export class ApiEndpoints {
 
@@ -39,11 +40,11 @@ export class ApiEndpoints {
     resetRequestHandler: ResetRequestHandler;
 
        constructor(private dataRepository: IDataRepository, private pokerProcessor: PokerProcessor, private connectionToPaymentServer: IConnectionToPaymentServer, private processor: GameServerProcessor) {
-      
+        console.log("connecting to" + process.env.mongoDBHost)
         this.dbConnection()
     }
    async dbConnection(){
-    this.db=  await MongoClient.connect(process.env.mongoDBHost);
+    this.db=  await MongoClient.connect(`${process.env.mongoDBHost}/${process.env.mongoDBDatabase}`);
 
     }
 
@@ -137,46 +138,75 @@ export class ApiEndpoints {
             res.send({ success: success, country: country });
         });
 
+
+
+        app.get('/api/rewards', async (req:any, res:any) => {
+            let data= await this.dataRepository.getRewardsReport()
+            // let rewards = [];
+            let i=0
+            interface rewardsI {
+                rank: number;
+                name: string;
+                profitLoss: number;
+                xp: number;
+                fireWinnings: number;
+                missionsCompleted: number;
+            }
+            let rewards: rewardsI[] = [];
+
+            for (let counter = 0; counter<data.length; counter++) {
+                rewards[counter] = {
+                    rank: counter+1,
+                    name: data[counter].guid.substring(0, 3)+".."+data[counter].guid.substring(36),
+                    profitLoss: data[counter].profitLoss,
+                    xp: data[counter].xp,
+                    fireWinnings: 0,
+                    missionsCompleted: data[counter].missionsCompleted
+                }
+            }
+
+            res.send({rewards});
+          });    
+
+
         app.get('/api/tables', async (req:any, res:any) => {
              
             let tableList  = await pokerProcessor.getTables().map(getTableViewRow);
             let data= await this.dataRepository.getRewardsReport()
             let rewards = [];
-        let i=0
-        console.log("updating leaderboard data");
-            for (let result of data || []) {
-                i++
-              let dailyMission = 0
-              let fireWinning = 0
-              if (result.misProgress) {
-                if (result.misProgress.a === 100) {
-                  dailyMission++
-                  fireWinning += 10
+            let i=0
+        // console.log("updating leaderboard data");
+            // for (let result of data || []) {
+            //     i++
+            //   let dailyMission = 0
+            //   let fireWinning = 0
+            //   if (result.misProgress) {
+            //     if (result.misProgress.a === 100) {
+            //       dailyMission++
+            //       fireWinning += 10
         
-                }
-                if (result.misProgress.b === 100) {
-                  dailyMission++
-                  fireWinning += 50
-                }
-                if (result.misProgress.c === 100) {
-                  dailyMission++
-                  fireWinning += 100
-                }
-              }
-              let view = {
-                rank:i,
-                guid: "anon" + result.guid.substring(0, 4),
-                profitLoss: result.profitLoss,
-                percentile: result.percentile,
-                fireWinning: fireWinning,
+            //     }
+            //     if (result.misProgress.b === 100) {
+            //       dailyMission++
+            //       fireWinning += 50
+            //     }
+            //     if (result.misProgress.c === 100) {
+            //       dailyMission++
+            //       fireWinning += 100
+            //     }
+            //   }
+            //   let view = {
+            //     rank:i,
+            //     guid: "anon" + result.guid.substring(0, 4),
+            //     profitLoss: result.profitLoss,
+            //     percentile: result.percentile,
+            //     fireWinning: fireWinning,
         
-                dailyMission: dailyMission + "/3"
-              };
-              rewards.push(view);
-            }
-        
-
-            res.send({tableList,rewards});
+            //     dailyMission: dailyMission + "/3"
+            //   };
+            //   rewards.push(view);
+            // }
+            res.send({tableList});
           });    
       
 
