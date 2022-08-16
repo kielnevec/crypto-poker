@@ -25,6 +25,7 @@ import { DbGameResults } from './model/table/DbGameResults';
 import { RewardsDetails } from './model/table/RewardsDetails';
 import { IPokerTableProvider } from "./services/IBroadcastService";
 import {Table} from './table'
+import { rewardsInitializer } from './configfiles/missionMaps';
 // import {  Db  } from 'mongodb';
 export class ApiEndpoints {
 
@@ -141,9 +142,30 @@ export class ApiEndpoints {
 
         app.get('/api/rewards', async (req:any, res:any) => {
             let data= await this.dataRepository.getRewardsReport()
-            let rewards = [];
+            // let rewards = [];
             let i=0
-            res.send({data});
+            interface rewardsI {
+                rank: number;
+                name: string;
+                profitLoss: number;
+                xp: number;
+                fireWinnings: number;
+                missionsCompleted: number;
+            }
+            let rewards: rewardsI[] = [];
+
+            for (let counter = 0; counter<data.length; counter++) {
+                rewards[counter] = {
+                    rank: counter+1,
+                    name: data[counter].guid,
+                    profitLoss: data[counter].profitLoss,
+                    xp: data[counter].xp,
+                    fireWinnings: 0,
+                    missionsCompleted: data[counter].missionsCompleted
+                }
+            }
+
+            res.send({rewards});
           });    
 
 
