@@ -3,7 +3,7 @@ import { TableConfig } from "../TableConfig"
 const configs: TableConfig[] = [
     {
         "_id": undefined,
-        "name": "Palermo_01",
+        "name": "Palermo",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -15,7 +15,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Dublin_01",
+        "name": "Dublin",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -27,7 +27,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Belgrade_01",
+        "name": "Belgrade",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -39,7 +39,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Hyderabad_01",
+        "name": "Hyderabad",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -51,7 +51,7 @@ const configs: TableConfig[] = [
     }, 
     {
         "_id": undefined,
-        "name": "Paris_01",
+        "name": "Paris",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -62,7 +62,7 @@ const configs: TableConfig[] = [
         "rake": 0
     },    {
         "_id": undefined,
-        "name": "Madrid_01",
+        "name": "Madrid",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -74,7 +74,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Faro_01",
+        "name": "Faro",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -86,7 +86,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "New_01 York",
+        "name": "New York",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -98,7 +98,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Las_01 Vegas",
+        "name": "Las Vegas",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -109,7 +109,7 @@ const configs: TableConfig[] = [
         "rake": 0
     }, {
         "_id": undefined,
-        "name": "Miami_01",
+        "name": "Miami",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -121,7 +121,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Douala_01",
+        "name": "Douala",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -133,7 +133,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Tunis_01",
+        "name": "Tunis",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -145,7 +145,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Mandalay_01",
+        "name": "Mandalay",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -157,7 +157,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Tabriz_01",
+        "name": "Tabriz",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -169,7 +169,7 @@ const configs: TableConfig[] = [
     }, 
     {
         "_id": undefined,
-        "name": "Shiraz_01",
+        "name": "Shiraz",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -180,7 +180,7 @@ const configs: TableConfig[] = [
         "rake": 0
     },    {
         "_id": undefined,
-        "name": "Kyoto_01",
+        "name": "Kyoto",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -192,7 +192,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Qom_01",
+        "name": "Qom",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -204,7 +204,20 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Baghdad_01",
+        "name": "Baghdad",
+        "smallBlindUsd": 5,
+        "bigBlindUsd": 10,
+        "currency": "usd",
+        "maxPlayers": 9,
+        "timeToActSec": 60,
+        "orderIndex": 11,
+        "maxBuyIn": 100,
+        "rake": 0
+    },
+    
+    {
+        "_id": undefined,
+        "name": "Maracaibo",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -216,30 +229,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Las_01 Vegas",
-        "smallBlindUsd": 5,
-        "bigBlindUsd": 10,
-        "currency": "usd",
-        "maxPlayers": 9,
-        "timeToActSec": 60,
-        "orderIndex": 11,
-        "maxBuyIn": 100,
-        "rake": 0
-    }, {
-        "_id": undefined,
-        "name": "Maracaibo_01",
-        "smallBlindUsd": 5,
-        "bigBlindUsd": 10,
-        "currency": "usd",
-        "maxPlayers": 9,
-        "timeToActSec": 60,
-        "orderIndex": 11,
-        "maxBuyIn": 100,
-        "rake": 0
-    },
-    {
-        "_id": undefined,
-        "name": "Tehran_01",
+        "name": "Tehran",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -251,7 +241,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Taichung_01",
+        "name": "Taichung",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -263,7 +253,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Cairo_01",
+        "name": "Cairo",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -275,7 +265,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Warsaw_01",
+        "name": "Warsaw",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -287,7 +277,7 @@ const configs: TableConfig[] = [
     }, 
     {
         "_id": undefined,
-        "name": "Fez_01",
+        "name": "Fez",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -298,7 +288,7 @@ const configs: TableConfig[] = [
         "rake": 0
     },    {
         "_id": undefined,
-        "name": "Harbin_01",
+        "name": "Harbin",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -310,7 +300,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Tashkent_01",
+        "name": "Tashkent",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -322,7 +312,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Chittagong_01",
+        "name": "Chittagong",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -334,7 +324,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Melbourne_01",
+        "name": "Melbourne",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -345,7 +335,7 @@ const configs: TableConfig[] = [
         "rake": 0
     }, {
         "_id": undefined,
-        "name": "Guatemala_01 City",
+        "name": "Guatemala City",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -357,7 +347,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Abidjan_01",
+        "name": "Abidjan",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -369,7 +359,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Yokohama_01",
+        "name": "Yokohama",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -381,7 +371,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Shenyang_01",
+        "name": "Shenyang",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -393,7 +383,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Osaka_01",
+        "name": "Osaka",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -405,7 +395,7 @@ const configs: TableConfig[] = [
     }, 
     {
         "_id": undefined,
-        "name": "Ahvaz_01",
+        "name": "Ahvaz",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -416,7 +406,7 @@ const configs: TableConfig[] = [
         "rake": 0
     },    {
         "_id": undefined,
-        "name": "Cape_01 Town",
+        "name": "Cape Town",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -428,7 +418,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Accra_01",
+        "name": "Accra",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -440,7 +430,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Roma_01",
+        "name": "Roma",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -452,7 +442,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Enna_01",
+        "name": "Enna",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -463,7 +453,7 @@ const configs: TableConfig[] = [
         "rake": 0
     }, {
         "_id": undefined,
-        "name": "Bologna_01",
+        "name": "Bologna",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -475,7 +465,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Siracusa_01",
+        "name": "Siracusa",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -487,7 +477,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Verona_01",
+        "name": "Verona",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -499,7 +489,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Rosario_01",
+        "name": "Rosario",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -511,7 +501,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Newcastle_01 upon Tine",
+        "name": "Newcastle upon Tine",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -523,7 +513,7 @@ const configs: TableConfig[] = [
     }, 
     {
         "_id": undefined,
-        "name": "Stratford_01 upon Avon",
+        "name": "Stratford upon Avon",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -534,7 +524,7 @@ const configs: TableConfig[] = [
         "rake": 0
     },    {
         "_id": undefined,
-        "name": "Ramsay_01",
+        "name": "Ramsay",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -546,7 +536,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Belfast_01",
+        "name": "Belfast",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -558,7 +548,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Bradford_01",
+        "name": "Bradford",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -570,7 +560,7 @@ const configs: TableConfig[] = [
     },
     {
         "_id": undefined,
-        "name": "Derby_01",
+        "name": "Derby",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
@@ -581,7 +571,7 @@ const configs: TableConfig[] = [
         "rake": 0
     }, {
         "_id": undefined,
-        "name": "Durham_01",
+        "name": "Durham",
         "smallBlindUsd": 5,
         "bigBlindUsd": 10,
         "currency": "usd",
