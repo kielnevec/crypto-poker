@@ -157,7 +157,7 @@ export class ApiEndpoints {
             for (let counter = 0; counter<data.length; counter++) {
                 rewards[counter] = {
                     rank: counter+1,
-                    name: data[counter].guid,
+                    name: data[counter].guid.substring(0, 3)+".."+data[counter].guid.substring(36),
                     profitLoss: data[counter].profitLoss,
                     xp: data[counter].xp,
                     fireWinnings: 0,
