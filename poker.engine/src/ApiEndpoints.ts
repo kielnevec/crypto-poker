@@ -44,7 +44,7 @@ export class ApiEndpoints {
         this.dbConnection()
     }
    async dbConnection(){
-    this.db=  await MongoClient.connect(`${process.env.mongoDBHost}/${process.env.mongoDBDatabase}`);
+    this.db=  await MongoClient.connect(`${process.env.mongoDBHost}`);
 
     }
 
@@ -157,8 +157,8 @@ export class ApiEndpoints {
             for (let counter = 0; counter<data.length; counter++) {
                 rewards[counter] = {
                     rank: counter+1,
-                    name: data[counter].guid.substring(0, 3)+".."+data[counter].guid.substring(36),
-                    profitLoss: data[counter].profitLoss,
+                    name: data[counter].guid.substring(0, 4)+".."+data[counter].guid.substring(35),
+                    profitLoss: data[counter].profitLoss/100,
                     xp: data[counter].xp,
                     fireWinnings: 0,
                     missionsCompleted: data[counter].missionsCompleted

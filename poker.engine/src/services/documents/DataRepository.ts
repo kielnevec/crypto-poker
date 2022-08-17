@@ -64,7 +64,7 @@ export class DataRepository implements IDataRepository {
 
   async init() {
     DataRepository.percentil = [10, 30, 50];
-    this.db = await MongoClient.connect(process.env.mongoDBHost + "/" + process.env.mongoDBDatabase);
+    this.db = await MongoClient.connect(process.env.mongoDBHost);
     return this.db
   }
 
