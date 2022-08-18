@@ -15,6 +15,7 @@ export class RewardsReportLeaderboard {
     winHand: number;
     winStreak: number;
     currentWinStreak: number;
+    fireWinning: number;
     handOnePair: number; // rank = 2
     handTwoPairs: number; // rank = 3
     position: number;

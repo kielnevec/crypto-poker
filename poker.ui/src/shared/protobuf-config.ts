@@ -470,8 +470,9 @@ class ProtobufConfig {
     rewardsReport.add(new Field("percentile", 3, "double"));
     rewardsReport.add(new Field("xp", 4, "double"));
     rewardsReport.add(new Field("missionsCompleted", 5, "double"));
-    rewardsReport.add(new Field("rank", 6, "double"));
-    rewardsReport.add(new Field("missionsStatus", 7, "MissionReport", "repeated"));    
+    rewardsReport.add(new Field("position", 6, "double"));
+    rewardsReport.add(new Field("fireWinning", 7, "double"));
+    rewardsReport.add(new Field("missionsStatus", 8, "MissionReport", "repeated"));    
     this.namespace.add(rewardsReport);
 
     let missionReport = new Type("MissionReport");
