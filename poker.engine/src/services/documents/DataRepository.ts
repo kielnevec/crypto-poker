@@ -430,7 +430,7 @@ export class DataRepository implements IDataRepository {
     });
   }
 
-
+  
   saveGame(game: DbGameResults): any {
     var collection = this.db.collection('games');
     return collection.save(game);
@@ -464,7 +464,7 @@ export class DataRepository implements IDataRepository {
   }
 
   getRewardsReport(): Promise<RewardsReport[]> {
-    let x = this.db.collection('rewardsReportLeaderboard').find({}, { guid:1, profitLoss:1, position:1, xp:1, missionsCompleted:1, missions:1 }).sort({ profitLoss: -1 }).toArray(); 
+    let x = this.db.collection('rewardsReportLeaderboard').find({}, { guid:1, profitLoss:1, position:1, xp:1, missionsCompleted:1, fireWinning: 1, missions:1 }).sort({ profitLoss: -1 }).toArray(); 
     //let x = this.db.collection('rewardsReportLeaderboard').find({}, {}).sort({ profitLoss: -1 }).toArray();
     return x;
   }

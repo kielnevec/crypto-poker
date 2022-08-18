@@ -104,7 +104,7 @@ const rewardsInitializer = {
     handsPlayed: 0,
     currentWinStreak: 0,
     winStreak: 0,
-    postition: 0,
+    position: 0,
     percentile: 0,
     missions: missionMap
 }

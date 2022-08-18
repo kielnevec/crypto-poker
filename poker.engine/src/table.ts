@@ -48,7 +48,6 @@ import { DataRepository } from './services/documents/DataRepository';
 import { config } from 'bluebird';
 
 export class Table {
-
   static readonly MaxSeatNumber: number = 9; //not related to maxPlayers - indicates the seat numbers that can be sat in (regardless of the maximum number of players)
   constructor(tableConfig: TableConfig) {
     this._tableConfig = tableConfig;
@@ -58,9 +57,9 @@ export class Table {
   broadcastService: IBroadcastService;
 
   private auditEvents: TableAuditEvent[] = [];
-  private players: PlayerTableHandle[] = [];//all players seated - playing or otherwise
+  private players: PlayerTableHandle[] = []; //all players seated - playing or otherwise
   subscribers: ISubscriber[] = [];
-  currentPlayers: PlayerTableHandle[];//players in the current hand
+  currentPlayers: PlayerTableHandle[]; //players in the current hand
   pastPlayers: SeatHistory[][] = [];
   private _tableConfig: TableConfig;
   get tableConfig(): TableConfig {
@@ -114,10 +113,9 @@ export class Table {
         activeplayers++;
       }
     }
-    if (activeplayers<2) {
+    if (activeplayers < 2) {
       this.gameRunning = false;
     }
-
 
     if (this.tournamentId) {
       result.errorMessage = `Cannot join a tournament table`;
@@ -142,7 +140,7 @@ export class Table {
       result.errorMessage = `Max number of players is ${this.tableConfig.maxPlayers}`;
       return result;
     }
-    var existingSeat = this.players.find(h => h.seat === request.seat);
+    var existingSeat = this.players.find((h) => h.seat === request.seat);
     if (existingSeat != null) {
       result.errorMessage = `Seat ${request.seat} is occupied`;
       return result;
@@ -152,12 +150,12 @@ export class Table {
       result.errorMessage = `Minimum stack size is ${this.tableConfig.bigBlind} and your stack is ${playerStack}`;
       return result;
     }
-    if (!this.subscribers.filter(s => s.user.guid === request.guid).length) {
+    if (!this.subscribers.filter((s) => s.user.guid === request.guid).length) {
       result.errorMessage = `player is not a subscriber`;
       return result;
     }
 
-    let existingPlayer = this.players.find(p => p.guid === request.guid);
+    let existingPlayer = this.players.find((p) => p.guid === request.guid);
     if (existingPlayer) {
       result.errorMessage = `player is already playing at seat ${existingPlayer.seat}`;
       return result;
@@ -167,7 +165,7 @@ export class Table {
   }
 
   getEmptySeats(): number[] {
-    let takenSeats = this.getPlayers().map(h => h.seat);
+    let takenSeats = this.getPlayers().map((h) => h.seat);
     let emptySeats = [];
     let numSeatsLeft = this._tableConfig.maxPlayers - takenSeats.length;
     if (numSeatsLeft) {
@@ -186,8 +184,7 @@ export class Table {
 
   handleJoinTableRequest(request: JoinTableRequest): JoinTableResult {
     let result = this.validateJoinTable(request);
-    if (!result.success)
-      return result;
+    if (!result.success) return result;
     let handle = this.addPlayerHandle(request);
     this.broadcastJoinTable(handle);
     if (!this.tournamentId && this.broadcastService) {
@@ -198,7 +195,6 @@ export class Table {
   }
 
   broadcastJoinTable(handle: PlayerTableHandle) {
-
     let publicSeatEvent = handle.toTableSeatEvent();
     publicSeatEvent.avatar = handle.gravatar;
     for (let subscriber of this.subscribers) {
@@ -220,7 +216,10 @@ export class Table {
     let activePlayers = 0;
     for (let counter = 0; counter < players.length; counter++) {
       console.log(players[counter]);
-      if (players[counter].isDisconnected===false || players[counter].isDisconnected === undefined) {
+      if (
+        players[counter].isDisconnected === false ||
+        players[counter].isDisconnected === undefined
+      ) {
         activePlayers++;
       }
     }
@@ -233,14 +232,14 @@ export class Table {
       if (!this.gameStarting) {
         if (!this.currentPlayers) {
           players = this.getPlayersForNextHand();
+        } else {
+          if (this.checkActivePlayers(this.currentPlayers) < 2) {
+            // players = this.currentPlayers;
+            players = [];
           } else {
-            if ((this.checkActivePlayers(this.currentPlayers))<2) {
-                // players = this.currentPlayers;
-                players = [];
-            } else {
-              players = this.getPlayersForNextHand();
-            }
-            //  players = this.currentPlayers;          
+            players = this.getPlayersForNextHand();
+          }
+          //  players = this.currentPlayers;
         }
 
         if (players.length >= this.minNumPlayers) {
@@ -251,10 +250,12 @@ export class Table {
   }
 
   private getPlayersForNextHand(): PlayerTableHandle[] {
-    let players = this.players.filter(p => !p.sitOutNextHand && !p.isDisconnected);
+    let players = this.players.filter(
+      (p) => !p.sitOutNextHand && !p.isDisconnected
+    );
     return players;
   }
-  
+
   async missionSort(data: missionMapI[], guid: string): Promise<DataContainer> {
     let xp = 0;
     let progressbarN: number;
@@ -263,32 +264,39 @@ export class Table {
     let missionsDelTop: number = 0;
     let missionsDelTail: number = 0;
     var missionD: missionMapDisplayI[] = [];
-    data.forEach(element => {
-      progressbarN = element.current/element.target*100;
-      if (element.current>=element.target) {
-        xp+=element.xp;
+    data.forEach((element) => {
+      progressbarN = (element.current / element.target) * 100;
+      if (element.current >= element.target) {
+        xp += element.xp;
         missionsCompleted++;
       }
       missionD.push({
         name: element.name,
-        progressbar: (progressbarN).toString() + "%",
+        progressbar: progressbarN.toString() + "%",
         xp: element.xp,
         position: progressbarN,
         target: element.target,
-        current: element.current<element.target ? element.current : element.target
-      })
+        current:
+          element.current < element.target ? element.current : element.target,
+      });
     });
 
     let y = new DataContainer();
     let x: missionMapDisplayI[];
-    x = missionD.sort((a, b) => b.position - a.position || a.xp - b.xp)
-    
+    x = missionD.sort((a, b) => b.position - a.position || a.xp - b.xp);
 
     missionsTotal = missionD.length;
-    missionsTotal
+    missionsTotal;
     // length - completed <5 ? non va bene !
-    missionsTotal - missionsCompleted > 5 ? missionsDelTop = missionsTotal - missionsCompleted: missionsDelTop = missionsTotal - missionsCompleted + (6 - (missionsTotal-missionsCompleted));
-    missionsDelTop>missionsCompleted ? missionsDelTop = missionsCompleted : missionsDelTop;
+    missionsTotal - missionsCompleted > 5
+      ? (missionsDelTop = missionsTotal - missionsCompleted)
+      : (missionsDelTop =
+          missionsTotal -
+          missionsCompleted +
+          (6 - (missionsTotal - missionsCompleted)));
+    missionsDelTop > missionsCompleted
+      ? (missionsDelTop = missionsCompleted)
+      : missionsDelTop;
     for (let counter = 0; counter < missionsDelTop; counter++) {
       missionD.shift();
     }
@@ -297,37 +305,50 @@ export class Table {
     for (let counter = 0; counter < missionsDelTail; counter++) {
       missionD.pop();
     }
-    
+
     y.missionReportR = {
       guid: guid,
       xp: xp,
-      missions: (x === null || x === undefined) ? missionMapDisplay : x
-    }
+      missions: x === null || x === undefined ? missionMapDisplay : x,
+    };
 
-    this.dataRepository.updateRewardsReportXPMissions(guid, missionsCompleted, xp);
+    this.dataRepository.updateRewardsReportXPMissions(
+      guid,
+      missionsCompleted,
+      xp
+    );
 
     return y;
   }
-    
+
   // ++++++++++++++++++++ changed to async / to check
-    async sendRewardsData() {
+  async sendRewardsData() {
     let dcRewardReports = new DataContainer();
     let missionSendData = new DataContainer();
     dcRewardReports.rewardsReportResult = new RewardsReportResult();
-    dcRewardReports.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
+    dcRewardReports.rewardsReportResult.rewards =
+      await this.dataRepository.getRewardsReport();
     try {
       let dcMissionResults = new DataContainer();
       dcMissionResults.missionReportR = new MissionReportR();
       let subFound = false;
       for (let subscriber of this.subscribers) {
-        for (let counter = 0; counter <dcRewardReports.rewardsReportResult.rewards.length; counter++) {
-          if (dcRewardReports.rewardsReportResult.rewards[counter].guid === subscriber.user.guid) {
+        for (
+          let counter = 0;
+          counter < dcRewardReports.rewardsReportResult.rewards.length;
+          counter++
+        ) {
+          if (
+            dcRewardReports.rewardsReportResult.rewards[counter].guid ===
+            subscriber.user.guid
+          ) {
             subFound = true;
           }
         }
         if (!subFound) {
           await this.dataRepository.initRewards(subscriber.user.guid);
-          dcRewardReports.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
+          dcRewardReports.rewardsReportResult.rewards =
+            await this.dataRepository.getRewardsReport();
         }
         subFound = false;
       }
@@ -349,13 +370,50 @@ export class Table {
           ) {
             dcMissionResults.missionReportR.guid =
               dcRewardReports.rewardsReportResult.rewards[counter].guid;
-            dcMissionResults.missionReportR.xp = 
+            dcMissionResults.missionReportR.xp =
               dcRewardReports.rewardsReportResult.rewards[counter].xp;
             let tmpMission: missionMapI[] =
               dcRewardReports.rewardsReportResult.rewards[counter].missions;
-              missionSendData = await this.missionSort(tmpMission, subscriber.user.guid);
-              subscriber.send(missionSendData);
+            missionSendData = await this.missionSort(
+              tmpMission,
+              subscriber.user.guid
+            );
+            subscriber.send(missionSendData);
           }
+        }
+      }
+      for (
+        let x = 1;
+        x < dcRewardReports.rewardsReportResult.rewards.length + 1;
+        x++
+      ) {
+        dcRewardReports.rewardsReportResult.rewards[x-1].position = x;
+        if (x === 1) {
+          dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 1000;
+        } else if (x === 2) {
+          dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 800;
+        } else if (x === 3) {
+          dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 600;
+        } else if (x === 4) {
+          dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 500;
+        } else if (x === 5) {
+          dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 350;
+        } else if (x === 6) {
+          dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 250;
+        } else if (x === 7) {
+          dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 200;
+        } else if (x === 8) {
+          dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 150;
+        } else if (x > 8 && x < 15) {
+          dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 100;
+        } else if (x > 14 && x < 25) {
+          dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 75;
+        } else if (x > 24 && x < 31) {
+          dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 50;
+        } else if (x > 30 && x < 51) {
+          dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 25;
+        } else {
+          dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 0;
         }
       }
       this.sendDataContainerRewards(dcRewardReports);
@@ -368,22 +426,33 @@ export class Table {
     let startDelay = this.gameStartDelaySec;
     let data = new DataContainer();
 
-    if (this.pendingExchangeRate && this.pendingExchangeRate != this.tableConfig.exchangeRate) {
+    if (
+      this.pendingExchangeRate &&
+      this.pendingExchangeRate != this.tableConfig.exchangeRate
+    ) {
       this.updateExchangeRate(this.pendingExchangeRate);
       this.setTableConfigUpdate(data);
     }
     let blindsChangingEvent: BlindsChangingEvent;
     let nextBlind: NextBlind;
     if (this.blindConfig) {
-      let blindConfigResult = getBlindConfig(this.blindsStartTime, this.blindConfig);
+      let blindConfigResult = getBlindConfig(
+        this.blindsStartTime,
+        this.blindConfig
+      );
       let blindConfig = blindConfigResult.blinds;
-      if (this.tableConfig.smallBlind != blindConfig.smallBlind || this.tableConfig.bigBlind != blindConfig.bigBlind) {
-
+      if (
+        this.tableConfig.smallBlind != blindConfig.smallBlind ||
+        this.tableConfig.bigBlind != blindConfig.bigBlind
+      ) {
         this.tableConfig.smallBlind = blindConfig.smallBlind;
         this.tableConfig.bigBlind = blindConfig.bigBlind;
         this.setTableConfigUpdate(data);
-        blindsChangingEvent = new BlindsChangingEvent(blindConfig.smallBlind, blindConfig.bigBlind);
-        startDelay += 3;//add extra time so users can see the change
+        blindsChangingEvent = new BlindsChangingEvent(
+          blindConfig.smallBlind,
+          blindConfig.bigBlind
+        );
+        startDelay += 3; //add extra time so users can see the change
       }
       nextBlind = this.getNextBlind(blindConfigResult);
     }
@@ -396,24 +465,30 @@ export class Table {
     data.gameStarting.nextBlind = nextBlind;
 
     this.sendDataContainer(data);
-    this.timerProvider.startTimer(this.dealHoleCards.bind(this), startDelay * 1000, this);
-
+    this.timerProvider.startTimer(
+      this.dealHoleCards.bind(this),
+      startDelay * 1000,
+      this
+    );
   }
-
-
 
   private getGameStartingEvent(): GameStartingEvent {
     let gameStarting = new GameStartingEvent(this.tableId);
     gameStarting.isStarting = true;
-    gameStarting.startsInNumSeconds = Math.max(0, Math.round((this.gameStarting.getTime() - new Date().getTime()) / 1000));
+    gameStarting.startsInNumSeconds = Math.max(
+      0,
+      Math.round((this.gameStarting.getTime() - new Date().getTime()) / 1000)
+    );
     return gameStarting;
-
   }
 
   updateExchangeRate(rate: number) {
     let config = this.tableConfig;
     config.exchangeRate = rate;
-    config.smallBlind = Math.round((config.smallBlindUsd / rate) * CurrencyUnit.getCurrencyUnit(config.currency));
+    config.smallBlind = Math.round(
+      (config.smallBlindUsd / rate) *
+        CurrencyUnit.getCurrencyUnit(config.currency)
+    );
     config.bigBlind = config.smallBlind * 2;
   }
 
@@ -423,13 +498,15 @@ export class Table {
 
   addPlayerHandle(request: JoinTableRequest): PlayerTableHandle {
     let { guid, screenName, gravatar, seat, stack } = request;
-    let existingSeat = this.players.find(h => h.seat === seat);
+    let existingSeat = this.players.find((h) => h.seat === seat);
     if (existingSeat != null)
       throw Error(`seat ${seat} is occupied by ${existingSeat.screenName}`);
     let handle = new PlayerTableHandle(guid, screenName, gravatar, seat);
     handle.stack = stack;
     this.players.push(handle);
-    this.players.sort(function (p1, p2) { return p1.seat - p2.seat });
+    this.players.sort(function (p1, p2) {
+      return p1.seat - p2.seat;
+    });
     return handle;
   }
 
@@ -464,7 +541,6 @@ export class Table {
     this.sendDataContainer(data);
     logger.info("finished shutdown for table: " + this.tableConfig.name);
     this.promiseResolve();
-
   }
 
   dealHoleCards() {
@@ -478,14 +554,13 @@ export class Table {
 
     this.gameStarting = null;
     this.sitOutDisconnectedPlayers();
-    let sittingOutPlayers = this.players.filter(p => p.sitOutNextHand);
+    let sittingOutPlayers = this.players.filter((p) => p.sitOutNextHand);
 
     let playersForNextHand = this.getPlayersForNextHand();
     if (playersForNextHand.length < this.minNumPlayers) {
       this.broadcastGameNotStarting(sittingOutPlayers);
       return;
     }
-
 
     this.setCurrentPlayers(playersForNextHand);
     this.resetAutoActions();
@@ -496,25 +571,31 @@ export class Table {
       let lastPlayers = this.pastPlayers[this.pastPlayers.length - 1].slice(0);
       while (lastPlayers.length) {
         let nextDealSeatTmp = this.getNextDealerSeat(lastPlayers);
-        if (!nextDealSeatTmp)
-          break;
-        let nextDealPlayer = lastPlayers.find(p => p.seat == nextDealSeatTmp);
-        let currentPlayer = this.currentPlayers.find(p => p.guid == nextDealPlayer.guid);
-        if (currentPlayer != null && currentPlayer.seat == nextDealPlayer.seat) {
+        if (!nextDealSeatTmp) break;
+        let nextDealPlayer = lastPlayers.find((p) => p.seat == nextDealSeatTmp);
+        let currentPlayer = this.currentPlayers.find(
+          (p) => p.guid == nextDealPlayer.guid
+        );
+        if (
+          currentPlayer != null &&
+          currentPlayer.seat == nextDealPlayer.seat
+        ) {
           nextDealerSeat = nextDealSeatTmp;
           break;
         } else {
           removeItem(lastPlayers, nextDealPlayer);
         }
       }
-
     }
 
-    this.dealerSeat = nextDealerSeat || this.getNextDealerSeat(this.tournamentId ? this.players : this.currentPlayers);
+    this.dealerSeat =
+      nextDealerSeat ||
+      this.getNextDealerSeat(
+        this.tournamentId ? this.players : this.currentPlayers
+      );
 
     this.deck = new Deck();
     this.auditEvents = [];
-
 
     for (let player of this.currentPlayers) {
       player.holecards = [this.deck.getNextCard(), this.deck.getNextCard()];
@@ -522,17 +603,23 @@ export class Table {
 
     let smallBlind: PlayerTableHandle;
     let bigBlind: PlayerTableHandle;
-    //console.log('dealerSeat: ' + this.dealerSeat);      
+    //console.log('dealerSeat: ' + this.dealerSeat);
 
     //see https://boardgames.stackexchange.com/questions/1617/texas-holdem-heads-up-blind-structure
-    if ((this.currentPlayers.length === 2 && !this.tournamentId) || this.players.length == 2) {
-      let dealerPlayer = this.currentPlayers.find(p => p.seat === this.dealerSeat);
+    if (
+      (this.currentPlayers.length === 2 && !this.tournamentId) ||
+      this.players.length == 2
+    ) {
+      let dealerPlayer = this.currentPlayers.find(
+        (p) => p.seat === this.dealerSeat
+      );
       let indexOfDealer = this.currentPlayers.indexOf(dealerPlayer);
-      smallBlind = indexOfDealer === 0 ? this.currentPlayers[0] : this.currentPlayers[1];
-      bigBlind = indexOfDealer === 0 ? this.currentPlayers[1] : this.currentPlayers[0];
+      smallBlind =
+        indexOfDealer === 0 ? this.currentPlayers[0] : this.currentPlayers[1];
+      bigBlind =
+        indexOfDealer === 0 ? this.currentPlayers[1] : this.currentPlayers[0];
       this.playerNextToActIndex = indexOfDealer;
     } else {
-
       let playerArr = this.tournamentId ? this.players : this.currentPlayers;
       smallBlind = this.getNextPlayer(this.dealerSeat, playerArr);
       bigBlind = this.getNextPlayer(smallBlind.seat, playerArr);
@@ -542,7 +629,10 @@ export class Table {
       let nextToActIndex = bigBlindIndex;
       for (let i = 0; i < playerArr.length; i++) {
         //keep moving forward after the big blind until we find the next player who belongs to the current players
-        nextToActIndex = this.getPlayerNextToActIndex(nextToActIndex, playerArr);
+        nextToActIndex = this.getPlayerNextToActIndex(
+          nextToActIndex,
+          playerArr
+        );
         let playerNextToAct = playerArr[nextToActIndex];
         let indexOf = this.currentPlayers.indexOf(playerNextToAct);
         if (indexOf > -1) {
@@ -552,7 +642,7 @@ export class Table {
       }
     }
 
-    this.lastToActIndex = this.getPriorPlayerIndex(this.playerNextToActIndex)
+    this.lastToActIndex = this.getPriorPlayerIndex(this.playerNextToActIndex);
 
     let playerNextToAct = this.currentPlayers[this.playerNextToActIndex];
 
@@ -560,15 +650,19 @@ export class Table {
     bigBlind.setBet(Math.min(this.tableConfig.bigBlind, bigBlind.stack));
     if (!this.tournamentId && this.pastPlayers && this.pastPlayers.length) {
       for (let player of this.currentPlayers) {
-        let seatHistory = this.pastPlayers[this.pastPlayers.length - 1].find(h => h.guid == player.guid);
+        let seatHistory = this.pastPlayers[this.pastPlayers.length - 1].find(
+          (h) => h.guid == player.guid
+        );
         if (seatHistory != null && seatHistory.seat != player.seat) {
-          player.setBet(Math.min(this.tableConfig.bigBlind - player.bet, player.stack));
+          player.setBet(
+            Math.min(this.tableConfig.bigBlind - player.bet, player.stack)
+          );
         }
       }
     }
     let pot1 = new GamePot();
     pot1.amount = 0;
-    for (let player of this.players.filter(p => p.bet > 0)) {
+    for (let player of this.players.filter((p) => p.bet > 0)) {
       pot1.amount += player.bet;
       if (this.currentPlayers.indexOf(player) > -1) {
         pot1.players.push(player);
@@ -577,7 +671,6 @@ export class Table {
 
     this.gameState = new TexasHoldemGameState();
     this.gameState.pots.push(pot1);
-
 
     if (smallBlind === playerNextToAct) {
       smallBlind.myturn = true;
@@ -592,15 +685,19 @@ export class Table {
     }
     this.toCall = this.tableConfig.bigBlind - playerNextToAct.bet;
     this.lastRaise = 0;
-    playerNextToAct.hasCalled = this.toCall == 0;//only true when someone moves seats and pays the big blind
+    playerNextToAct.hasCalled = this.toCall == 0; //only true when someone moves seats and pays the big blind
     let publicData = new DataContainer();
     publicData.deal = new DealHoleCardsEvent(this.tableId);
     publicData.tableSeatEvents = new TableSeatEvents(this.tableId);
-    publicData.tableSeatEvents.seats = this.players.map(p => p.toTableSeatEvent());
+    publicData.tableSeatEvents.seats = this.players.map((p) =>
+      p.toTableSeatEvent()
+    );
     publicData.game = this.toGameEvent();
 
     for (let subscriber of this.subscribers) {
-      let player = this.currentPlayers.find(p => p.guid === subscriber.user.guid);
+      let player = this.currentPlayers.find(
+        (p) => p.guid === subscriber.user.guid
+      );
       if (player != null) {
         let privateData = new DataContainer();
         privateData.deal = new DealHoleCardsEvent(this.tableId);
@@ -611,22 +708,27 @@ export class Table {
       } else {
         subscriber.send(publicData);
       }
-
     }
     this.startPlayerTimeout();
   }
 
-  incrementPlayerNextToActIndex(index: number, players: PlayerTableHandle[]): void {
+  incrementPlayerNextToActIndex(
+    index: number,
+    players: PlayerTableHandle[]
+  ): void {
     this.playerNextToActIndex = this.getPlayerNextToActIndex(index, players);
   }
 
-  private getNextPlayer(startingSeatNum: number, seats: PlayerTableHandle[], reverse: boolean = false): PlayerTableHandle {
-
-    let startingSeat = seats.find(s => s.seat == startingSeatNum);
+  private getNextPlayer(
+    startingSeatNum: number,
+    seats: PlayerTableHandle[],
+    reverse: boolean = false
+  ): PlayerTableHandle {
+    let startingSeat = seats.find((s) => s.seat == startingSeatNum);
     if (!startingSeat) {
       //no player at this seat
-      let seatsBefore = seats.filter(s => s.seat < startingSeatNum);
-      let seatsAfter = seats.filter(s => s.seat > startingSeatNum);
+      let seatsBefore = seats.filter((s) => s.seat < startingSeatNum);
+      let seatsAfter = seats.filter((s) => s.seat > startingSeatNum);
 
       if (reverse) {
         if (seatsBefore.length) {
@@ -655,15 +757,17 @@ export class Table {
       }
       return seats[nextSeatIndex];
     }
-
   }
 
-  private getNextPlayerWherePlayerIsPlaying(startingSeatNum: number, seats: PlayerTableHandle[], reverse: boolean): PlayerTableHandle {
-
+  private getNextPlayerWherePlayerIsPlaying(
+    startingSeatNum: number,
+    seats: PlayerTableHandle[],
+    reverse: boolean
+  ): PlayerTableHandle {
     for (let i = 0; i < seats.length - 1; i++) {
       let nextSeat = this.getNextPlayer(startingSeatNum, seats, reverse);
       if (this.currentPlayers.indexOf(nextSeat) > -1) {
-        return nextSeat
+        return nextSeat;
       } else {
         startingSeatNum = nextSeat.seat;
       }
@@ -672,8 +776,10 @@ export class Table {
     return null;
   }
 
-
-  private getPlayerNextToActIndex(index: number, players: PlayerTableHandle[]): number {
+  private getPlayerNextToActIndex(
+    index: number,
+    players: PlayerTableHandle[]
+  ): number {
     let nextToActIndex = -1;
     for (let i = 1; i < players.length; i++) {
       let tmpIndex = (index + i) % players.length;
@@ -681,17 +787,18 @@ export class Table {
         nextToActIndex = tmpIndex;
         break;
       }
-      if (tmpIndex == this.lastToActIndex)
-        return -1;
+      if (tmpIndex == this.lastToActIndex) return -1;
     }
     return nextToActIndex;
   }
   currencyUnit: number;
-  minimumUsdAmount: Decimal = new Decimal('0.01');
+  minimumUsdAmount: Decimal = new Decimal("0.01");
 
   private playerCanAct(player: PlayerTableHandle): boolean {
     if (!player.hasFolded && player.stack > 0) {
-      let usdStack = new Decimal(player.stack).dividedBy(this.currencyUnit).mul(this.tableConfig.exchangeRate);
+      let usdStack = new Decimal(player.stack)
+        .dividedBy(this.currencyUnit)
+        .mul(this.tableConfig.exchangeRate);
 
       return !usdStack.lessThan(this.minimumUsdAmount);
     }
@@ -712,7 +819,6 @@ export class Table {
       } else {
         return priorIndex;
       }
-
     }
     return -1;
   }
@@ -720,7 +826,7 @@ export class Table {
   private toGameEvent() {
     let gameEvent = new GameEvent(this.tableId);
     if (this.gameState) {
-      gameEvent.pot = this.gameState.pots.map(x => x.amount);
+      gameEvent.pot = this.gameState.pots.map((x) => x.amount);
       gameEvent.board = this.gameState.boardCards;
     }
     gameEvent.tocall = this.toCall;
@@ -731,7 +837,6 @@ export class Table {
 
   //the seat number of the next dealer
   getNextDealerSeat(players: ISeat[]): number {
-
     let nextSeat: number = null;
     for (let player of players) {
       if (player.seat > this.dealerSeat) {
@@ -749,9 +854,7 @@ export class Table {
     }
 
     return nextSeat;
-
   }
-
 
   sendDataContainer(data: DataContainer): void {
     for (let subscriber of this.subscribers) {
@@ -766,25 +869,24 @@ export class Table {
       subscriber.send(data);
     }
   }
- 
 
   getPlayers(): PlayerTableHandle[] {
     return this.players;
   }
 
   getPlayerAtSeat(seat: number): PlayerTableHandle {
-    return this.players.find(p => p.seat == seat);
+    return this.players.find((p) => p.seat == seat);
   }
 
   async addSubscriber(subscriber: ISubscriber) {
-    let existingSubscriber = this.subscribers.find(s => s === subscriber);
+    let existingSubscriber = this.subscribers.find((s) => s === subscriber);
     if (existingSubscriber == null) {
       this.subscribers.push(subscriber);
       let broadcastToOthers: boolean = false;
       let data = new DataContainer();
       data.game = this.toGameEvent();
 
-      let player = this.players.find(p => p.guid === subscriber.user.guid);
+      let player = this.players.find((p) => p.guid === subscriber.user.guid);
       if (player != null) {
         player.isDisconnected = false;
         player.disconnectedSince = null;
@@ -818,15 +920,16 @@ export class Table {
           let seatEvent = playerHandle.toTableSeatEvent();
           seatEvent.avatar = playerHandle.gravatar;
           if (seatEvent.myturn && playerHandle.timerStart) {
-            let msSinceStarted = (new Date().getTime() - playerHandle.timerStart.getTime());
-            let startingIn = this.tableConfig.timeToActSec * 1000 - msSinceStarted;
+            let msSinceStarted =
+              new Date().getTime() - playerHandle.timerStart.getTime();
+            let startingIn =
+              this.tableConfig.timeToActSec * 1000 - msSinceStarted;
             seatEvent.timeToActSec = Math.round(startingIn / 1000);
           }
 
           if (playerHandle.guid === subscriber.user.guid) {
             seatEvent.guid = subscriber.user.guid;
-            if (player != null)
-              seatEvent.playercards = player.holecards;
+            if (player != null) seatEvent.playercards = player.holecards;
           }
           data.tableSeatEvents.seats.push(seatEvent);
         }
@@ -843,14 +946,14 @@ export class Table {
         data.gameStarting.nextBlind = data.subscribeTableResult.nextBlind;
       }
 
-
-
       data.missionReportR = new MissionReportR();
-      let ar01 = [{
-        guid: subscriber.user.guid,
-        xp: 0,
-        missionsStatus: {}
-      }]
+      let ar01 = [
+        {
+          guid: subscriber.user.guid,
+          xp: 0,
+          missionsStatus: {},
+        },
+      ];
 
       // data = ar01;
       subscriber.send(data);
@@ -891,18 +994,24 @@ export class Table {
     //   console.log(e);
 
     // }
-
   }
 
   getNextBlind(blindConfigResult: BlindConfigResult): NextBlind {
     if (blindConfigResult == null) {
-      blindConfigResult = getBlindConfig(this.blindsStartTime, this.blindConfig);
+      blindConfigResult = getBlindConfig(
+        this.blindsStartTime,
+        this.blindConfig
+      );
     }
     let currentBlind = blindConfigResult.blinds;
     let indexOf = this.blindConfig.indexOf(currentBlind);
     if (indexOf < this.blindConfig.length - 1) {
       let next = this.blindConfig[indexOf + 1];
-      return new NextBlind(next.smallBlind, next.bigBlind, Math.round(blindConfigResult.remainingTimeSec));
+      return new NextBlind(
+        next.smallBlind,
+        next.bigBlind,
+        Math.round(blindConfigResult.remainingTimeSec)
+      );
     }
     return null;
   }
@@ -911,13 +1020,15 @@ export class Table {
     return this.subscribers;
   }
   getSubscriber(guid: string): ISubscriber {
-    return this.subscribers.find(s => s.user.guid == guid)
+    return this.subscribers.find((s) => s.user.guid == guid);
   }
-
 
   onClientDisconnected(handle: WebSocketHandle): void {
     let player = this.removeSubscriber(handle);
-    if (player && (!this.currentPlayers || this.currentPlayers.indexOf(player) === -1)) {
+    if (
+      player &&
+      (!this.currentPlayers || this.currentPlayers.indexOf(player) === -1)
+    ) {
       // console.log(player);
       player.isAutoSitout = !player.isSittingOut; //only update if not sitting out as player will be sat back in auto
       player.isSittingOut = true;
@@ -938,7 +1049,7 @@ export class Table {
       }
     }
     if (!stillSubscribed) {
-      let player = this.players.find(p => p.guid === handle.user.guid);
+      let player = this.players.find((p) => p.guid === handle.user.guid);
       if (player != null) {
         player.isDisconnected = true;
         player.disconnectedSince = new Date();
@@ -954,7 +1065,6 @@ export class Table {
     this.processor.sendMessage(tMessage);
   }
 
-
   handleFold(guid: string): void {
     if (this.playerNextToActIndex < 0) {
       this.sendError(guid, `cannot fold between rounds`);
@@ -966,12 +1076,12 @@ export class Table {
       return;
     }
     this.clearPlayerTimer();
-    this.auditEvents.push(new TableAuditEvent(player.guid, 'fold', null));
+    this.auditEvents.push(new TableAuditEvent(player.guid, "fold", null));
     player.hasFolded = true;
     player.myturn = false;
     this.resetAutoAction(player, true);
 
-    let remainingPlayers = this.currentPlayers.filter(p => !p.hasFolded);
+    let remainingPlayers = this.currentPlayers.filter((p) => !p.hasFolded);
     let data = new DataContainer();
     data.tableSeatEvents = new TableSeatEvents(this.tableId);
     data.tableSeatEvents.seats.push(player.toTableSeatEvent());
@@ -982,14 +1092,21 @@ export class Table {
       this.toCall = null;
       this.playerNextToActIndex = -1;
       this.resetAutoActions();
-      this.timerProvider.startTimer(this.handleShowdown.bind(this), this.showdownAfterAllFoldDelaySec * 1000, this);
+      this.timerProvider.startTimer(
+        this.handleShowdown.bind(this),
+        this.showdownAfterAllFoldDelaySec * 1000,
+        this
+      );
     } else {
       if (this.playerNextToActIndex === this.lastToActIndex) {
         chipsToPot = true;
         this.startNextStreet(data, player);
       } else {
         if (remainingPlayers.length > 1) {
-          this.incrementPlayerNextToActIndex(this.playerNextToActIndex, this.currentPlayers);
+          this.incrementPlayerNextToActIndex(
+            this.playerNextToActIndex,
+            this.currentPlayers
+          );
           nextPlayer = this.currentPlayers[this.playerNextToActIndex];
           let priorBet = this.toCall + player.bet;
           this.toCall = priorBet - nextPlayer.bet;
@@ -998,8 +1115,13 @@ export class Table {
       }
     }
 
-    this.handlePostBetOrFold(data, 'fold', chipsToPot, nextPlayer, isValidAutoAction);
-
+    this.handlePostBetOrFold(
+      data,
+      "fold",
+      chipsToPot,
+      nextPlayer,
+      isValidAutoAction
+    );
   }
 
   sendBet(betAmount: number, user: UserSmall) {
@@ -1009,7 +1131,6 @@ export class Table {
   }
 
   handleBet(betAmount: number, guid: string): void {
-
     if (this.playerNextToActIndex < 0) {
       this.sendError(guid, `cannot bet between rounds`);
       return;
@@ -1020,20 +1141,44 @@ export class Table {
       return;
     }
     if (betAmount > player.stack) {
-      this.sendError(guid, `bet amount of ${this.getDisplayAmt(betAmount)} is larger than your stack of ${this.getDisplayAmt(player.stack)}`);
+      this.sendError(
+        guid,
+        `bet amount of ${this.getDisplayAmt(
+          betAmount
+        )} is larger than your stack of ${this.getDisplayAmt(player.stack)}`
+      );
       return;
     }
     if (betAmount < this.toCall && betAmount !== player.stack) {
-      this.sendError(guid, `bet amount of ${this.getDisplayAmt(betAmount)} is less than the call amount of ${this.getDisplayAmt(this.toCall)}`);
+      this.sendError(
+        guid,
+        `bet amount of ${this.getDisplayAmt(
+          betAmount
+        )} is less than the call amount of ${this.getDisplayAmt(this.toCall)}`
+      );
       return;
     }
     if (betAmount > this.toCall && betAmount !== player.stack) {
       let raiseAmt = betAmount - this.toCall;
       if (raiseAmt < this._tableConfig.bigBlind) {
-        this.sendError(guid, `Bet of ${this.getDisplayAmt(betAmount)} is invalid. The minimum bet or raise must be at least the big blind of ${this.getDisplayAmt(this._tableConfig.bigBlind)}`);
+        this.sendError(
+          guid,
+          `Bet of ${this.getDisplayAmt(
+            betAmount
+          )} is invalid. The minimum bet or raise must be at least the big blind of ${this.getDisplayAmt(
+            this._tableConfig.bigBlind
+          )}`
+        );
         return;
       } else if (raiseAmt < this.lastRaise) {
-        this.sendError(guid, `Bet of ${this.getDisplayAmt(betAmount)} is invalid. A raise must be at least the size of the largest previous bet or raise (${this.getDisplayAmt(this.lastRaise)})`);
+        this.sendError(
+          guid,
+          `Bet of ${this.getDisplayAmt(
+            betAmount
+          )} is invalid. A raise must be at least the size of the largest previous bet or raise (${this.getDisplayAmt(
+            this.lastRaise
+          )})`
+        );
         return;
       }
     }
@@ -1051,7 +1196,7 @@ export class Table {
       this.lastToActIndex = this.getPriorPlayerIndex(this.playerNextToActIndex);
 
     let data = new DataContainer();
-    let action: string = betAmount > 0 ? 'bet' : 'check';
+    let action: string = betAmount > 0 ? "bet" : "check";
     this.auditEvents.push(new TableAuditEvent(player.guid, action, betAmount));
     let chipsToPot: boolean = null;
     let nextPlayer: PlayerTableHandle;
@@ -1060,35 +1205,46 @@ export class Table {
       chipsToPot = true;
       this.startNextStreet(data, player);
     } else {
-      this.incrementPlayerNextToActIndex(this.playerNextToActIndex, this.currentPlayers);
+      this.incrementPlayerNextToActIndex(
+        this.playerNextToActIndex,
+        this.currentPlayers
+      );
       nextPlayer = this.currentPlayers[this.playerNextToActIndex];
 
       data.tableSeatEvents = new TableSeatEvents(this.tableId);
       data.tableSeatEvents.seats.push(player.toTableSeatEvent());
 
-      if (betAmount < this.toCall)
-        this.toCall = priorBet - nextPlayer.bet;
-      else
-        this.toCall = player.bet - nextPlayer.bet;
+      if (betAmount < this.toCall) this.toCall = priorBet - nextPlayer.bet;
+      else this.toCall = player.bet - nextPlayer.bet;
 
       isValidAutoAction = this.pushNextPlayerAction(nextPlayer, data);
-
     }
 
     this.gameState.pots[0].amount += betAmount;
-    this.handlePostBetOrFold(data, action, chipsToPot, nextPlayer, isValidAutoAction);
+    this.handlePostBetOrFold(
+      data,
+      action,
+      chipsToPot,
+      nextPlayer,
+      isValidAutoAction
+    );
   }
 
   private getDisplayAmt(amount: number): string {
     if (this._tableConfig.currency == Currency.tournament) {
-      return amount + '';
+      return amount + "";
     }
-    return new Decimal(amount).dividedBy(this.currencyUnit).mul(this._tableConfig.exchangeRate).toFixed(2);
+    return new Decimal(amount)
+      .dividedBy(this.currencyUnit)
+      .mul(this._tableConfig.exchangeRate)
+      .toFixed(2);
   }
 
-  private pushNextPlayerAction(nextPlayer: PlayerTableHandle, data: DataContainer): boolean {
-    if (nextPlayer.autoFold)
-      return true;
+  private pushNextPlayerAction(
+    nextPlayer: PlayerTableHandle,
+    data: DataContainer
+  ): boolean {
+    if (nextPlayer.autoFold) return true;
     if (nextPlayer.autoCheck) {
       if (this.toCall === 0) {
         return true;
@@ -1098,7 +1254,6 @@ export class Table {
       }
     }
 
-
     nextPlayer.myturn = true;
     data.tableSeatEvents.seats.push(nextPlayer.toTableSeatEvent());
     this.startPlayerTimeout();
@@ -1106,7 +1261,13 @@ export class Table {
     return false;
   }
 
-  private handlePostBetOrFold(data: DataContainer, action: string, chipsToPot: boolean, nextPlayer: PlayerTableHandle, isValidAutoAction: boolean) {
+  private handlePostBetOrFold(
+    data: DataContainer,
+    action: string,
+    chipsToPot: boolean,
+    nextPlayer: PlayerTableHandle,
+    isValidAutoAction: boolean
+  ) {
     data.game = this.toGameEvent();
     data.game.action = action;
     data.game.chipsToPot = chipsToPot;
@@ -1114,12 +1275,17 @@ export class Table {
     this.sendDataContainer(data);
 
     if (nextPlayer != null && isValidAutoAction) {
-
       let that = this;
       if (nextPlayer.autoFold || nextPlayer.autoCheck) {
         let isFold: boolean = nextPlayer.autoFold === true && this.toCall > 0;
         let delay = isFold ? 500 : this.getRandomInt(1000, 2750);
-        this.timerProvider.startTimer(function startAutoFoldTimer() { that.doAutoAction(nextPlayer, isFold); }, delay, this);
+        this.timerProvider.startTimer(
+          function startAutoFoldTimer() {
+            that.doAutoAction(nextPlayer, isFold);
+          },
+          delay,
+          this
+        );
         nextPlayer.autoFold = false;
         nextPlayer.autoCheck = false;
       }
@@ -1131,10 +1297,8 @@ export class Table {
   }
 
   private doAutoAction(handle: PlayerTableHandle, isFold: boolean) {
-    if (isFold)
-      this.handleFold(handle.guid);
-    else
-      this.handleBet(0, handle.guid);
+    if (isFold) this.handleFold(handle.guid);
+    else this.handleBet(0, handle.guid);
 
     this.sendTableOptions(handle);
   }
@@ -1146,14 +1310,18 @@ export class Table {
       data.setTableOptionResult.autoFold = handle.autoFold;
       data.setTableOptionResult.autoCheck = handle.autoCheck;
       return data;
-    }
+    };
     this.sendToSubscriber(handle.guid, func);
   }
 
   private shouldStartNextStreet(): boolean {
-    if (this.playerNextToActIndex === this.lastToActIndex)
-      return true;
-    if (this.getPlayerNextToActIndex(this.playerNextToActIndex, this.currentPlayers) === -1)
+    if (this.playerNextToActIndex === this.lastToActIndex) return true;
+    if (
+      this.getPlayerNextToActIndex(
+        this.playerNextToActIndex,
+        this.currentPlayers
+      ) === -1
+    )
       return true;
 
     return false;
@@ -1171,32 +1339,31 @@ export class Table {
       return;
     let that = this;
     let nextToActIndex = this.playerNextToActIndex;
-    this.playerTimer = this.timerProvider.startTimer(function startPlayerTimer() {
-      that.handlePlayerTimeout(nextToActIndex);
-    },
-      this.tableConfig.timeToActSec * 1000, this);
+    this.playerTimer = this.timerProvider.startTimer(
+      function startPlayerTimer() {
+        that.handlePlayerTimeout(nextToActIndex);
+      },
+      this.tableConfig.timeToActSec * 1000,
+      this
+    );
     let playerHandle = this.currentPlayers[this.playerNextToActIndex];
     playerHandle.timerStart = new Date();
     this.playerTimer.guid = playerHandle.guid;
   }
 
   handlePlayerTimeout(playerIndex: number): void {
-
-    if (playerIndex !== this.playerNextToActIndex)
-      return;
+    if (playerIndex !== this.playerNextToActIndex) return;
     let handle = this.currentPlayers[playerIndex];
     handle.sitOutNextHand = true;
-    if (this.toCall > 0)
-      this.handleFold(handle.guid);
-    else
-      this.handleBet(0, handle.guid);
+    if (this.toCall > 0) this.handleFold(handle.guid);
+    else this.handleBet(0, handle.guid);
 
     let func = (): DataContainer => {
       let data = new DataContainer();
       data.setTableOptionResult = this.getSetTableOptionResult();
       data.setTableOptionResult.sitOutNextHand = handle.sitOutNextHand;
       return data;
-    }
+    };
     this.sendToSubscriber(handle.guid, func);
   }
 
@@ -1206,11 +1373,10 @@ export class Table {
       if (!this.players[counter].hasFolded) {
         this.players[counter].lastStreet = this.street;
       }
-    };
+    }
   }
 
   private startNextStreet(data: DataContainer, player: PlayerTableHandle) {
-
     this.toCall = 0;
     this.lastRaise = 0;
     this.playerNextToActIndex = -1;
@@ -1221,20 +1387,16 @@ export class Table {
       data.tableSeatEvents.seats.push(player.toTableSeatEvent());
     }
 
-
     let delayedFunc = this.dealCommunityCards;
     let delayMs = this.flopDelaySec * 1000;
     if (!this.street) {
       this.street = PokerStreetType.flop;
-    }
-    else if (this.street === PokerStreetType.flop) {
+    } else if (this.street === PokerStreetType.flop) {
       this.street = PokerStreetType.turn;
-    }
-    else if (this.street === PokerStreetType.turn) {
+    } else if (this.street === PokerStreetType.turn) {
       this.street = PokerStreetType.river;
-    }
-    else if (this.street === PokerStreetType.river) {
-      this.street = 'showdown';
+    } else if (this.street === PokerStreetType.river) {
+      this.street = "showdown";
       delayedFunc = this.handleShowdown;
     }
 
@@ -1253,7 +1415,9 @@ export class Table {
       handle.autoFold = false;
       this.sendTableOptions(handle);
       if (warn)
-        logger.warn(`player ${handle.screenName} is set to autofold or autoCheck. autoFold=${handle.autoFold} autoCheck=${handle.autoCheck}`);
+        logger.warn(
+          `player ${handle.screenName} is set to autofold or autoCheck. autoFold=${handle.autoFold} autoCheck=${handle.autoCheck}`
+        );
     }
   }
 
@@ -1265,20 +1429,25 @@ export class Table {
 
     data.game = this.toGameEvent();
     data.game.potResults = [];
-    for (let counter = 0; counter<this.players.length; counter++) {
-      console.log(this.players[counter].seat===0);
-      if (this.players[counter].seat===this.dealerSeat) {
+    for (let counter = 0; counter < this.players.length; counter++) {
+      console.log(this.players[counter].seat === 0);
+      if (this.players[counter].seat === this.dealerSeat) {
         this.players[counter].position = 0;
-        
       }
     }
-    let combinedPlayers = this.players.filter(p => p.cumulativeBet > 0 || this.currentPlayers.indexOf(p) > -1);//need to include players who were sat out but paid blinds
+    let combinedPlayers = this.players.filter(
+      (p) => p.cumulativeBet > 0 || this.currentPlayers.indexOf(p) > -1
+    ); //need to include players who were sat out but paid blinds
     let result: GamePotResult;
     try {
       this.gameState.allocatePots(combinedPlayers);
       result = this.gameState.allocateWinners();
     } catch (e) {
-      throw new Error(`allocatePots error: ${e}. combinedPlayers:${JSON.stringify(combinedPlayers)}`);
+      throw new Error(
+        `allocatePots error: ${e}. combinedPlayers:${JSON.stringify(
+          combinedPlayers
+        )}`
+      );
     }
 
     let dbGame = new DbGameResults();
@@ -1294,9 +1463,17 @@ export class Table {
     dbGame.exchangeRate = this.tableConfig.exchangeRate;
 
     let index = 0;
-    let gameResultPlayers: GameResultPlayer[] = this.players.map(this.getGameResultPlayer);
-    let lastPotHasOnePlayer = result.potResults.length > 1 && this.gameState.pots[result.potResults.length - 1].players.length === 1;
-    let lastPotPlayer: PlayerTableHandle = lastPotHasOnePlayer ? <PlayerTableHandle>this.gameState.pots[result.potResults.length - 1].players[0] : null;
+    let gameResultPlayers: GameResultPlayer[] = this.players.map(
+      this.getGameResultPlayer
+    );
+    let lastPotHasOnePlayer =
+      result.potResults.length > 1 &&
+      this.gameState.pots[result.potResults.length - 1].players.length === 1;
+    let lastPotPlayer: PlayerTableHandle = lastPotHasOnePlayer
+      ? <PlayerTableHandle>(
+          this.gameState.pots[result.potResults.length - 1].players[0]
+        )
+      : null;
 
     for (let r of result.potResults) {
       let potResult = new PotResult();
@@ -1304,34 +1481,39 @@ export class Table {
 
       if (noRake) {
         let priorPotResult = data.game.potResults[index - 1];
-        if (priorPotResult.seatWinners.length == 1 && priorPotResult.seatWinners[0] == lastPotPlayer.seat) {
-          priorPotResult.amount += this.gameState.pots[index].amount;//handles case where user goes all in and their stack exceeds the other players
+        if (
+          priorPotResult.seatWinners.length == 1 &&
+          priorPotResult.seatWinners[0] == lastPotPlayer.seat
+        ) {
+          priorPotResult.amount += this.gameState.pots[index].amount; //handles case where user goes all in and their stack exceeds the other players
         }
-
       } else {
         potResult.amount = this.gameState.pots[index].amount;
       }
 
       potResult.seatWinners = [];
       for (let allocation of r.allocations) {
-        let player = this.currentPlayers.find(p => p === allocation.player);
+        let player = this.currentPlayers.find((p) => p === allocation.player);
         let rake = 0;
         if (this.tableConfig.rake && !noRake) {
-          rake = allocation.amount * this.tableConfig.rake / 100;
+          rake = (allocation.amount * this.tableConfig.rake) / 100;
           rake = Math.round(rake);
         }
 
-
-
         player.stack += allocation.amount - rake;
-        let gameResultPlayer = gameResultPlayers.find(x => x.guid === player.guid);
+        let gameResultPlayer = gameResultPlayers.find(
+          (x) => x.guid === player.guid
+        );
         gameResultPlayer.profitLoss += allocation.amount - rake;
         gameResultPlayer.stack = player.stack;
         gameResultPlayer.rake += rake;
 
         potResult.seatWinners.push(player.seat);
         if (!potResult.winningHand && r.playerHandEvaluatorResults.length) {
-          let handEvaluatorResult: HandEvaluatorResult = r.playerHandEvaluatorResults.find(evalResult => evalResult.player === allocation.player);
+          let handEvaluatorResult: HandEvaluatorResult =
+            r.playerHandEvaluatorResults.find(
+              (evalResult) => evalResult.player === allocation.player
+            );
           potResult.winningHand = handEvaluatorResult.handRankEnglish;
           potResult.bestHandCards = handEvaluatorResult.bestHandCards;
         }
@@ -1364,63 +1546,97 @@ export class Table {
     for (let counter01 = 0; counter01 < gameResultPlayers.length; counter01++) {
       if (gameResultPlayers[counter01].playing) {
         winHand = false;
-        for (let counter03 = 0; counter03 < data.game.potResults.length; counter03++) {
-          for (let counter02 = 0; counter02 < data.game.potResults[counter03].seatWinners.length; counter02++) {
-            if (data.game.potResults[counter03].seatWinners[counter03] == gameResultPlayers[counter01].seat) {
+        for (
+          let counter03 = 0;
+          counter03 < data.game.potResults.length;
+          counter03++
+        ) {
+          for (
+            let counter02 = 0;
+            counter02 < data.game.potResults[counter03].seatWinners.length;
+            counter02++
+          ) {
+            if (
+              data.game.potResults[counter03].seatWinners[counter03] ==
+              gameResultPlayers[counter01].seat
+            ) {
               winHand = true;
             }
           }
         }
-        hasFolded = gameResultPlayers[counter01].hasFolded === true ? false : true;
+        hasFolded =
+          gameResultPlayers[counter01].hasFolded === true ? false : true;
         rewardsDetails.push({
           date: new Date(Date.now()),
           guid: gameResultPlayers[counter01].guid,
           profitLoss: gameResultPlayers[counter01].profitLoss,
-          handRank: dbGame.potResults[0].playerHandEvaluatorResults[counter01] ? dbGame.potResults[0].playerHandEvaluatorResults[counter01].handRank : 0,
-          handRankEnglish: dbGame.potResults[0].playerHandEvaluatorResults[counter01] ? dbGame.potResults[0].playerHandEvaluatorResults[counter01].handRankEnglish : "N/A",
-          lastStreet: gameResultPlayers[counter01].lastStreet ? gameResultPlayers[counter01].lastStreet : "preflop",
+          handRank: dbGame.potResults[0].playerHandEvaluatorResults[counter01]
+            ? dbGame.potResults[0].playerHandEvaluatorResults[counter01]
+                .handRank
+            : 0,
+          handRankEnglish: dbGame.potResults[0].playerHandEvaluatorResults[
+            counter01
+          ]
+            ? dbGame.potResults[0].playerHandEvaluatorResults[counter01]
+                .handRankEnglish
+            : "N/A",
+          lastStreet: gameResultPlayers[counter01].lastStreet
+            ? gameResultPlayers[counter01].lastStreet
+            : "preflop",
           winHand: winHand,
           flopScore: gameResultPlayers[counter01].missionData.flopScore,
           score: gameResultPlayers[counter01].missionData.score,
-          turnScore:  gameResultPlayers[counter01].missionData.turnScore,
+          turnScore: gameResultPlayers[counter01].missionData.turnScore,
           flopRank: gameResultPlayers[counter01].missionData.flopRank,
           turnRank: gameResultPlayers[counter01].missionData.turnRank,
           seenShowdown: hasFolded,
           holeCards: gameResultPlayers[counter01].holecards,
-          boardCards: this.gameState.boardCards        
-        
+          boardCards: this.gameState.boardCards,
         });
       }
       // console.log(rewardsDetails);
     }
-    let notPlaying = 0;
     // await console.log(this.dataRepository.compRewardsDetails(rewardsDetails));
-    let matchCounter = 0;
     for (let counter01 = 0; counter01 < gameResultPlayers.length; counter01++) {
       try {
         if (gameResultPlayers[counter01].playing) {
-        for (let counterX = 0; counterX<rewardsDetails.length; counterX++) {
-          if (rewardsDetails[counterX].guid === gameResultPlayers[counter01].guid) {
-            await this.dataRepository.saveRewardsDetails(rewardsDetails[counterX]);
-            await this.dataRepository.updateRewardsReportLeaderboard(rewardsDetails[counterX], gameResultPlayers[counter01].guid);
+          for (let counterX = 0; counterX < rewardsDetails.length; counterX++) {
+            if (
+              rewardsDetails[counterX].guid ===
+              gameResultPlayers[counter01].guid
+            ) {
+              await this.dataRepository.saveRewardsDetails(
+                rewardsDetails[counterX]
+              );
+              await this.dataRepository.updateRewardsReportLeaderboard(
+                rewardsDetails[counterX],
+                gameResultPlayers[counter01].guid
+              );
+            }
           }
         }
-      } 
       } catch (e) {
         console.log(gameResultPlayers);
         console.log(counter01);
         console.log(e);
       }
-    }    
+    }
     await this.dataRepository.saveGame(dbGame);
     await this.dataRepository.fillPercentile().catch(console.dir);
-    let temp = await this.dataRepository.saveTableStates([this.getTableState()]);
+    let temp = await this.dataRepository.saveTableStates([
+      this.getTableState(),
+    ]);
     if (!this.tournamentId) {
-      await this.dataRepository.updateTableBalances(this.tableId, this.tableConfig.currency, this.players.map(p => new UserTableAccount(p.guid, p.screenName, p.stack)));
+      await this.dataRepository.updateTableBalances(
+        this.tableId,
+        this.tableConfig.currency,
+        this.players.map(
+          (p) => new UserTableAccount(p.guid, p.screenName, p.stack)
+        )
+      );
     }
 
-
-    let remainingPlayers = this.currentPlayers.filter(p => !p.hasFolded);
+    let remainingPlayers = this.currentPlayers.filter((p) => !p.hasFolded);
 
     data.tableSeatEvents = new TableSeatEvents(this.tableId);
 
@@ -1432,8 +1648,7 @@ export class Table {
     for (let p of this.currentPlayers) {
       let hasFolded = p.hasFolded;
       p.hasFolded = false;
-      if (hasFolded)
-        p.playing = false;
+      if (hasFolded) p.playing = false;
       p.hasRaised = false;
       p.hasCalled = false;
 
@@ -1448,16 +1663,16 @@ export class Table {
     this.timerProvider.startTimer(this.postShowdown.bind(this), delay, this);
   }
 
-
   private getGameResultPlayer(p: PlayerTableHandle) {
-    let val = Object.assign(new GameResultPlayer(p.guid, p.screenName, '', p.seat), p);
+    let val = Object.assign(
+      new GameResultPlayer(p.guid, p.screenName, "", p.seat),
+      p
+    );
     val.profitLoss = -p.cumulativeBet;
     val.rake = 0;
-    val.gravatar = '';
+    val.gravatar = "";
     return val;
   }
-
-
 
   handleChat(screenName: string, message: string, send: boolean) {
     let chatMessage = new ChatMessage();
@@ -1480,25 +1695,26 @@ export class Table {
     return chatMessageResult;
   }
 
-
-
-
   getWinAmount(amount: number): string {
-
     let currencyUnit = CurrencyUnit.getCurrencyUnit(this.tableConfig.currency);
-    let val = new Decimal(amount).dividedBy(currencyUnit).mul(this.tableConfig.exchangeRate)
-      .round(2).toFixed(2);
-    let prefix = this.tableConfig.currency == Currency.tournament ? '' : '$';
+    let val = new Decimal(amount)
+      .dividedBy(currencyUnit)
+      .mul(this.tableConfig.exchangeRate)
+      .round(2)
+      .toFixed(2);
+    let prefix = this.tableConfig.currency == Currency.tournament ? "" : "$";
     return prefix + numberWithCommas(val);
   }
 
-
-
-  private getDbPotResult(potResult: TexasHoldemGameState_PotResult): DbPotResult {
+  private getDbPotResult(
+    potResult: TexasHoldemGameState_PotResult
+  ): DbPotResult {
     var result = new DbPotResult();
     for (let allocation of potResult.allocations) {
       let dbAllocation = new DbPlayerAllocationResult();
-      dbAllocation.player = { guid: (<PlayerTableHandle>allocation.player).guid };
+      dbAllocation.player = {
+        guid: (<PlayerTableHandle>allocation.player).guid,
+      };
       dbAllocation.amount = allocation.amount;
       result.allocations.push(dbAllocation);
     }
@@ -1506,9 +1722,12 @@ export class Table {
       let dbHandEvaluatorResult = new DbHandEvaluatorResult();
       dbHandEvaluatorResult.bestHand = handEvaluatorResult.bestHand;
       dbHandEvaluatorResult.handRank = handEvaluatorResult.handRank;
-      dbHandEvaluatorResult.handRankEnglish = handEvaluatorResult.handRankEnglish;
+      dbHandEvaluatorResult.handRankEnglish =
+        handEvaluatorResult.handRankEnglish;
       dbHandEvaluatorResult.score = handEvaluatorResult.score;
-      dbHandEvaluatorResult.player = { guid: (<PlayerTableHandle>handEvaluatorResult.player).guid };
+      dbHandEvaluatorResult.player = {
+        guid: (<PlayerTableHandle>handEvaluatorResult.player).guid,
+      };
       result.playerHandEvaluatorResults.push(dbHandEvaluatorResult);
     }
     return result;
@@ -1519,7 +1738,7 @@ export class Table {
     let data = new DataContainer();
     this.gameState = null;
     data.game = this.toGameEvent();
-    data.game.action = 'chipsToPlayer';
+    data.game.action = "chipsToPlayer";
     data.game.potResults = [];
     data.tableSeatEvents = new TableSeatEvents(this.tableId);
 
@@ -1527,7 +1746,10 @@ export class Table {
 
     for (let i = this.players.length - 1; i >= 0; i--) {
       let player = this.players[i];
-      if ((!this.tournamentId && player.stack < this.tableConfig.bigBlind) || player.stack == 0) {
+      if (
+        (!this.tournamentId && player.stack < this.tableConfig.bigBlind) ||
+        player.stack == 0
+      ) {
         await this.leaveTableInternal(player, false);
         bustedPlayers.push(player);
       }
@@ -1545,8 +1767,13 @@ export class Table {
       data.tableSeatEvents.seats.push(seatEvent);
     }
 
-    this.pastPlayers.push(this.currentPlayers.map(h => new SeatHistory(h.guid, h.seat)));
-    this.pastPlayers = _.takeRight(this.pastPlayers, this.tableConfig.maxPlayers);
+    this.pastPlayers.push(
+      this.currentPlayers.map((h) => new SeatHistory(h.guid, h.seat))
+    );
+    this.pastPlayers = _.takeRight(
+      this.pastPlayers,
+      this.tableConfig.maxPlayers
+    );
     this.currentPlayers = null;
 
     this.sendDataContainer(data);
@@ -1555,7 +1782,7 @@ export class Table {
     if (this.onPostShowdown != null) {
       const postShowdownEvent = new PostShowdownEvent(this);
       postShowdownEvent.bustedPlayers = bustedPlayers;
-      await this.onPostShowdown(postShowdownEvent)
+      await this.onPostShowdown(postShowdownEvent);
       handled = postShowdownEvent.handled;
     }
     if (this.shutdownRequested) {
@@ -1564,15 +1791,31 @@ export class Table {
       if (!handled) {
         if (this.getPlayersForNextHand().length >= this.minNumPlayers) {
           var today = new Date();
-          var startReset = new Date(today.getFullYear(), today.getMonth(), today.getDate(), configV.resetHoursFrom, configV.ResetMinutesFrom);
-          var stopReset = new Date(today.getFullYear(), today.getMonth(), today.getDate(), configV.ResetHoursTo, configV.ResetMinutesTo);
-          let reset = (startReset < today && stopReset > today)
+          var startReset = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+            configV.resetHoursFrom,
+            configV.ResetMinutesFrom
+          );
+          var stopReset = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+            configV.ResetHoursTo,
+            configV.ResetMinutesTo
+          );
+          let reset = startReset < today && stopReset > today;
           if (reset) {
             console.log("Day Reset");
             if (!configV.resetInProgress) {
               configV.resetInProgress = true;
-              console.log("TIMEOUT RESET SET ON table.ts")
-              setTimeout(Table.brutalStopServer, configV.resetDelay, this.dataRepository);
+              console.log("TIMEOUT RESET SET ON table.ts");
+              setTimeout(
+                Table.brutalStopServer,
+                configV.resetDelay,
+                this.dataRepository
+              );
             }
           } else {
             await this.handleGameStartingEvent();
@@ -1588,26 +1831,34 @@ export class Table {
     this.processor.sendMessage(tMessage);
   }
   async leaveTable(guid: string): Promise<any> {
-    let handle = this.players.find(p => p.guid == guid);
+    let handle = this.players.find((p) => p.guid == guid);
     if (handle) {
       return this.leaveTableInternal(handle, true);
     }
   }
 
-  async leaveTableInternal(player: PlayerTableHandle, broadcastRemovedPlayer: boolean = true): Promise<any> {
+  async leaveTableInternal(
+    player: PlayerTableHandle,
+    broadcastRemovedPlayer: boolean = true
+  ): Promise<any> {
     this.sendRewardsData();
     this.removePlayer(player);
-    if (broadcastRemovedPlayer)
-    this.broadcastPlayer(player);
+    if (broadcastRemovedPlayer) this.broadcastPlayer(player);
     this.broadcastTableConfigUpdate();
 
     if (!this.tournamentId) {
       await this.removeTableBalance(player.guid);
       if (player.stack > 0) {
-        await transferTableBalance(player.guid, player.stack, this.tableConfig.currency, this.dataRepository, `table ${this.tableConfig.name}`);
+        await transferTableBalance(
+          player.guid,
+          player.stack,
+          this.tableConfig.currency,
+          this.dataRepository,
+          `table ${this.tableConfig.name}`
+        );
       }
 
-      await this.relayUserData(player.guid)
+      await this.relayUserData(player.guid);
     }
   }
 
@@ -1620,7 +1871,6 @@ export class Table {
     this.setTableConfigUpdate(data);
     return data;
   }
-
 
   private setTableConfigUpdate(data: DataContainer): void {
     data.tableConfigs = new TableConfigs();
@@ -1635,10 +1885,9 @@ export class Table {
   }
 
   private async relayUserData(guid: string): Promise<void> {
-
-    let subscriber = this.subscribers.find(s => s.user.guid === guid);
+    let subscriber = this.subscribers.find((s) => s.user.guid === guid);
     if (subscriber != null) {
-      let user: User = await this.dataRepository.getUser(guid)
+      let user: User = await this.dataRepository.getUser(guid);
       let userData = await getUserData(user, this.dataRepository, false);
       let data = new DataContainer();
       data.user = userData;
@@ -1647,10 +1896,15 @@ export class Table {
   }
 
   removeTableBalance(userGuid: string): Promise<any> {
-    return this.dataRepository.removeTableBalance(this.tableId, userGuid)
+    return this.dataRepository
+      .removeTableBalance(this.tableId, userGuid)
       .then((updateResult: any) => {
-        if (updateResult.  result.nModified !== 1) {
-          throw new Error(`removeTableBalance: expecting update to exactly 1 document instead ${JSON.stringify(updateResult.result)} for player: ${userGuid} for table ${this.tableId}`);
+        if (updateResult.result.nModified !== 1) {
+          throw new Error(
+            `removeTableBalance: expecting update to exactly 1 document instead ${JSON.stringify(
+              updateResult.result
+            )} for player: ${userGuid} for table ${this.tableId}`
+          );
         }
       });
   }
@@ -1661,16 +1915,18 @@ export class Table {
     player.isSittingOut = false;
   }
 
-
-
-  private broadcastPlayer(player: PlayerTableHandle, excludePlayer: boolean = false) {
-
+  private broadcastPlayer(
+    player: PlayerTableHandle,
+    excludePlayer: boolean = false
+  ) {
     let data = new DataContainer();
     data.tableSeatEvents = new TableSeatEvents(this.tableId);
     let seatEvent = player.toTableSeatEvent();
     data.tableSeatEvents.seats.push(seatEvent);
     if (excludePlayer) {
-      for (let subscriber of this.subscribers.filter(s => s.user.guid !== player.guid)) {
+      for (let subscriber of this.subscribers.filter(
+        (s) => s.user.guid !== player.guid
+      )) {
         subscriber.send(data);
       }
     } else {
@@ -1681,15 +1937,20 @@ export class Table {
   dealCommunityCards() {
     this.playersSeenStreet();
     this.resetAutoActions();
-    let moreThanOnePlayerLeft = this.currentPlayers.filter(this.playerCanAct.bind(this)).length > 1;
+    let moreThanOnePlayerLeft =
+      this.currentPlayers.filter(this.playerCanAct.bind(this)).length > 1;
     if (moreThanOnePlayerLeft) {
-
-
-      let lastToAct: PlayerTableHandle = this.currentPlayers.find(p => p.seat === this.dealerSeat)
+      let lastToAct: PlayerTableHandle = this.currentPlayers.find(
+        (p) => p.seat === this.dealerSeat
+      );
       if (!lastToAct) {
-        lastToAct = this.getNextPlayerWherePlayerIsPlaying(this.dealerSeat, this.players, true);
+        lastToAct = this.getNextPlayerWherePlayerIsPlaying(
+          this.dealerSeat,
+          this.players,
+          true
+        );
       }
-      this.lastToActIndex = this.currentPlayers.indexOf(lastToAct)
+      this.lastToActIndex = this.currentPlayers.indexOf(lastToAct);
 
       if (this.currentPlayers[this.lastToActIndex].hasFolded)
         this.lastToActIndex = this.getPriorPlayerIndex(this.lastToActIndex);
@@ -1697,7 +1958,10 @@ export class Table {
       if (this.currentPlayers.length === 2) {
         this.playerNextToActIndex = this.lastToActIndex === 0 ? 1 : 0;
       } else {
-        this.incrementPlayerNextToActIndex(this.lastToActIndex, this.currentPlayers);
+        this.incrementPlayerNextToActIndex(
+          this.lastToActIndex,
+          this.currentPlayers
+        );
       }
     }
 
@@ -1705,8 +1969,15 @@ export class Table {
     let data = new DataContainer();
     data.deal = new DealHoleCardsEvent(this.tableId);
     if (this.street === PokerStreetType.flop) {
-      this.gameState.boardCards = [this.deck.getNextCard(), this.deck.getNextCard(), this.deck.getNextCard()];
-    } else if (this.street === PokerStreetType.turn || this.street === PokerStreetType.river) {
+      this.gameState.boardCards = [
+        this.deck.getNextCard(),
+        this.deck.getNextCard(),
+        this.deck.getNextCard(),
+      ];
+    } else if (
+      this.street === PokerStreetType.turn ||
+      this.street === PokerStreetType.river
+    ) {
       this.gameState.boardCards.push(this.deck.getNextCard());
     }
     data.deal.board = this.gameState.boardCards;
@@ -1720,17 +1991,15 @@ export class Table {
         p.bet = 0;
         let seatEvent = p.toTableSeatEvent();
         if (!moreThanOnePlayerLeft && !p.hasFolded) {
-          seatEvent.playercards = p.holecards;//players are all in
+          seatEvent.playercards = p.holecards; //players are all in
         }
 
         data.tableSeatEvents.seats.push(seatEvent);
       }
     }
 
-    if (moreThanOnePlayerLeft)
-      this.startPlayerTimeout();
-    else
-      this.startNextStreet(data, player);
+    if (moreThanOnePlayerLeft) this.startPlayerTimeout();
+    else this.startNextStreet(data, player);
 
     this.sendDataContainer(data);
   }
@@ -1741,33 +2010,43 @@ export class Table {
       data.error = new PokerError();
       data.error.message = errorMessage;
       return data;
-    }
+    };
 
     this.sendToSubscriber(guid, func);
   }
 
   private sendToSubscriber(guid: string, func: () => DataContainer) {
-    let subscriber = this.subscribers.find(s => s.user.guid === guid);
+    let subscriber = this.subscribers.find((s) => s.user.guid === guid);
     if (subscriber != null) {
       let data = func();
       subscriber.send(data);
     }
   }
 
-  handleSetTableOptionRequest(setTableOptionRequest: SetTableOptionRequest, guid: string) {
+  handleSetTableOptionRequest(
+    setTableOptionRequest: SetTableOptionRequest,
+    guid: string
+  ) {
     let data = new DataContainer();
     data.setTableOptionResult = this.getSetTableOptionResult();
 
-    let player = this.players.find(p => p.guid === guid);
+    let player = this.players.find((p) => p.guid === guid);
     if (player != null) {
-
-      if (setTableOptionRequest.sitOutNextHand != null && (player.sitOutNextHand != setTableOptionRequest.sitOutNextHand || player.isSittingOut != setTableOptionRequest.sitOutNextHand)) {
-        let sittingBackIn = (player.sitOutNextHand || player.isSittingOut) && !setTableOptionRequest.sitOutNextHand;
+      if (
+        setTableOptionRequest.sitOutNextHand != null &&
+        (player.sitOutNextHand != setTableOptionRequest.sitOutNextHand ||
+          player.isSittingOut != setTableOptionRequest.sitOutNextHand)
+      ) {
+        let sittingBackIn =
+          (player.sitOutNextHand || player.isSittingOut) &&
+          !setTableOptionRequest.sitOutNextHand;
         player.sitOutNextHand = setTableOptionRequest.sitOutNextHand;
-        if (!this.currentPlayers || this.currentPlayers.indexOf(player) === -1) {
+        if (
+          !this.currentPlayers ||
+          this.currentPlayers.indexOf(player) === -1
+        ) {
           player.isSittingOut = player.sitOutNextHand;
-          if (player.isSittingOut)
-            player.sittingOutSince = new Date();
+          if (player.isSittingOut) player.sittingOutSince = new Date();
         }
 
         data.setTableOptionResult.sitOutNextHand = player.sitOutNextHand;
@@ -1779,34 +2058,47 @@ export class Table {
         this.broadcastPlayer(player);
       }
 
-      if (setTableOptionRequest.autoFold != null || setTableOptionRequest.autoCheck) {
-        let autoOptionResult: AutoOptionResult = CommonHelpers.allowAutoFold(guid, this.currentPlayers);
+      if (
+        setTableOptionRequest.autoFold != null ||
+        setTableOptionRequest.autoCheck
+      ) {
+        let autoOptionResult: AutoOptionResult = CommonHelpers.allowAutoFold(
+          guid,
+          this.currentPlayers
+        );
         if (setTableOptionRequest.autoFold != null) {
-          if (!setTableOptionRequest.autoFold) {//always allow uncheck
+          if (!setTableOptionRequest.autoFold) {
+            //always allow uncheck
             player.autoFold = false;
-          }
-          else if (this.currentPlayers && setTableOptionRequest.autoFold === true && player.autoFold != setTableOptionRequest.autoFold && autoOptionResult.allowAutoFold) {
+          } else if (
+            this.currentPlayers &&
+            setTableOptionRequest.autoFold === true &&
+            player.autoFold != setTableOptionRequest.autoFold &&
+            autoOptionResult.allowAutoFold
+          ) {
             player.autoFold = true;
           }
           data.setTableOptionResult.autoFold = player.autoFold;
         }
 
         if (setTableOptionRequest.autoCheck != null) {
-          if (!setTableOptionRequest.autoCheck) {//always allow uncheck
+          if (!setTableOptionRequest.autoCheck) {
+            //always allow uncheck
             player.autoCheck = false;
-          }
-          else if (this.currentPlayers && setTableOptionRequest.autoCheck === true && player.autoCheck != setTableOptionRequest.autoCheck && autoOptionResult.allowAutoCheck) {
+          } else if (
+            this.currentPlayers &&
+            setTableOptionRequest.autoCheck === true &&
+            player.autoCheck != setTableOptionRequest.autoCheck &&
+            autoOptionResult.allowAutoCheck
+          ) {
             player.autoCheck = true;
           }
           data.setTableOptionResult.autoCheck = player.autoCheck;
         }
       }
-
     }
     this.sendToSubscriber(guid, () => data);
   }
-
-
 
   private getSetTableOptionResult() {
     let result = new SetTableOptionResult();
@@ -1815,7 +2107,7 @@ export class Table {
   }
 
   findPlayer(guid: string): PlayerTableHandle {
-    return this.players.find(p => p.guid === guid);
+    return this.players.find((p) => p.guid === guid);
   }
 
   updateScreenName(guid: string, screenName: string, gravatar: string): void {
@@ -1827,7 +2119,7 @@ export class Table {
       let data = new DataContainer();
       data.tableSeatEvents = new TableSeatEvents(this.tableId);
       let seatEvent = player.toTableSeatEvent();
-      seatEvent.avatar = gravatar || '';
+      seatEvent.avatar = gravatar || "";
       data.tableSeatEvents.seats.push(seatEvent);
       for (let subscriber of this.subscribers) {
         subscriber.send(data);
@@ -1843,15 +2135,12 @@ export class Table {
   shutdown(): Promise<void> {
     this.shutdownRequested = true;
     return new Promise<void>((resolve, reject) => {
-
       this.promiseResolve = resolve;
       if (!this.currentPlayers) {
         this.broadcastShutdown();
       }
     });
-
   }
-
 
   getPlayersToEvict(): PlayerTableHandle[] {
     let now = new Date();
@@ -1859,10 +2148,14 @@ export class Table {
     for (let player of this.players) {
       if (player.isSittingOut) {
         if (this.currentPlayers && this.currentPlayers.indexOf(player) !== -1) {
-          logger.warn(`player${player.guid} isSittingOut=${player.isSittingOut} however they are currently playing `);
+          logger.warn(
+            `player${player.guid} isSittingOut=${player.isSittingOut} however they are currently playing `
+          );
           continue;
         }
-        let secIdle = Math.round((now.getTime() - player.sittingOutSince.getTime()) / 1000);
+        let secIdle = Math.round(
+          (now.getTime() - player.sittingOutSince.getTime()) / 1000
+        );
         if (secIdle >= this.idleTimeSec) {
           handles.push(player);
         }
@@ -1872,10 +2165,11 @@ export class Table {
   }
 
   async checkIdlePlayers(): Promise<PlayerTableHandle[]> {
-
     let playerHandles = this.getPlayersToEvict();
     for (let handle of playerHandles) {
-      logger.info(`removing player ${handle.screenName} from table ${this.tableId} due to idleness`);
+      logger.info(
+        `removing player ${handle.screenName} from table ${this.tableId} due to idleness`
+      );
       await this.leaveTableInternal(handle);
     }
     return playerHandles;
@@ -1888,12 +2182,13 @@ export class Table {
     }
     state.tournamentId = this.tournamentId;
     state.dealerSeat = this.dealerSeat;
-    state.players = this.players.map(p => new PlayerTableState(p));
+    state.players = this.players.map((p) => new PlayerTableState(p));
     return state;
   }
 
-
-  sendTableProcessorMessage(message: TableProcessorMessage): Promise<TableProcessorResult> {
-    return this.processor.sendMessage(message)
+  sendTableProcessorMessage(
+    message: TableProcessorMessage
+  ): Promise<TableProcessorResult> {
+    return this.processor.sendMessage(message);
   }
 }

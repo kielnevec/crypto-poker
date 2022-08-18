@@ -11,6 +11,7 @@ export class RewardsReport {
   handOnePair: number; // rank = 2
   handTwoPairs: number; // rank = 3
   position: number;
+  fireWinning: number;
   percentile: number;
   currentMission: number;
   missionProgress: number;
