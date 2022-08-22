@@ -47,7 +47,9 @@ body {
   overflow: hidden;
   display: inline-block;
   vertical-align: top;
-  border: 2px solid gray;
+  border: 1px solid #979797;
+  border-radius: 15px;
+  background-color: rgba(64,64,64,0.7);
 }
 .poker-tables-container {
   margin: auto;
@@ -114,7 +116,7 @@ body {
 
 .pingTime {
   position: absolute;
-  right: 0px;
+  right: 10px;
   bottom: 0px;
   color: #fff;  
   font-size: 0.70em;
@@ -473,40 +475,45 @@ display:none;
 }
 
 #infobox {
-    background:#000;
     opacity:0.85;
     height:145px;
     width:360px;
     position:absolute;
-    top:450px;
-    left:10px;
+    // top:450px;
+    left:0px;
     border-style:solid;
     border-width:2px;
-    border-color:#fff;
+    // border-color:#fff;
     overflow:hidden;
+    border-radius: 15px;
+    bottom: 0px;
+    box-shadow: inset 0 5px 83px 0 rgba(0,0,0,0.49), 0 2px 70px 0 rgba(0,0,0,0.18);
+    border: 1px solid #979797;
+    background-color: rgba(64,64,64,0.7);
 }
 
 #gameinfo {
-  text-align:left;  
-  border-bottom: 1px solid white;
-    height: 30px;    
-    line-height: 30px;
-    padding-left:20px;
-    background-color: $generic-header;
+  color: #FFFFFF;
+    font-family: "Open Sans";
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 28px;
+    padding: 0px 15px;
 }
 
 #chatbox {
-  height: 85px;
+  padding: 0px 15px;
+  height: 65px;
   width: 355px;
   position: absolute;
   top: 33px;
-  padding-left: 4px;
   color: #fff;
   line-height: 14px;
   font-size: 12px;
   overflow-y: auto;
-  padding-bottom: 3px;
-  padding-right: 20px;
+  // padding-bottom: 3px;
+  // padding-right: 20px;
   overflow-wrap: break-word;
 }
 #poker-room-chat-volume {
@@ -523,7 +530,7 @@ display:none;
     height:21px;
     width:360px;
     position:absolute;
-    top:117px;
+    bottom:15px;
     /* background:#0000ff; */
 }
 
@@ -800,11 +807,10 @@ position: absolute;
     box-sizing: border-box;
     border: 1px solid #979797;
     border-radius: 15px;
-    background-color: rgba(64,64,64,0.7);
     box-shadow: 0 2px 26px 0 rgba(0,0,0,0.43);
     position: absolute;
-    bottom: 10px;
-    left: 10px;
+    bottom: 0px;
+    left: 0px;
 }
 
 .player-sitting {
@@ -1215,12 +1221,12 @@ color:green;
  
     // height: 42px;
     // width: 327px;
-    color: #FFFFFF;
-    font-family: "Open Sans";
-    font-size: 14px;
+    font-size: 11px;
     font-weight: 600;
     letter-spacing: 0;
-    line-height: 28px;
+    line-height: 17px;
+    color: #FFFFFF;
+  font-family: "Open Sans";
   
 }
 .chatScreenName {
@@ -1430,6 +1436,7 @@ ux-dialog {
     background-color: #000000;
     margin-left: 10px;
     margin-bottom: 10px;
+    color: white;
   
 }
 .clear {
@@ -1480,7 +1487,7 @@ ux-dialog {
   font-size: 12px;
   overflow-y: scroll;
   overflow-x: hidden;
-  padding: 0px 2px;
+  padding: 0px 10px;
   position: relative;
   vertical-align: top;
   float: left;
@@ -1655,7 +1662,7 @@ ux-dialog {
 .progress {
   border-radius: 10px !important;
   height:  12px !important;
-  width: 200px;
+  width: 85%;
 }
 
 .progress-bar {
@@ -1667,13 +1674,12 @@ ux-dialog {
 .progress_area{
   display: flex;
   align-items: center;
-  padding-top: 5px;
 }
 .daily_missions_header {
   height: 42px;
   border-radius: 15px 15px 0 0;
   background-color: #000000;
-  padding-left: 40px;
+  padding-left: 20px;
   display: flex;
   align-items: center;
 }
@@ -1703,6 +1709,9 @@ ux-dialog {
     padding: 20px;
     padding-bottom: 0px;
 }
+.daily_missions_content:not(:first-child){
+  border-radius: 15px 15px 0 0;
+}
 .daily_mission_bottom{
   border-bottom: 1px solid gray;
 }
@@ -1711,12 +1720,13 @@ ux-dialog {
 
 
 .daily_missions_content_title {
-  color: #9A9A9A;
+  color: #FFFFFF;
   font-family: "Open Sans";
   font-size: 16px;
   letter-spacing: 0;
   line-height: 28px;
-  width: 65%;
+  width: 90%;
+  font-weight: bold;
 }
 .fire_mission_image{
   height: 35px;
