@@ -5,6 +5,7 @@
       "cwd": "poker.engine/build/poker.engine/",
       "script": "./src/app.js",
       "instances": 1,
+      "cron_restart": "5 0 * * *",
       "exec_mode": "fork"
     },
     {

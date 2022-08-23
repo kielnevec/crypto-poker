@@ -1,3 +1,10 @@
+interface missionMapI {
+    name: string,
+    field: string,
+    target: number, 
+    current: number,
+    xp: number
+}  
 export class RewardsReportLeaderboard {
     guid: string;
     date: Date;
@@ -6,30 +13,15 @@ export class RewardsReportLeaderboard {
     seeTurn: number;
     seeRiver: number;
     winHand: number;
+    winStreak: number;
+    currentWinStreak: number;
+    fireWinning: number;
     handOnePair: number; // rank = 2
     handTwoPairs: number; // rank = 3
     position: number;
     percentile: number;
     currentMission: number;
     handsPlayed: number;
-    misProgress: {
-        a: number;
-        b: number;
-        c: number;
-    }
-    misPrBest: {
-        a: number;
-        b: number;
-        c: number;
-    }
-    misCount: {
-        a: number;
-        b: number;
-        c: number;
-    }
-    misTotalCount: {
-        a: number;
-        b: number;
-        c: number;
-    }
+    xp: number;
+    missions: missionMapI[];
 }

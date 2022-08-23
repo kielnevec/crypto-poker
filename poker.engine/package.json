@@ -10,7 +10,7 @@
     "@dashevo/dashcore-lib": "^0.17.9",
     "@sendgrid/mail": "^6.3.1",
     "axios": "^0.24.0",
-    "bcrypt": "^3.0.7",
+    "bcrypt": "^5",
     "bigi": "^1.4.2",
     "bip32": "^2.0.3",
     "bitcoinjs-lib": "^5.1.4",
@@ -38,7 +38,7 @@
     "ws": "^6.0.0"
   },
   "devDependencies": {
-    "@types/bcrypt": "^2.0.0",
+    "@types/bcrypt": "^5",
     "@types/bluebird": "^3.5.9",
     "@types/dotenv": "^4.0.3",
     "@types/express": "^4.0.35",

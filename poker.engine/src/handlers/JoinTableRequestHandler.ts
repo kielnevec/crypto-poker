@@ -2,7 +2,7 @@ import { JoinTableRequest as ClientJoinTableRequest } from './../../../poker.ui/
 import { WebSocketHandle } from "../model/WebSocketHandle";
 import { ListTablesRequest } from "../../../poker.ui/src/shared/ClientMessage";
 import { AbstractMessageHandler } from "./AbstractMessageHandler";
-import { DataContainer, RewardsReportResult, MissionReportResult } from "../../../poker.ui/src/shared/DataContainer";
+import { DataContainer, RewardsReportResult, MissionReportR } from "../../../poker.ui/src/shared/DataContainer";
 import { IPokerTableProvider } from "../services/IBroadcastService";
 import { IDataRepository } from '../services/documents/IDataRepository';
 import { User } from '../model/User';

@@ -29,8 +29,16 @@ export class PlayerTableHandle implements IPlayer {
     sittingOutSince: Date;  
     timerStart: Date;  
     lastStreet: string;    
+    missionData: {
+      flopScore: number;
+      score: number;
+      turnScore: number;
+      flopRank: number;
+      turnRank: number;
+      rank: number;
+    }
+    position: number;
    
-
     toTableSeatEvent():TableSeatEvent{
         let event = new TableSeatEvent();
             event.name = this.screenName;

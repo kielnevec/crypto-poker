@@ -61,3 +61,14 @@ poker.payments/.env
 scripts/vagrant/game_server/install_files/GeoLite2-Country.tar.gz
 scripts/vagrant/game_server/ubuntu-bionic-18.04-cloudimg-console.log
 doc/
+poker.engine/datajump.json
+.vscode/settings.json
+poker.ui/src/**/*.js
+poker.engine/.vscode/settings.json
+poker.engine/test/test-rewards.ts
+poker.engine/datajump2.json
+poker.ui/test/unit/setup.js
+poker.engine/package.json.save.1
+
+.env
+poker.engine/.env

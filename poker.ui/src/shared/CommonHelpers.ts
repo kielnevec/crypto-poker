@@ -44,6 +44,14 @@ export interface IPlayer{
   hasRaised: boolean;
   bet: number;
   guid: string;
+  missionData: {
+    flopScore: number;
+    turnScore: number;
+    score: number;
+    flopRank: number;
+    turnRank: number;
+    rank: number;
+  }
 }
 
 export default function to(promise:Promise<any>) {  

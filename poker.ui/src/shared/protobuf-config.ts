@@ -1,5 +1,6 @@
 import { ClientMessage } from './ClientMessage';
 import { DataContainer } from './DataContainer';
+import { missionMapI } from './Interfaces';
 
 //var protobufjs = require("protobufjs");
 import * as protobufjs from 'protobufjs';
@@ -467,25 +468,30 @@ class ProtobufConfig {
     rewardsReport.add(new Field("guid", 1, "string"));
     rewardsReport.add(new Field("profitLoss", 2, "int32"));
     rewardsReport.add(new Field("percentile", 3, "double"));
-    rewardsReport.add(new Field("misPrBest", 4, "MisPrg"));
-    rewardsReport.add(new Field("misCount", 5, "MisPrg"));
-    rewardsReport.add(new Field("misProgress", 6, "MisPrg"));
+    rewardsReport.add(new Field("xp", 4, "double"));
+    rewardsReport.add(new Field("missionsCompleted", 5, "double"));
+    rewardsReport.add(new Field("position", 6, "double"));
+    rewardsReport.add(new Field("fireWinning", 7, "double"));
+    rewardsReport.add(new Field("missionsStatus", 8, "MissionReport", "repeated"));    
     this.namespace.add(rewardsReport);
 
     let missionReport = new Type("MissionReport");
-    missionReport.add(new Field("guid",1, "string"));
-    missionReport.add(new Field("misProgress",2, "MisPrg"));
-    missionReport.add(new Field("misPrBest",3, "MisPrg"));
-    missionReport.add(new Field("misCount",4, "MisPrg"));
-    missionReport.add(new Field("multiplier",5, "double"));
+    missionReport.add(new Field("name", 1, "string"));
+    missionReport.add(new Field("position", 2, "double"));    
+    missionReport.add(new Field("progressbar", 3, "string"));    
+    missionReport.add(new Field("current", 4, "double"));    
+    missionReport.add(new Field("target", 5, "double"));    
+    missionReport.add(new Field("xp", 6, "double"));    
     this.namespace.add(missionReport);
 
-    let misPrg = new Type("MisPrg");
-    misPrg.add(new Field("a",1,"int32"));
-    misPrg.add(new Field("b",2,"int32"));
-    misPrg.add(new Field("c",3,"int32"));
-    this.namespace.add(misPrg);
-
+    
+    // let missionReport = new Type("MissionReport");
+    // missionReport.add(new Field("guid",1, "string"));
+    // missionReport.add(new Field("misProgress",2, "MisPrg"));
+    // missionReport.add(new Field("misPrBest",3, "MisPrg"));
+    // missionReport.add(new Field("misCount",4, "MisPrg"));
+    // missionReport.add(new Field("multiplier",5, "double"));
+    // this.namespace.add(missionReport);
 
     let exchangeRate = new Type("ExchangeRate");
     exchangeRate.add(new Field("base", 1, "string"));
@@ -505,9 +511,11 @@ class ProtobufConfig {
     // rewardsResult.add(new Field("seeTurn", 2, "double"));
     this.namespace.add(rewardsReportResult);
 
-    let missionReportResult = new Type("MissionReportResult");
-    missionReportResult.add(new Field("mission", 1, "MissionReport", "repeated"));
-    this.namespace.add(missionReportResult);
+    let missionReportR = new Type("MissionReportR");
+    missionReportR.add(new Field("guid", 1, "string"));
+    missionReportR.add(new Field("xp", 2, "double"));
+    missionReportR.add(new Field("missions", 3, "MissionReport", "repeated"));
+    this.namespace.add(missionReportR);
 
     let pong = new Type("Pong");
     this.namespace.add(pong);
@@ -645,7 +653,7 @@ class ProtobufConfig {
     message.add(new Field("version", 31, "Version"));
     message.add(new Field("duplicateIpAddress", 32, "DuplicateIpAddress"));    
     message.add(new Field("rewardsReportResult", 33, "RewardsReportResult"));
-    message.add(new Field("missionReportResult", 34, "MissionReportResult"));
+    message.add(new Field("missionReportR", 34, "MissionReportR"));
     this.namespace.add(message);
 
     
