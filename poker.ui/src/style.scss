@@ -495,11 +495,15 @@ display:none;
 #gameinfo {
   color: #FFFFFF;
     font-family: "Open Sans";
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
     letter-spacing: 0;
     line-height: 28px;
     padding: 0px 15px;
+}
+.col_space{
+  display: flex;
+    justify-content: flex-end;
 }
 
 #chatbox {
@@ -1221,7 +1225,7 @@ color:green;
  
     // height: 42px;
     // width: 327px;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
     letter-spacing: 0;
     line-height: 17px;
@@ -1230,11 +1234,12 @@ color:green;
   
 }
 .chatScreenName {
+  color: grey;
     // color: red;
     // font-weight: bold;
 }
 .chatDealer {
-  color: aqua;
+  color: grey;
   font-weight: bold;
 }
 .chatMessage {
@@ -1840,6 +1845,9 @@ line-height: 28px;
   align-items: center;
   height: 40px;
   border-bottom: 1px solid #FFFFFF !important;
+}
+.right_align{
+  justify-content: flex-end;
 }
 .table_body_content:not(:last-child){
   color: #FFFFFF;
